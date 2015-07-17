@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ncurses.h>
+#include "rcurses-manager.h"
 using namespace std;
 
 namespace rcurses-manager 
