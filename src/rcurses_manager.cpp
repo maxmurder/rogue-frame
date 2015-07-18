@@ -8,8 +8,7 @@ using namespace rcurses_manager;
 vector<SCREEN *> screens; //list of current terminal screens
 
 screen_manager::screen_manager(){
-    SCREEN *t = newterm(NULL,NULL,NULL);
-    screens.push_back(t);
+    
 }
 
 screen_manager::~screen_manager(){
@@ -20,11 +19,11 @@ screen_manager::~screen_manager(){
 }
 
 SCREEN *screen_manager::AddScreen() {
-    FILE *i = new FILE;
-    FILE *o = new FILE;
-    i = tmpfile();
-    o = tmpfile();
-    SCREEN *t = newterm(NULL,i,o);
+    SCREEN *t = newterm(NULL,stdout,stdin);
+    cbreak();
+    noecho();
+    clear();
+    curs_set(0);
     screens.push_back(t);
     return t;
 }
