@@ -16,6 +16,8 @@ namespace rcurses_manager
             std::vector<SCREEN *> GetScreens(); //returns screens list    
             screen_manager();
             ~screen_manager();
+        private:
+            std::vector<SCREEN *> screens; //list of current screens
     };
 };
 

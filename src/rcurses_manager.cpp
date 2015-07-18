@@ -5,10 +5,7 @@
 using namespace std;
 using namespace rcurses_manager;
 
-vector<SCREEN *> screens; //list of current terminal screens
-
 screen_manager::screen_manager(){
-    
 }
 
 screen_manager::~screen_manager(){
@@ -22,9 +19,11 @@ SCREEN *screen_manager::AddScreen() {
     SCREEN *t = newterm(NULL,stdout,stdin);
     cbreak();
     noecho();
-    clear();
+    keypad();
     curs_set(0);
+    clear();
     screens.push_back(t);
+    
     return t;
 }
 
