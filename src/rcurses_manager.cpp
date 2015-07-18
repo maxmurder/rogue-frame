@@ -5,14 +5,15 @@
 using namespace std;
 using namespace rcurses_manager;
 
-//vector<SCREEN *> screen_manager::screens{};
 vector<SCREEN *> screens; //list of current terminal screens
 
 screen_manager::screen_manager(){
+    SCREEN *t = newterm(NULL,NULL,NULL);
+    screens.push_back(t);
 }
 
 screen_manager::~screen_manager(){
-    for (int i=screens.size();i>=0;i--)
+    for (int i=screens.size()-1;i>=0;i--)
     {
         RemoveScreen(i);
     }
