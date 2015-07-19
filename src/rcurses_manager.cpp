@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector>
+#include <map>
 #include <algorithm>
 #include "rcurses_manager.h"
 using namespace std;
@@ -9,37 +9,30 @@ screen_manager::screen_manager(){
 }
 
 screen_manager::~screen_manager(){
-    for (int i=screens.size()-1;i>=0;i--)
-    {
-        RemoveScreen(i);
+    for (auto& s: screens){
+        RemoveScreen(s.first);
     }
 }
 
-SCREEN *screen_manager::AddScreen() {
+int screen_manager::AddScreen() {
+    //create terminal and add to the screen list
     SCREEN *t = newterm(NULL,stdout,stdin);
+    screens[++screenCount] = t;
+    
+    //init ncurses
     cbreak();
     noecho();
-    keypad();
+    keypad(stdscr,0);
     curs_set(0);
     clear();
-    screens.push_back(t);
     
-    return t;
-}
-
-void screen_manager::RemoveScreen(SCREEN * t){
-    set_term(t);
-    endwin();
-    screens.erase(find(screens.begin(), screens.end(), t));
+    return screenCount;
 }
 
 void screen_manager::RemoveScreen(int t){
     set_term(screens[t]);
     endwin();
-    screens.erase(screens.begin()+t);
+    screens.erase(t);
 }
 
-vector<SCREEN *> screen_manager::GetScreens(){
-    return screens;
-}
 

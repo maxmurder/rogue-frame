@@ -1,7 +1,8 @@
 CC = g++
 DEBUG = -g
+VER = -std=c++1y
 LFLAGS = -Wall $(DEBUG)
-CFLAGS = -Wall -c $(DEBUG)
+CFLAGS = -Wall -c $(VER) $(DEBUG)
 LDFLAGS = -lncurses
 SRC = src/
 OBJS = test.o rcurses_manager.o

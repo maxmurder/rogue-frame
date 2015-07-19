@@ -1,7 +1,7 @@
 #ifndef RCURSES_MANAGER
 #define RCURSES_MANAGER
 
-#include <vector>
+#include <map>
 #include <ncurses.h>
 
 namespace rcurses_manager
@@ -9,15 +9,16 @@ namespace rcurses_manager
     class screen_manager
     {   
         public:
-            SCREEN *AddScreen(); // add new terminal screen
-            void RemoveScreen(SCREEN * t); //remove terminal screen by pointer
-            void RemoveScreen(int t); //remove terminal screen by index
+            int AddScreen(); // add new terminal screen
+            void RemoveScreen(int t); //remove terminal screen by id
+            //void RemoveScreen(std::map<int, SCREEN *>::iterator); //remove terminal screen by pointer
             
-            std::vector<SCREEN *> GetScreens(); //returns screens list    
+            //std::map<int, SCREEN *> GetScreens(); //returns screen id list    
             screen_manager();
             ~screen_manager();
         private:
-            std::vector<SCREEN *> screens; //list of current screens
+            std::map<int, SCREEN *> screens; //list of current screens
+            int screenCount;
     };
 };
 
