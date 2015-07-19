@@ -11,9 +11,6 @@ namespace rcurses_manager
         public:
             int AddScreen(); // add new terminal screen
             void RemoveScreen(int t); //remove terminal screen by id
-            //void RemoveScreen(std::map<int, SCREEN *>::iterator); //remove terminal screen by pointer
-            
-            //std::map<int, SCREEN *> GetScreens(); //returns screen id list    
             screen_manager();
             ~screen_manager();
         private:

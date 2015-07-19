@@ -16,8 +16,10 @@ screen_manager::~screen_manager(){
 
 int screen_manager::AddScreen() {
     //create terminal and add to the screen list
+    int i = screenCount;
     SCREEN *t = newterm(NULL,stdout,stdin);
-    screens[++screenCount] = t;
+    screens[i] = t;
+    screenCount++;
     
     //init ncurses
     cbreak();
@@ -26,7 +28,7 @@ int screen_manager::AddScreen() {
     curs_set(0);
     clear();
     
-    return screenCount;
+    return i;
 }
 
 void screen_manager::RemoveScreen(int t){
