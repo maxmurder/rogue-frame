@@ -18,5 +18,5 @@ test.o : $(SRC)test.cpp $(SRC)rcurses_manager.h
 	$(CC) $(CFLAGS) $(SRC)test.cpp
 
 clean:
-	\rm *.o *~ $(EXE) $(SRC)*~
+	\rm *.o *~ $(EXE) $(SRC)*~ core.*
 
