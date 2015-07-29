@@ -1,10 +1,8 @@
 #include <iostream>
 #include <stdio.h>
-#include "rcurses_manager.h"
-using namespace rcurses_manager;
+#include "r_curses.h"
+using namespace r_curses;
 
 int main() {
-    screen_manager scr;
-    scr.AddScreen();
-    getch();
+    r_screen *screen = new r_screen();
 }

@@ -13,6 +13,6 @@ namespace r_curses
                 public:
                 r_screen();
                 ~r_screen();
-        }
+        };
 }
 #endif
