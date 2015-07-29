@@ -5,16 +5,16 @@ LFLAGS = -Wall $(DEBUG)
 CFLAGS = -Wall -c $(VER) $(DEBUG)
 LDFLAGS = -lncurses
 SRC = src/
-OBJS = test.o rcurses_manager.o
+OBJS = test.o r_curses.o
 EXE = rogue-frame
 
 $(EXE) : $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o $(EXE) $(LDFLAGS)
 
-rcurses_manager.o : $(SRC)rcurses_manager.cpp $(SRC)rcurses_manager.h
-	$(CC) $(CFLAGS) $(SRC)rcurses_manager.cpp
+r_curses.o : $(SRC)r_curses.cpp $(SRC)r_curses.h
+	$(CC) $(CFLAGS) $(SRC)r_curses.cpp
 
-test.o : $(SRC)test.cpp $(SRC)rcurses_manager.h
+test.o : $(SRC)test.cpp $(SRC)r_curses.h
 	$(CC) $(CFLAGS) $(SRC)test.cpp
 
 clean:
