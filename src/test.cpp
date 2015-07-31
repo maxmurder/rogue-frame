@@ -5,4 +5,7 @@ using namespace r_curses;
 
 int main() {
     r_screen *screen = new r_screen();
+    getch();
+    system("reset");
+    return 0;
 }
