@@ -15,7 +15,10 @@ namespace r_curses
                 r_screen();
                 ~r_screen();
                 
+                static void resizeHandler(int);                
+                        
                 std::pair<int,int> GetScreenDimensions();
+        
         };
 }
 #endif

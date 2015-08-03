@@ -25,3 +25,9 @@ r_screen::~r_screen(){
     endwin();
 }
 
+void r_screen::resizeHandler(int sig)
+{
+    int nh,nw;
+    getmaxyx(stdscr, nh, nw);    
+}
+
