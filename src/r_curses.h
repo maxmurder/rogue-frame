@@ -9,10 +9,13 @@ namespace r_curses
         class r_screen
         {
                 SCREEN *_screenPointer;
+                std::pair<int,int> _screenDimensions; //hight, width of screen
                 
                 public:
                 r_screen();
                 ~r_screen();
+                
+                std::pair<int,int> GetScreenDimensions();
         };
 }
 #endif

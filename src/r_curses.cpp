@@ -5,6 +5,10 @@
 using namespace std;
 using namespace r_curses;
 
+pair<int,int> r_screen::GetScreenDimensions(){
+    return _screenDimensions;
+}
+
 r_screen::r_screen(){
     _screenPointer = newterm(NULL,stdout,stdin);
     //init ncurses
@@ -12,6 +16,7 @@ r_screen::r_screen(){
     noecho();
     keypad(stdscr,0);
     curs_set(0);
+    getmaxyx(stdscr,_screenDimensions.first,_screenDimensions.second);
     clear();
 }
 
