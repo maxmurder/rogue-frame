@@ -2,10 +2,7 @@
 Framework for ncurses roguelike games.
 
 This will be a rather ambitious and long term  project. The goal is to create 
-a framework for building various ascii roguelike games. Idealy this will be 
-a highly customizable framework, using a component based 
-data oriented design where most game rules, creatures, worlds are defined at 
-run-time.
+a framework for building various ascii roguelike games/experiments.
 
 Desired Feautres: 
 
