@@ -20,10 +20,10 @@ int r_screen::AddWindow(int height, int width, int x_pos, int y_pos){
     set_term(_screenPointer);
     //if window wont fit on screen, resize
     if( x_pos + width > _screenDimensions.second ){
-        width = x_pos + width - _screenDimensions.second;
+        width -= width - _screenDimensions.second + x_pos;
     }
     if( y_pos + height > _screenDimensions.first ){
-        height = y_pos + height - _screenDimensions.first;
+        height -= height - _screenDimensions.first + y_pos;
     }
     //add window
     WINDOW *win = newwin(height, width, x_pos, y_pos);   
