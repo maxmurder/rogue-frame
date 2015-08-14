@@ -17,6 +17,8 @@ void r_screen::SetScreenDimensions(int height, int width){
 }
 
 int r_screen::AddWindow(int height, int width, int x_pos, int y_pos){
+    static int w;
+    w++;
     set_term(_screenPointer);
     //if window wont fit on screen, resize
     if( x_pos + width > _screenDimensions.second ){
@@ -27,16 +29,16 @@ int r_screen::AddWindow(int height, int width, int x_pos, int y_pos){
     }
     //add window
     WINDOW *win = newwin(height, width, x_pos, y_pos);   
-    _windows.push_back(win);
-    return _windows.size() - 1;
+    _windows[w] = win;
+    return w;
 }
 
-void r_screen::RemoveWindow(int window_index){
+void r_screen::RemoveWindow(int window_key){
     set_term(_screenPointer);
-    werase(_windows[window_index]);
-    delwin(_windows[window_index]);
-    _windows.erase(_windows.begin() + window_index);
-} 
+    werase(_windows.at(window_key));
+    delwin(_windows.at(window_key));
+    _windows.erase(window_key);
+}
 
 r_screen::r_screen(){
     _screenPointer = newterm(NULL,stdout,stdin);
