@@ -2,6 +2,7 @@
 #define R_CURSES
 
 #include <map>
+#include <vector>
 #include <ncurses.h>
 
 namespace r_curses
@@ -10,22 +11,31 @@ namespace r_curses
     {
         SCREEN *_screenPointer;
         static std::pair<int,int> _screenDimensions; //hight, width of screen
-        std::map<int, WINDOW *> _windows; //list of windows on the screen
         
         static void SetScreenDimensions(int height, int width); //sets _screenDimensions
         
         public:             
                 
         std::pair<int,int> GetScreenDimensions(); //returns dimensions of the screen
+        SCREEN * GetScreenPointer();
         
-        int AddWindow(int height,int width, int x_pos, int y_pos); //adds a window to the screen
-        void RemoveWindow(int window_key); //removes window
-        void UpdateWindow(int window_key); //updates window
-        void UpdateAllWindows();
         r_screen();
         ~r_screen();
         
         static void resizeHandler(int); //handles resizing of the screen
+    };
+    class r_window
+    {
+        WINDOW * _windowPointer;
+        int _index;
+        r_screen *_screen;
+        std::pair<int,int> _dimensions;
+        std::vector<std::vector<char>> _buffer;
+        
+        
+        public:
+        r_window(r_screen *screen, int height,int width, int x_pos, int y_pos);
+        ~r_window();
     };
 }
 #endif
