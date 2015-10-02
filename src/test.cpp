@@ -1,14 +1,23 @@
 #include <iostream>
 #include <stdio.h>
-#include <signal.h>
-#include "r_curses.h"
-using namespace r_curses;
+#include "r_engine.h"
+#include "TestState.h"
 
-int main() {
-    r_screen *screen = new r_screen();
-    signal(SIGWINCH,screen->resizeHandler);
+int main() 
+{
+    r_engine::RGameEngine game;
+
+    game.Init();
+    game.ChangeState( TestState::Instance() );
+    
+    /*while (game.Running() )
+    {
+        game.HandleEvents();
+        game.Update();
+        game.Draw();
+    }*/
     getch();
-    r_window *window = r_window(screen,10,10,10,10);
-    delete screen;
+    
+    game.Cleanup();
     return 0;
 }
