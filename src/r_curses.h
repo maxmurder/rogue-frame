@@ -24,6 +24,7 @@ namespace r_curses
         
         static void resizeHandler(int); //handles resizing of the screen
     };
+    
     class r_window
     {
         WINDOW * _windowPointer;
@@ -32,8 +33,9 @@ namespace r_curses
         std::pair<int,int> _dimensions;
         std::vector<std::vector<char>> _buffer;
         
-        
         public:
+        
+        
         r_window(r_screen *screen, int height,int width, int x_pos, int y_pos);
         ~r_window();
     };

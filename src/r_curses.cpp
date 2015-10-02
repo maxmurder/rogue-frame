@@ -7,20 +7,24 @@ using namespace r_curses;
 
 pair <int,int> r_screen::_screenDimensions = make_pair(0,0);
 
-pair<int,int> r_screen::GetScreenDimensions(){
+pair<int,int> r_screen::GetScreenDimensions()
+{
     return _screenDimensions;
 }
 
-SCREEN *r_screen::GetScreenPointer(){
+SCREEN *r_screen::GetScreenPointer()
+{
     return _screenPointer;
 }
 
-void r_screen::SetScreenDimensions(int height, int width){
+void r_screen::SetScreenDimensions(int height, int width)
+{
     _screenDimensions.first = height;
     _screenDimensions.second = width;
 }
 
-r_screen::r_screen(){
+r_screen::r_screen()
+{
     _screenPointer = newterm(NULL,stdout,stdin);
     //init ncurses
     cbreak();
@@ -31,7 +35,8 @@ r_screen::r_screen(){
     clear();
 }
 
-r_screen::~r_screen(){
+r_screen::~r_screen()
+{
     set_term(_screenPointer);
     endwin();
 }
@@ -41,7 +46,8 @@ void r_screen::resizeHandler(int sig)
     getmaxyx(stdscr, _screenDimensions.first, _screenDimensions.second); 
 }
 
-r_window::r_window(r_screen *screen, int height,int width, int x_pos, int y_pos) {
+r_window::r_window(r_screen *screen, int height,int width, int x_pos, int y_pos) 
+{
     _screen = screen;
     set_term(_screen->GetScreenPointer());
     pair<int,int> dims = _screen->GetScreenDimensions();
