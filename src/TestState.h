@@ -1,4 +1,5 @@
 #include "r_gamestate.h"
+#include "SDL/SDL.h"
 
 class TestState: public RGameState {
 
@@ -23,5 +24,7 @@ class TestState: public RGameState {
     
     private:
     static TestState m_TestState;
+    SDL_Surface* m_image;
+    
 };
 

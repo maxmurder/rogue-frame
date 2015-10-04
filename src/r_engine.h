@@ -23,10 +23,10 @@ class RGameEngine
     void PushState(RGameState*);
     void PopState();
     
+    SDL_Surface* screen;
+    
     private:
     std::vector<RGameState*> states; //game state stack
-
-    SDL_Surface* screen;
     
     bool m_fullscreen;
     bool m_running;
