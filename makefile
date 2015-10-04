@@ -5,7 +5,7 @@ LFLAGS = -Wall $(DEBUG)
 CFLAGS = -Wall -c $(VER) $(DEBUG)
 LDFLAGS = -lncurses -lSDL
 SRC = src/
-OBJS = main.o r_engine.o TestState.o
+OBJS = main.o r_engine.o TestState.o r_SDL.o
 EXE = rogue-frame
 
 $(EXE) : $(OBJS)
@@ -13,6 +13,9 @@ $(EXE) : $(OBJS)
 
 r_engine.o : $(SRC)r_engine.cpp $(SRC)r_engine.h
 	$(CC) $(CFLAGS) $(SRC)r_engine.cpp
+
+r_SDL.o : $(SRC)r_SDL.cpp $(SRC)r_SDL.h
+	$(CC) $(CFLAGS) $(SRC)r_SDL.cpp
 
 TestState.o : $(SRC)TestState.cpp $(SRC)TestState.h
 	$(CC) $(CFLAGS) $(SRC)TestState.cpp

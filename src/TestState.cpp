@@ -1,11 +1,12 @@
 #include <iostream>
 #include "TestState.h"
+#include "r_SDL.h"
 
 TestState TestState::m_TestState;
 
 void TestState::Init()
 {
-    _bg = SDL_LoadBMP( "src/test.bmp" );
+    _bg = r_SDL::LoadImage("src/test.bmp");
 }
 void TestState::Cleanup()
 {
