@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "TestState.h"
+#include "SDL/SDL.h"
 
 TestState TestState::m_TestState;
 
@@ -9,7 +10,7 @@ void TestState::Pause(){}
 void TestState::Resume(){}
 void TestState::HandleEvents(RGameEngine* game)
 {
-    getch();
+    SDL_Delay(2000);
     game->Quit();
 }
 void TestState::Update(RGameEngine* game){}

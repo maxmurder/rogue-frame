@@ -4,10 +4,21 @@
 
 using namespace std;
 
-void RGameEngine::Init() 
+void RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
 {
-    screen = new r_curses::r_screen();
-    signal(SIGWINCH,screen->resizeHandler);
+    int flags = 0;    
+    
+    SDL_Init( SDL_INIT_VIDEO );
+    
+    if ( fullscreen ) {
+        flags = SDL_FULLSCREEN;
+    }
+    screen = SDL_SetVideoMode(width, height, bpp, flags);
+    
+    m_fullscreen = fullscreen;
+    m_running = true;
+    
+    printf("RGameEngine Init\n");
 }
 
 void RGameEngine::Cleanup() 
@@ -17,7 +28,16 @@ void RGameEngine::Cleanup()
         states.back()->Cleanup();
         states.pop_back();
     }
-    delete screen;
+    
+    // release fullscreen mode
+    if (m_fullscreen) 
+    {
+        screen = SDL_SetVideoMode(640, 480, 0, 0);
+    }
+    
+    printf("RGameEngine Cleanup\n");
+    
+    SDL_Quit();
 }
 
 void RGameEngine::HandleEvents() 

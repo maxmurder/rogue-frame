@@ -2,22 +2,22 @@
 #define R_ENGINE
 
 #include <vector>
-#include "r_curses.h"
+#include "SDL/SDL.h"
 
 class RGameState;
 
 class RGameEngine
 {
     public:
-    void Init();
+    void Init(const char* title, int width=640, int height=480, int bbp=0, bool fullscreen=false);
     void Cleanup();
     
     void HandleEvents();
     void Update();
     void Draw();
     
-    bool Running() {return _running;}
-    void Quit() {_running = false;}
+    bool Running() {return m_running;}
+    void Quit() {m_running = false;}
     
     void ChangeState(RGameState*);
     void PushState(RGameState*);
@@ -25,10 +25,11 @@ class RGameEngine
     
     private:
     std::vector<RGameState*> states; //game state stack
+
+    SDL_Surface* screen;
     
-    r_curses::r_screen *screen; // game screen
-    
-    bool _running;
+    bool m_fullscreen;
+    bool m_running;
 };
 
 #endif

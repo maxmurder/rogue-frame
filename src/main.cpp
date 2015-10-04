@@ -2,11 +2,11 @@
 #include "r_engine.h"
 #include "TestState.h"
 
-int main() 
+int main( int argc, char* args[] ) 
 {
     RGameEngine game;
 
-    game.Init();
+    game.Init("Test");
     game.ChangeState( TestState::Instance() );
     
     while (game.Running() )
