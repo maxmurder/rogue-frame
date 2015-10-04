@@ -6,9 +6,12 @@ class TestState: public RGameState {
     void Init();
     void Cleanup();
     
-    void HandleEvents();
-    void Update();
-    void Draw();
+    void Pause();
+    void Resume();
+    
+    void HandleEvents(RGameEngine* game);
+    void Update(RGameEngine* game);
+    void Draw(RGameEngine* game);
     
     static TestState* Instance()
     {

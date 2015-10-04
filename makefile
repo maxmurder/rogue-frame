@@ -5,7 +5,7 @@ LFLAGS = -Wall $(DEBUG)
 CFLAGS = -Wall -c $(VER) $(DEBUG)
 LDFLAGS = -lncurses
 SRC = src/
-OBJS = main.o r_curses.o r_engine.o mainState.o
+OBJS = main.o r_curses.o r_engine.o TestState.o
 EXE = rogue-frame
 
 $(EXE) : $(OBJS)
@@ -17,8 +17,8 @@ r_curses.o : $(SRC)r_curses.cpp $(SRC)r_curses.h
 r_engine.o : $(SRC)r_engine.cpp $(SRC)r_engine.h
 	$(CC) $(CFLAGS) $(SRC)r_engine.cpp
 
-mainState.o : $(SRC)mainState.cpp $(SRC)mainState.h
-	$(CC) $(CFLAGS) $(SRC)mainState.cpp
+TestState.o : $(SRC)TestState.cpp $(SRC)TestState.h
+	$(CC) $(CFLAGS) $(SRC)TestState.cpp
 
 main.o : $(SRC)main.cpp $(SRC)r_engine.h
 	$(CC) $(CFLAGS) $(SRC)main.cpp

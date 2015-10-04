@@ -1,5 +1,6 @@
 #include <signal.h>
 #include "r_engine.h"
+#include "r_gamestate.h"
 
 using namespace std;
 
@@ -11,6 +12,11 @@ void RGameEngine::Init()
 
 void RGameEngine::Cleanup() 
 {
+    while ( !states.empty() ) 
+    {
+        states.back()->Cleanup();
+        states.pop_back();
+    }
     delete screen;
 }
 
@@ -34,7 +40,7 @@ void RGameEngine::ChangeState(RGameState* state)
     //cleanup current state
     if( !states.empty() )
     {
-        states.back->Cleanup();
+        states.back()->Cleanup();
         states.pop_back();
     }
 
@@ -61,7 +67,7 @@ void RGameEngine::PopState()
         states.pop_back();
     }
     
-    if ( !state.empty() ) {
+    if ( !states.empty() ) {
         states.back()->Resume();
     }
 }
