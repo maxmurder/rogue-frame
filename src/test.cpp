@@ -5,7 +5,7 @@
 
 int main() 
 {
-    r_engine::RGameEngine game;
+    RGameEngine game;
 
     game.Init();
     game.ChangeState( TestState::Instance() );

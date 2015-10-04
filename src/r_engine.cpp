@@ -2,7 +2,6 @@
 #include "r_engine.h"
 
 using namespace std;
-using namespace r_engine;
 
 void RGameEngine::Init() 
 {
@@ -23,7 +22,7 @@ void RGameEngine::Draw() {};
 
 void RGameEngine::ChangeState(RGameState* state)
 {
-    //state->Init();
+
 }
 
 void RGameEngine::PushState(RGameState* state)
@@ -34,15 +33,4 @@ void RGameEngine::PushState(RGameState* state)
 void RGameEngine::PopState()
 {
     states.pop_back();
-}
-
-void RGameState::ChangeState(RGameEngine* game, RGameState* state)
-{
-   game->ChangeState(state);
-}
-
-RGameState* RGameState::Instance()
-{
-    static RGameState *instance;
-    return instance;
 }
