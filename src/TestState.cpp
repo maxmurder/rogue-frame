@@ -26,6 +26,6 @@ void TestState::Update(RGameEngine* game)
 }
 void TestState::Draw(RGameEngine* game)
 {
-    SDL_BlitSurface ( _bg, NULL, game->screen, NULL );
+    r_SDL::ApplySurface(0, 0, _bg, game->screen);
     SDL_Flip( game->screen );
 } 
