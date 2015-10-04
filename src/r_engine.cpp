@@ -14,23 +14,54 @@ void RGameEngine::Cleanup()
     delete screen;
 }
 
-void RGameEngine::HandleEvents() {};
+void RGameEngine::HandleEvents() 
+{
+    states.back()->HandleEvents(this);
+};
 
-void RGameEngine::Update() {};
+void RGameEngine::Update() 
+{
+    states.back()->Update(this);
+};
 
-void RGameEngine::Draw() {};
+void RGameEngine::Draw() 
+{
+    states.back()->Draw(this);
+};
 
 void RGameEngine::ChangeState(RGameState* state)
 {
+    //cleanup current state
+    if( !states.empty() )
+    {
+        states.back->Cleanup();
+        states.pop_back();
+    }
 
+    //add and initilize new state    
+    states.push_back(state);
+    states.back()->Init();
 }
 
 void RGameEngine::PushState(RGameState* state)
 {
+    if ( !states.empty() ) 
+    {
+        states.back()->Pause();
+    }
+    
     states.push_back(state);
+    states.back()->Init();
 }
 
 void RGameEngine::PopState()
 {
-    states.pop_back();
+    if ( !states.empty() ) {
+        states.back()->Cleanup();
+        states.pop_back();
+    }
+    
+    if ( !state.empty() ) {
+        states.back()->Resume();
+    }
 }

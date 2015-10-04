@@ -10,12 +10,12 @@ int main()
     game.Init();
     game.ChangeState( TestState::Instance() );
     
-    /*while (game.Running() )
+    while (game.Running() )
     {
         game.HandleEvents();
         game.Update();
         game.Draw();
-    }*/
+    }
     getch();
     
     game.Cleanup();
