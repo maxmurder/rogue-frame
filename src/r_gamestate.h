@@ -6,11 +6,11 @@
 class RGameState //base class for game states
 {
     public:
-    virtual void Init() = 0;
-    virtual void Cleanup() = 0;
+    virtual void Init(RGameEngine* game) = 0;
+    virtual void Cleanup(RGameEngine* game) = 0;
     
-    virtual void Pause() = 0;
-    virtual void Resume() = 0;
+    virtual void Pause(RGameEngine* game) = 0;
+    virtual void Resume(RGameEngine* game) = 0;
     
     virtual void HandleEvents(RGameEngine* game) = 0;
     virtual void Update(RGameEngine* game) = 0;

@@ -1,15 +1,16 @@
 #include "r_SDL.h"
+#include "SDL/SDL_image.h"
 
-SDL_Surface *r_SDL::LoadImage( std::string filename )
+SDL_Surface *r_SDL::LoadImage( std::string filename, SDL_PixelFormat* format )
 {
     SDL_Surface* loadedImage = NULL;
     SDL_Surface* optimisedImage = NULL;
     
-    loadedImage = SDL_LoadBMP( filename.c_str() );
+    loadedImage = IMG_Load( filename.c_str() );
     
-    if( loadedImage != NULL )
+    if( loadedImage != NULL)
     {
-    optimisedImage = SDL_DisplayFormat( loadedImage );
+    optimisedImage = SDL_ConvertSurface( loadedImage, format, 0);
     SDL_FreeSurface( loadedImage );
     }
     return optimisedImage;

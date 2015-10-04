@@ -4,11 +4,11 @@
 class TestState: public RGameState {
 
     public:
-    void Init();
-    void Cleanup();
+    void Init(RGameEngine* game);
+    void Cleanup(RGameEngine* game);
     
-    void Pause();
-    void Resume();
+    void Pause(RGameEngine* game);
+    void Resume(RGameEngine* game);
     
     void HandleEvents(RGameEngine* game);
     void Update(RGameEngine* game);
@@ -25,6 +25,7 @@ class TestState: public RGameState {
     private:
     static TestState m_TestState;
     SDL_Surface* _bg;
+    SDL_Event _event;
     
 };
 

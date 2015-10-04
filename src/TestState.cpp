@@ -4,28 +4,29 @@
 
 TestState TestState::m_TestState;
 
-void TestState::Init()
+void TestState::Init(RGameEngine* game)
 {
-    _bg = r_SDL::LoadImage("src/test.bmp");
+    _bg = r_SDL::LoadImage("src/test.bmp", game->screen->format);
 }
-void TestState::Cleanup()
+void TestState::Cleanup(RGameEngine* game)
 {
     SDL_FreeSurface( _bg );
 }
-void TestState::Pause(){}
-void TestState::Resume(){}
-void TestState::HandleEvents(RGameEngine* game){}
-void TestState::Update(RGameEngine* game)
+void TestState::Pause(RGameEngine* game){}
+void TestState::Resume(RGameEngine* game){}
+void TestState::HandleEvents(RGameEngine* game)
 {
-    static int i = 0;
-    if (i>2000)
+    while( SDL_PollEvent( &_event ) )
     {
-        game->Quit();
+        if( _event.type == SDL_QUIT )
+        {
+            game->Quit();
+        }
     }
-    i++;
 }
+void TestState::Update(RGameEngine* game){}
 void TestState::Draw(RGameEngine* game)
 {
     r_SDL::ApplySurface(0, 0, _bg, game->screen);
-    SDL_Flip( game->screen );
+    SDL_UpdateWindowSurface( game->window );
 } 

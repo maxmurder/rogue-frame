@@ -3,7 +3,7 @@ DEBUG = -g
 VER = -std=c++1y
 LFLAGS = -Wall $(DEBUG)
 CFLAGS = -Wall -c $(VER) $(DEBUG)
-LDFLAGS = -lncurses -lSDL
+LDFLAGS = -lncurses -lSDL2 -lSDL2_image
 SRC = src/
 OBJS = main.o r_engine.o TestState.o r_SDL.o
 EXE = rogue-frame

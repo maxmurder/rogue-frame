@@ -1,11 +1,10 @@
 #include <iostream>
-#include <signal.h>
 #include "r_engine.h"
 #include "r_gamestate.h"
 
 using namespace std;
 
-int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
+bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
 {
     int flags = 0;    
     
@@ -13,46 +12,50 @@ int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fu
     if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
     {
         cout << "SDL initilization failure\n";
-        return 1;
+        return false;
     }
-    SDL_WM_SetCaption(title, title);
 
     if ( fullscreen ) {
-        flags = SDL_FULLSCREEN;
+        flags = SDL_WINDOW_FULLSCREEN;
     }
     
-    //setup screen
-    screen = SDL_SetVideoMode(width, height, bpp, flags);
+    //initialize window
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags );
+    if (window == NULL)
+    {
+        cout << "Error setting up SDL window\n";
+        return false;
+    }
+    screen = SDL_GetWindowSurface( window );
     if (screen == NULL) 
     {
         cout << "Error setting up SDL screen\n";
-        return 1;
+        return false;
     }
     
     m_fullscreen = fullscreen;
     m_running = true;
     
     cout << "RGameEngine Init\n";
-    return 0;
+    return true;
 }
 
 void RGameEngine::Cleanup() 
 {
     while ( !states.empty() ) 
     {
-        states.back()->Cleanup();
+        states.back()->Cleanup(this);
         states.pop_back();
     }
     
     // release fullscreen mode
     if (m_fullscreen) 
-    {
-        screen = SDL_SetVideoMode(640, 480, 0, 0);
-    }
+    {}
+    
+    SDL_DestroyWindow( window );
+    SDL_Quit();
     
     cout << "RGameEngine Cleanup\n";
-    
-    SDL_Quit();
 }
 
 void RGameEngine::HandleEvents() 
@@ -84,34 +87,34 @@ void RGameEngine::ChangeState(RGameState* state)
     //cleanup current state
     if( !states.empty() )
     {
-        states.back()->Cleanup();
+        states.back()->Cleanup(this);
         states.pop_back();
     }
 
     //add and initilize new state    
     states.push_back(state);
-    states.back()->Init();
+    states.back()->Init(this);
 }
 
 void RGameEngine::PushState(RGameState* state)
 {
     if ( !states.empty() ) 
     {
-        states.back()->Pause();
+        states.back()->Pause(this);
     }
     
     states.push_back(state);
-    states.back()->Init();
+    states.back()->Init(this);
 }
 
 void RGameEngine::PopState()
 {
     if ( !states.empty() ) {
-        states.back()->Cleanup();
+        states.back()->Cleanup(this);
         states.pop_back();
     }
     
     if ( !states.empty() ) {
-        states.back()->Resume();
+        states.back()->Resume(this);
     }
 }
