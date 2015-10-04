@@ -6,7 +6,10 @@ int main( int argc, char* args[] )
 {
     RGameEngine game;
 
-    game.Init("Test");
+    if (game.Init("Test") != 0)
+    {
+        return 1;
+    }
     game.ChangeState( TestState::Instance() );
     
     while (game.Running() )

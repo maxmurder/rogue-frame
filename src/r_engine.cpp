@@ -1,24 +1,39 @@
+#include <iostream>
 #include <signal.h>
 #include "r_engine.h"
 #include "r_gamestate.h"
 
 using namespace std;
 
-void RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
+int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
 {
     int flags = 0;    
     
-    SDL_Init( SDL_INIT_VIDEO );
-    
+    //initialize SDL
+    if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
+    {
+        cout << "SDL initilization failure\n";
+        return 1;
+    }
+    SDL_WM_SetCaption(title, title);
+
     if ( fullscreen ) {
         flags = SDL_FULLSCREEN;
     }
+    
+    //setup screen
     screen = SDL_SetVideoMode(width, height, bpp, flags);
+    if (screen == NULL) 
+    {
+        cout << "Error setting up SDL screen\n";
+        return 1;
+    }
     
     m_fullscreen = fullscreen;
     m_running = true;
     
-    printf("RGameEngine Init\n");
+    cout << "RGameEngine Init\n";
+    return 0;
 }
 
 void RGameEngine::Cleanup() 
@@ -35,24 +50,33 @@ void RGameEngine::Cleanup()
         screen = SDL_SetVideoMode(640, 480, 0, 0);
     }
     
-    printf("RGameEngine Cleanup\n");
+    cout << "RGameEngine Cleanup\n";
     
     SDL_Quit();
 }
 
 void RGameEngine::HandleEvents() 
 {
-    states.back()->HandleEvents(this);
+     if( !states.empty() )
+    {
+        states.back()->HandleEvents(this);
+    }
 };
 
 void RGameEngine::Update() 
 {
-    states.back()->Update(this);
+    if( !states.empty() )
+    {
+        states.back()->Update(this);
+    }
 };
 
 void RGameEngine::Draw() 
 {
-    states.back()->Draw(this);
+    if( !states.empty() )
+    {
+        states.back()->Draw(this);
+    }
 };
 
 void RGameEngine::ChangeState(RGameState* state)

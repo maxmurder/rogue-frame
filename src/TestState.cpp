@@ -1,23 +1,30 @@
-#include <stdio.h>
+#include <iostream>
 #include "TestState.h"
 
 TestState TestState::m_TestState;
 
 void TestState::Init()
 {
-    m_image = SDL_LoadBMP( "src/test.bmp" );
+    _bg = SDL_LoadBMP( "src/test.bmp" );
 }
 void TestState::Cleanup()
 {
-    SDL_FreeSurface( m_image );
+    SDL_FreeSurface( _bg );
 }
 void TestState::Pause(){}
 void TestState::Resume(){}
 void TestState::HandleEvents(RGameEngine* game){}
-void TestState::Update(RGameEngine* game){}
-void TestState::Draw(RGameEngine* game){
-    SDL_BlitSurface ( m_image, NULL, game->screen, NULL );
+void TestState::Update(RGameEngine* game)
+{
+    static int i = 0;
+    if (i>2000)
+    {
+        game->Quit();
+    }
+    i++;
+}
+void TestState::Draw(RGameEngine* game)
+{
+    SDL_BlitSurface ( _bg, NULL, game->screen, NULL );
     SDL_Flip( game->screen );
-    SDL_Delay(2000);
-    game->Quit();
 } 

@@ -9,7 +9,7 @@ class RGameState;
 class RGameEngine
 {
     public:
-    void Init(const char* title, int width=640, int height=480, int bbp=0, bool fullscreen=false);
+    int Init(const char* title, int width=640, int height=480, int bbp=0, bool fullscreen=false);
     void Cleanup();
     
     void HandleEvents();

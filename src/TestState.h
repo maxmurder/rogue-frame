@@ -24,7 +24,7 @@ class TestState: public RGameState {
     
     private:
     static TestState m_TestState;
-    SDL_Surface* m_image;
+    SDL_Surface* _bg;
     
 };
 
