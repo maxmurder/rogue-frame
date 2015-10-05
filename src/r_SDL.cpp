@@ -34,7 +34,7 @@ SDL_Texture* r_SDL::LoadTexture( std::string path, SDL_Renderer* renderer )
     loadedSurface = IMG_Load( path.c_str() );
     if (loadedSurface == NULL )
     {
-        cout << "Unable to load image: " << path << " :: " << SDL_GetError() << "\n";
+        cout << "Unable to load image: " << path << " :: " << IMG_GetError() << "\n";
     }else
     {
         loadedTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );

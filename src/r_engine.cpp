@@ -6,12 +6,18 @@ using namespace std;
 
 bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
 {
-    int flags = 0;    
+    int flags = 0;
+    int imgFlag = IMG_INIT_PNG;
     
     //initialize SDL
     if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
     {
-        cout << "SDL initilization failure\n";
+        cout << "SDL initilization failure" << " :: " << SDL_GetError() << "\n";
+        return false;
+    }
+    if ( !(IMG_Init( imgFlag) & imgFlag ) )
+    {
+        cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << "\n";
         return false;
     }
 
@@ -23,15 +29,17 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags );
     if (window == NULL)
     {
-        cout << "Error setting up SDL window"  << " :: " << SDL_GetError() << "\n";
+        cout << "Error setting up SDL window" << " :: " << SDL_GetError() << "\n";
         return false;
     }
+    //initilize renderer
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
     if (renderer == NULL)
     {
         cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << "\n";
         return false;
     }
+    SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
     
     m_fullscreen = fullscreen;
     m_running = true;
@@ -47,10 +55,6 @@ void RGameEngine::Cleanup()
         states.back()->Cleanup(this);
         states.pop_back();
     }
-    
-    // release fullscreen mode
-    if (m_fullscreen) 
-    {}
     
     SDL_DestroyWindow( window );
     SDL_DestroyRenderer( renderer);

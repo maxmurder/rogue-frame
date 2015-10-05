@@ -30,7 +30,8 @@ void TestState::HandleEvents(RGameEngine* game)
         }
     }
 }
-void TestState::Update(RGameEngine* game){}
+void TestState::Update(RGameEngine* game)
+{}
 void TestState::Draw(RGameEngine* game)
 {
     SDL_RenderClear( game->renderer );
