@@ -21,6 +21,12 @@ void TestState::HandleEvents(RGameEngine* game)
         if( _event.type == SDL_QUIT )
         {
             game->Quit();
+        } else if ( _event.type == SDL_KEYDOWN )
+        {
+            if ( _event.key.keysym.sym == SDLK_RETURN )
+            {
+                game->Quit();
+            }
         }
     }
 }
