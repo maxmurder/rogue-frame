@@ -1,5 +1,8 @@
+#ifndef TESTSTATE
+#define TESTSTATE
+
+#include <SDL2/SDL.h>
 #include "r_gamestate.h"
-#include "SDL/SDL.h"
 
 class TestState: public RGameState {
 
@@ -24,8 +27,11 @@ class TestState: public RGameState {
     
     private:
     static TestState m_TestState;
+    SDL_Renderer* _renderer;
+    SDL_Texture* _texture;
     SDL_Surface* _bg;
     SDL_Event _event;
     
 };
 
+#endif

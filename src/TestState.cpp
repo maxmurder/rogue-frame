@@ -6,11 +6,11 @@ TestState TestState::m_TestState;
 
 void TestState::Init(RGameEngine* game)
 {
-    _bg = r_SDL::LoadImage("src/test.bmp", game->screen->format);
+    _texture = r_SDL::LoadTexture("src/test.bmp", game->renderer);
 }
 void TestState::Cleanup(RGameEngine* game)
 {
-    SDL_FreeSurface( _bg );
+    SDL_DestroyTexture( _texture );
 }
 void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
@@ -33,6 +33,7 @@ void TestState::HandleEvents(RGameEngine* game)
 void TestState::Update(RGameEngine* game){}
 void TestState::Draw(RGameEngine* game)
 {
-    r_SDL::ApplySurface(0, 0, _bg, game->screen);
-    SDL_UpdateWindowSurface( game->window );
+    SDL_RenderClear( game->renderer );
+    SDL_RenderCopy( game->renderer, _texture, NULL, NULL );
+    SDL_RenderPresent( game->renderer );
 } 

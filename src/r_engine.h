@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 class RGameState;
 
@@ -23,8 +24,8 @@ class RGameEngine
     void PushState(RGameState*);
     void PopState();
     
-    SDL_Surface* screen;
     SDL_Window* window;
+    SDL_Renderer* renderer;
     
     private:
     std::vector<RGameState*> states; //game state stack

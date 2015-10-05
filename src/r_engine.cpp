@@ -23,13 +23,13 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags );
     if (window == NULL)
     {
-        cout << "Error setting up SDL window\n";
+        cout << "Error setting up SDL window"  << " :: " << SDL_GetError() << "\n";
         return false;
     }
-    screen = SDL_GetWindowSurface( window );
-    if (screen == NULL) 
+    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+    if (renderer == NULL)
     {
-        cout << "Error setting up SDL screen\n";
+        cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << "\n";
         return false;
     }
     
@@ -53,6 +53,8 @@ void RGameEngine::Cleanup()
     {}
     
     SDL_DestroyWindow( window );
+    SDL_DestroyRenderer( renderer);
+    IMG_Quit();
     SDL_Quit();
     
     cout << "RGameEngine Cleanup\n";

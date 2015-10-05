@@ -56,5 +56,4 @@ void r_SDL::ApplySurface( int x, int y, SDL_Surface* source, SDL_Surface* destin
     offset.y = y;
     
     SDL_BlitSurface( source, NULL, destination, &offset );
-} 
-
+}
