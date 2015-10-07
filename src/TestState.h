@@ -35,6 +35,8 @@ class TestState: public RGameState {
     SDL_Event _event;
     
     RTexture* tex;
+    int x = 0;
+    int y = 0;
 };
 
 #endif
