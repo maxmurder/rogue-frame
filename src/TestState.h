@@ -1,7 +1,9 @@
-#ifndef TESTSTATE
-#define TESTSTATE
+#ifndef TESTSTATE_H
+#define TESTSTATE_H
 
 #include <SDL2/SDL.h>
+#include "r_SDL.h"
+#include "RTexture.h"
 #include "r_gamestate.h"
 
 class TestState: public RGameState {
@@ -32,6 +34,7 @@ class TestState: public RGameState {
     SDL_Surface* _bg;
     SDL_Event _event;
     
+    RTexture* tex;
 };
 
 #endif
