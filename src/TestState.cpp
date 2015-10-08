@@ -6,11 +6,28 @@ TestState TestState::m_TestState;
 
 void TestState::Init(RGameEngine* game)
 {
-    _texture = r_SDL::LoadTexture("src/test.bmp", game->renderer);
+    _texture = new RTexture();
+    _texture->LoadFromFile("src/test.bmp", game->renderer);
+    
+    _sprite = new RTexture();
+    _sprite->LoadFromFile("data/gfx/curses_square_16x16.bmp", game->renderer, 0xFF, 0, 0xFF );
+    _spriteClip[0].x = 16;
+    _spriteClip[0].y = 0;
+    _spriteClip[0].h = 16;
+    _spriteClip[0].w = 16;
+    
+    _spriteClip[1].x = 32;
+    _spriteClip[1].y = 0;
+    _spriteClip[1].h = 16;
+    _spriteClip[1].w = 16;
+    
+    _sprite->SetColor( 0x72, 0x00, 0xFF );
 }
 void TestState::Cleanup(RGameEngine* game)
 {
-    SDL_DestroyTexture( _texture );  
+   delete _texture;
+   delete _sprite;
+   
 }
 void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
@@ -38,10 +55,14 @@ void TestState::Draw(RGameEngine* game)
     static int height;
     SDL_GetWindowSize(game->window, &width, &height);
     
-    SDL_SetRenderDrawColor( game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    
+    SDL_SetRenderDrawColor( game->renderer, 0x00, 0x00, 0x00, 0xFF );
     SDL_RenderClear( game->renderer );
     
-    SDL_RenderCopy( game->renderer, _texture, NULL, NULL );
+    _texture->Render(game->renderer, 0, 0);
+    
+    _sprite->Render(game->renderer, 0, 0, &_spriteClip[0]);
+    _sprite->Render(game->renderer, width - 16, height - 16, &_spriteClip[1]);
 
     SDL_RenderPresent( game->renderer );
 } 

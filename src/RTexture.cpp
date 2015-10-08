@@ -27,7 +27,7 @@ bool RTexture::LoadFromFile( std::string path, SDL_Renderer* renderer )
         cout << "RTexture could not load " << SDL_GetError() << "\n";
     } else
     {
-       SDL_QueryTexture( newTexture, NULL, NULL, &_width, &_height ); 
+       SDL_QueryTexture( newTexture, NULL, NULL, &_width, &_height );
     }
     _texture = newTexture;
     return _texture != NULL;
@@ -61,10 +61,31 @@ void RTexture::FreeTexture()
     }
 }
 
-void RTexture::Render( SDL_Renderer* renderer, int x, int y )
+void RTexture::SetColor( Uint8 red, Uint8 green, Uint8 blue )
 {
-    SDL_Rect quad = {x, y, _width, _height};
-    SDL_RenderCopy( renderer, _texture, NULL, &quad );
+    SDL_SetTextureColorMod( _texture, red, green, blue );
+}
+
+void RTexture::SetAlpha( Uint8 alpha)
+{
+    SDL_SetTextureAlphaMod( _texture, alpha); 
+}
+
+void RTexture::SetBlendMode( SDL_BlendMode blending)
+{
+    SDL_SetTextureBlendMode( _texture, blending);
+}
+
+void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip )
+{
+    SDL_Rect renderQuad = {x, y, _width, _height};
+    
+    if (clip != NULL)
+    {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    }
+    SDL_RenderCopy( renderer, _texture, clip, &renderQuad );
 }
 
 int RTexture::GetWidth()
