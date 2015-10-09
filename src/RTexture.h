@@ -11,9 +11,9 @@ class RTexture
         bool LoadFromFile( std::string path, SDL_Renderer* renderer, int red, int green, int blue); // load from file with color keying
         void FreeTexture(); //deallocate texture
         
-        void SetColor(Uint8 red, Uint8 green, Uint8 blue);//set colour modulation
+        void SetColor(uint8_t red, uint8_t green, uint8_t blue);//set colour modulation
+        void SetAlpha( uint8_t alpha );
         void SetBlendMode( SDL_BlendMode blending);
-        void SetAlpha( Uint8 alpha );
         void Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL); // render at point
         
         //get dimensions

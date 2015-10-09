@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "r_SDL.h"
+#include "RSprite.h"
 #include "RTexture.h"
 #include "r_gamestate.h"
 
@@ -33,11 +34,8 @@ class TestState: public RGameState {
         RTexture* _texture;
         SDL_Event _event;
         
-        RTexture* _sprite;
-        SDL_Rect _spriteClip[2];
-
-        int x = 0;
-        int y = 0;
+        RTexture* _spriteTex;
+        RSprite* _sprite;
 };
 
 #endif

@@ -61,12 +61,12 @@ void RTexture::FreeTexture()
     }
 }
 
-void RTexture::SetColor( Uint8 red, Uint8 green, Uint8 blue )
+void RTexture::SetColor( uint8_t red, uint8_t green, uint8_t blue )
 {
     SDL_SetTextureColorMod( _texture, red, green, blue );
 }
 
-void RTexture::SetAlpha( Uint8 alpha)
+void RTexture::SetAlpha( uint8_t alpha)
 {
     SDL_SetTextureAlphaMod( _texture, alpha); 
 }

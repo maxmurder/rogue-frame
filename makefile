@@ -5,7 +5,7 @@ LFLAGS = -Wall $(DEBUG)
 CFLAGS = -Wall -c $(VER) $(DEBUG)
 LDFLAGS = -lSDL2 -lSDL2_image
 SRC = src/
-OBJS = main.o r_engine.o TestState.o r_SDL.o RTexture.o
+OBJS = main.o r_engine.o TestState.o r_SDL.o RTexture.o RSprite.o
 EXE = rogue-frame
 
 $(EXE) : $(OBJS)
@@ -16,7 +16,10 @@ r_engine.o : $(SRC)r_engine.cpp $(SRC)r_engine.h
 
 r_SDL.o : $(SRC)r_SDL.cpp $(SRC)r_SDL.h 
 	$(CC) $(CFLAGS) $(SRC)r_SDL.cpp 
-	
+
+RSprite.o : $(SRC)RSprite.cpp $(SRC)RSprite.h
+	$(CC) $(CFLAGS) $(SRC)RSprite.cpp
+
 RTexture.o : $(SRC)RTexture.cpp $(SRC)RTexture.h
 	$(CC) $(CFLAGS) $(SRC)RTexture.cpp
 
