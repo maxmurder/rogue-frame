@@ -19,7 +19,6 @@ void TestState::Init(RGameEngine* game)
     
     _sprite = new RSprite(_spriteTex, frames);
     _sprite->SetRGBA((RGBA){0x72,0x00,0xFF,0xFF});
-    _sprite->SetBackground((RGBA){0x00,0x00,0x00,0x00});
 }
 
 void TestState::Cleanup(RGameEngine* game)

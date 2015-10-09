@@ -44,7 +44,7 @@ void RSprite::SetColor(uint8_t red, uint8_t green, uint8_t blue)
         _fg.b = blue;
         if (_texture != NULL) 
         {
-        _texture->SetColor(_fg.r, _fg.g, _fg.b);
+            _texture->SetColor(_fg.r, _fg.g, _fg.b);
         }
     }
 }
@@ -72,6 +72,21 @@ void RSprite::SetBlendMode(SDL_BlendMode blending)
     {
         _texture->SetBlendMode( blending );
     }
+}
+
+void RSprite::SetFlipMode(SDL_RendererFlip flip)
+{
+    _flip = flip;
+}
+
+void RSprite::SetAngle(double angle)
+{
+    _angle = angle;
+}
+
+void RSprite::SetCenter(SDL_Point center)
+{
+    _center = center;
 }
 
 void RSprite::SetFrame( int frame )
@@ -126,7 +141,7 @@ void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
             SDL_RenderFillRect(renderer, &bgRect);
         }
         //render texture
-        _texture->Render(renderer, x, y, curFrame);
+        _texture->Render(renderer, x, y, curFrame, _angle, &_center, _flip);
     }
 }
 
@@ -137,7 +152,10 @@ RSprite::RSprite( RTexture* texture, std::vector<SDL_Rect> frames, int animation
     _animSpeed = animationSpeed;
     _fg = rgba;
     _bg = {0,0,0,0};
+    _center = {0,0};
+    _angle = 0.0;
     SetBlendMode( SDL_BLENDMODE_BLEND );
+    SetFlipMode( SDL_FLIP_NONE );
     _currentframe = 0;
 }
 RSprite::~RSprite(){};

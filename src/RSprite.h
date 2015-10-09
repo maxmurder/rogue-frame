@@ -19,6 +19,9 @@ class RSprite
         void SetAlpha(uint8_t alpha);
         void SetBackground(RGBA rgba);
         void SetBlendMode(SDL_BlendMode blending);
+        void SetFlipMode(SDL_RendererFlip flip);
+        void SetCenter(SDL_Point center);
+        void SetAngle(double angle);
         
         //animation interface
         void SetFrame(int frame);
@@ -37,5 +40,8 @@ class RSprite
         int _animSpeed;
         RGBA _fg;
         RGBA _bg;
+        SDL_RendererFlip _flip;
+        SDL_Point _center;
+        double _angle;
 };
 #endif

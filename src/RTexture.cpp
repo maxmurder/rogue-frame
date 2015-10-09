@@ -76,7 +76,7 @@ void RTexture::SetBlendMode( SDL_BlendMode blending)
     SDL_SetTextureBlendMode( _texture, blending);
 }
 
-void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip )
+void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
     SDL_Rect renderQuad = {x, y, _width, _height};
     
@@ -85,7 +85,7 @@ void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip )
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
-    SDL_RenderCopy( renderer, _texture, clip, &renderQuad );
+    SDL_RenderCopyEx( renderer, _texture, clip, &renderQuad, angle, center, flip );
 }
 
 int RTexture::GetWidth()

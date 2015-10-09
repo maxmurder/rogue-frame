@@ -14,7 +14,7 @@ class RTexture
         void SetColor(uint8_t red, uint8_t green, uint8_t blue);//set colour modulation
         void SetAlpha( uint8_t alpha );
         void SetBlendMode( SDL_BlendMode blending);
-        void Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL); // render at point
+        void Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE ); // render at point
         
         //get dimensions
         int GetWidth();
