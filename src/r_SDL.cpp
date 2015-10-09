@@ -1,6 +1,6 @@
 #include <iostream>
-#include "r_SDL.h"
 #include "SDL2/SDL_image.h"
+#include "r_SDL.h"
 
 using namespace std;
 
@@ -98,6 +98,40 @@ SDL_Texture* r_SDL::LoadTexture( std::string path, SDL_Renderer* renderer, int r
     }
     
     return loadedTexture;
+}
+
+SDL_Texture* r_SDL::RenderText( std::string string, TTF_Font* font, SDL_Renderer* renderer, SDL_Color textColor, SDL_Texture* texture)
+{
+    //free texture
+    if (texture != NULL) 
+    {
+        SDL_DestroyTexture (texture);
+    }
+    
+    SDL_Surface* textSurface = TTF_RenderText_Solid( font, string.c_str(), textColor );
+    if (textSurface == NULL )
+    {
+        cout << "Unable to render text: " << string << " :: " << SDL_GetError() << "\n";
+    }else
+    {
+        texture = SDL_CreateTextureFromSurface( renderer, textSurface );
+        if (texture == NULL)
+        {
+            cout << "Unable to create texture from rendered text surface: " << string << " :: " << SDL_GetError() << "\n";  
+        }
+        SDL_FreeSurface(textSurface);
+    }
+    return texture;
+}
+
+TTF_Font* r_SDL::LoadFont( std::string path, int pointSize )
+{
+    TTF_Font* font = TTF_OpenFont( path.c_str(), pointSize);
+    if (font == NULL )
+    {
+        cout << "Unable to load font: " << path << " :: " << TTF_GetError() << "\n";    
+    }
+    return font;
 }
 
 void r_SDL::ApplySurface( int x, int y, SDL_Surface* source, SDL_Surface* destination )

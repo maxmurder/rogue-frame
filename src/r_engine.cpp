@@ -20,9 +20,15 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
         cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << "\n";
         return false;
     }
+    
+    if ( TTF_Init() == -1 )
+    {
+        cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << "\n";
+        return false;
+    }
 
     if ( fullscreen ) {
-        flags = SDL_WINDOW_FULLSCREEN;
+        flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
     
     //initialize window

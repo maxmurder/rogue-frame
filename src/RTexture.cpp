@@ -88,6 +88,22 @@ void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, dou
     SDL_RenderCopyEx( renderer, _texture, clip, &renderQuad, angle, center, flip );
 }
 
+void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font* font, SDL_Color textColor )
+{
+
+    //update the texture
+    FreeTexture();
+    _texture = r_SDL::RenderText(string, font, renderer, textColor, _texture);
+        
+    if (_texture == NULL)
+    {
+        cout << "Text could not be rendered :: " << SDL_GetError() << "\n";
+    } else
+    {
+        SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 
+    }
+}
+
 int RTexture::GetWidth()
 {
     return _width;

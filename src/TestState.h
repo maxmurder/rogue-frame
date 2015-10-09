@@ -2,6 +2,7 @@
 #define TESTSTATE_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "r_SDL.h"
 #include "RSprite.h"
 #include "RTexture.h"
@@ -22,20 +23,24 @@ class TestState: public RGameState {
         
         static TestState* Instance()
         {
-            return &m_TestState;
+            return &_TestState;
         }
     
     protected:
         TestState() { }
     
     private:
-        static TestState m_TestState;
+        static TestState _TestState;
         SDL_Renderer* _renderer;
         RTexture* _texture;
         SDL_Event _event;
         
         RTexture* _spriteTex;
         RSprite* _sprite;
+        
+        TTF_Font* _font;
+        RTexture* _textTex;
+        
 };
 
 #endif
