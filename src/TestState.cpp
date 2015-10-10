@@ -9,28 +9,29 @@ void TestState::Init(RGameEngine* game)
 {
     _texture = new RTexture();
     _texture->LoadFromFile("src/test.bmp", game->renderer);
-    
+    int pnt = 16;
+    _font = r_SDL::LoadFont("data/font/FSEX300.ttf", pnt);
+    uint16_t text[] = {0x263B,0x263A};
     _spriteTex = new RTexture();
-    _spriteTex->LoadFromFile("data/gfx/curses_square_16x16.png", game->renderer, 0xFF,0x00,0xFF);
+    _spriteTex->RenderUnicode( game->renderer, text, _font );
+    //_spriteTex->LoadFromFile("data/gfx/curses_square_16x16.png", game->renderer, 0xFF,0x00,0xFF);
     
-    _font = r_SDL::LoadFont("data/font/FSEX300.ttf", 64);
     _textTex = new RTexture();
     _textTex->RenderText( game->renderer, "Hello World!", _font, {0xFF, 0x00, 0x00, 0xFF} );
     
-    SDL_Rect f1 = {16,0,16,16};
-    SDL_Rect f2 = {32,0,16,16};
-    std::vector<SDL_Rect> frames = {f1,f2};
-    
-    _sprite = new RSprite(_spriteTex, frames);
+    _sprite = new RSprite(_spriteTex, {{0,0,pnt/2,pnt},{pnt/2,0,pnt/2,pnt}} );
+    _sprite->AddAnimation("Test", {{208,32,16,16},{240,32,16,16},{192,112,16,16},{192,80,16,16}} );
     _sprite->SetForeground({0x80,0x00,0xFF,0xFF});
+    _sprite->SetBackground({0xFF,0xFF,0xFF,0xFF});
 }
 
 void TestState::Cleanup(RGameEngine* game)
 {
-   delete _texture;
+    TTF_CloseFont(_font);
+    delete _texture;
    
-   delete _spriteTex;
-   delete _sprite;
+    delete _spriteTex;
+    delete _sprite;
    
 }
 void TestState::Pause(RGameEngine* game){}
@@ -48,6 +49,10 @@ void TestState::HandleEvents(RGameEngine* game)
             {
                 game->Quit();
             }
+            if ( _event.key.keysym.sym == SDLK_SPACE )
+            {
+                _sprite->SetAnimation("Test");
+            }
         }
     }
 }
@@ -56,7 +61,7 @@ void TestState::Update(RGameEngine* game)
 {
     static int i = 0;
     
-    if ( i > 10000)
+    if ( i > 30)
     {
         _sprite->NextFrame();
         i = 0;

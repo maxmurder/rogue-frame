@@ -88,16 +88,29 @@ void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, dou
     SDL_RenderCopyEx( renderer, _texture, clip, &renderQuad, angle, center, flip );
 }
 
-void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font* font, SDL_Color textColor )
+void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font* font, SDL_Color color )
 {
 
     //update the texture
     FreeTexture();
-    _texture = r_SDL::RenderText(string, font, renderer, textColor, _texture);
+    _texture = r_SDL::RenderText(string, font, renderer, color, _texture);
         
     if (_texture == NULL)
     {
         cout << "Text could not be rendered :: " << SDL_GetError() << "\n";
+    } else
+    {
+        SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 
+    }
+}
+
+void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t text[], TTF_Font* font, SDL_Color color )
+{
+    FreeTexture();
+    _texture = r_SDL::RenderUnicode(text, font, renderer, color, _texture);
+    if (_texture == NULL)
+    {
+        cout << "Symbol could not be rendered :: " << SDL_GetError() << "\n";
     } else
     {
         SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 

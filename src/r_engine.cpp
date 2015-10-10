@@ -39,7 +39,7 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
         return false;
     }
     //initilize renderer
-    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if (renderer == NULL)
     {
         cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << "\n";
