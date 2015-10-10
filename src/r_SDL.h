@@ -21,26 +21,4 @@ class r_SDL
         static void ApplySurface( int x, int y, SDL_Surface* source, SDL_Surface* destination ); // apply sdl surface
 };
 
-struct RGBA
-{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
-
-    friend bool operator==(const RGBA& lhs, const RGBA& rhs) 
-    {
-        if (lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a)
-        {
-            return true;
-        }
-        return false;
-    }
-    
-    friend bool operator!=(const RGBA& lhs, const RGBA& rhs)
-    {
-        return !(lhs==rhs);
-    }
-};
-
 #endif

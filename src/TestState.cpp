@@ -9,20 +9,21 @@ void TestState::Init(RGameEngine* game)
 {
     _texture = new RTexture();
     _texture->LoadFromFile("src/test.bmp", game->renderer);
-    int pnt = 16;
-    _font = r_SDL::LoadFont("data/font/FSEX300.ttf", pnt);
-    uint16_t text[] = {0x263B,0x263A};
+    int pnt = 64;
+    _font = r_SDL::LoadFont("data/font/unifont-8.0.01.ttf", pnt);
+    uint16_t sym[] = {0x263B,0x263A,0x007C,0x005C,0x2500,0x002F};
     _spriteTex = new RTexture();
-    _spriteTex->RenderUnicode( game->renderer, text, _font );
+    _spriteTex->RenderUnicode( game->renderer, sym, _font );
     //_spriteTex->LoadFromFile("data/gfx/curses_square_16x16.png", game->renderer, 0xFF,0x00,0xFF);
     
     _textTex = new RTexture();
     _textTex->RenderText( game->renderer, "Hello World!", _font, {0xFF, 0x00, 0x00, 0xFF} );
     
-    _sprite = new RSprite(_spriteTex, {{0,0,pnt/2,pnt},{pnt/2,0,pnt/2,pnt}} );
-    _sprite->AddAnimation("Test", {{208,32,16,16},{240,32,16,16},{192,112,16,16},{192,80,16,16}} );
+    _sprite = new RSprite();
+    _sprite->Init(_spriteTex, {{0,0,pnt/2,pnt},{pnt/2,0,pnt/2,pnt}});
+    _sprite->AddAnimation("Test", {{2*(pnt/2),0,pnt/2,pnt},{3*(pnt/2),0,pnt/2,pnt},{4*(pnt/2),0,pnt/2,pnt},{5*(pnt/2),0,pnt/2,pnt}});
     _sprite->SetForeground({0x80,0x00,0xFF,0xFF});
-    _sprite->SetBackground({0xFF,0xFF,0xFF,0xFF});
+    _sprite->SetBackground({0x00,0x00,0x00,0xFF});
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -49,9 +50,18 @@ void TestState::HandleEvents(RGameEngine* game)
             {
                 game->Quit();
             }
-            if ( _event.key.keysym.sym == SDLK_SPACE )
+            else if ( _event.key.keysym.sym == SDLK_SPACE )
             {
-                _sprite->SetAnimation("Test");
+                static bool der;
+                if (der)
+                {
+                   _sprite->SetAnimation("DEFAULT");
+                   der = false;
+                }else
+                {
+                    _sprite->SetAnimation("Test");
+                    der = true;
+                }
             }
         }
     }

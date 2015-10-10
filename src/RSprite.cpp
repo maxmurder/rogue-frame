@@ -1,6 +1,21 @@
 #include <iostream>
 #include "RSprite.h"
 
+void RSprite::Init( RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed, SDL_Color fg, SDL_Color bg, std::string animation )
+{
+    _texture = texture;
+    _animSpeed = animationSpeed;
+    _fg = fg;
+    _bg = bg;
+    _center = {0,0};
+    _angle = 0.0;
+    AddAnimation(animation, frames );
+    SetAnimation(animation);
+    SetBlendMode( SDL_BLENDMODE_BLEND );
+    SetFlipMode( SDL_FLIP_NONE );
+    _currentframe = 0;
+}
+
 void RSprite::SetTexture(RTexture* texture)
 {
     _texture = texture;
@@ -178,7 +193,43 @@ void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
     }
 }
 
-RSprite::RSprite( RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed, SDL_Color fg, SDL_Color bg, std::string animation )
+RSprite::RSprite()
+{
+    _texture = NULL;
+    _animSpeed = 0;
+    _fg = {0,0,0,0};
+    _bg = {0,0,0,0};
+    _center = {0,0};
+    _angle = 0.0;
+    _currentframe = 0;
+}
+RSprite::~RSprite(){};
+
+void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, uint16_t symbols[], SDL_Color fg, SDL_Color bg, std::string animation, int animationSpeed);
+{
+    _fg = fg;
+    _bg = bg;
+    _animSpeed = animationSpeed;
+    _center = {pntsize/4,pntsize/2};
+    _angle = 0.0;
+    if (_texture == NULL)
+    {
+        _texture = new RTexture();
+        _internalTexutreInstance = true;
+    }else
+    {
+        _texture->FreeTexture();
+        _internalTexutreInstance = false;
+    }
+    CreateUnicodeSpriteSheet(renderer, font, symbols);
+    AddAnimation(animation, {0,0,pntsize/2,pntsize});
+    SetAnimation(animation);
+    SetBlendMode( SDL_BLENDMODE_BLEND );
+    SetFlipMode( SDL_FLIP_NONE );
+    _currentframe = 0;
+}
+
+void RUnicodeSprite::Init( SDL_Texture* texture, TTF_Font* font, int pntsize, uint16_t symbols[], SDL_Color fg, SDL_Color bg, std::string animation, int animationSpeed);
 {
     _texture = texture;
     _animSpeed = animationSpeed;
@@ -192,7 +243,33 @@ RSprite::RSprite( RTexture* texture, std::vector<SDL_Rect> frames, int animation
     SetFlipMode( SDL_FLIP_NONE );
     _currentframe = 0;
 }
-RSprite::~RSprite(){};
+
+
+SDL_Texture* RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, uint16_t symbols[])
+{
+    _texture->RenderUnicode(renderer, font, symbols);
+}
+
+RUnicodeSprite::RUnicodeSprite()
+{
+    _texture = NULL;
+    _animSpeed = 0;
+    _fg = {0,0,0,0};
+    _bg = {0,0,0,0};
+    _center = {0,0};
+    _angle = 0.0;
+    _currentframe = 0;
+    _pntsize = 0;
+}
+
+RUnicodeSprite::~RUnicodeSprite()
+{
+    _texture->FreeTexture();
+    if(_internalTexutreInstance)
+    {
+        delete _texture;
+    }
+}
 
 
 

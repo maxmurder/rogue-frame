@@ -10,6 +10,7 @@
 class RSprite
 {
     public:
+        void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 0, SDL_Color fg = {0,0,0,0}, SDL_Color bg = {0,0,0,0}, std::string animation = "DEFAULT" );
         void SetTexture(RTexture* texture);
         void AddAnimation(std::string animation, std::vector<SDL_Rect> frames); //adds animation to animation list
         void RemoveAnimation(std::string animation); //removes an animation
@@ -35,10 +36,10 @@ class RSprite
         void UpdateAnimation(); //update animation logic
         void Render(SDL_Renderer* renderer, int x, int y); //render sprite at point
         
-        RSprite(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 0, SDL_Color fg = {0,0,0,0}, SDL_Color bg = {0,0,0,0}, std::string animation = "DEFAULT");
+        RSprite();
         ~RSprite();
     
-    private:
+    protected:
         RTexture* _texture;
         std::map<std::string, std::vector<SDL_Rect>> _animations;
         std::string _currentAnimation;
@@ -51,5 +52,22 @@ class RSprite
         double _angle;
         
         void UpdateTexture();
+};
+
+class RUnicodeSprite: public RSprite
+{
+    public:
+        void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, uint16_t symbols[], SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
+        void Init( RTexture* texture, TTF_Font* font, int pntsize, uint16_t symbols[], SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
+        
+        RUnicodeSprite(); 
+       ~RUnicodeSprite();
+
+    private:
+        SDL_Texture* CreateUnicodeSpriteSheet(TTF_Font* font, uint16_t symbols[]);
+        
+        int _pntsize;
+        uint16_t _symbols[];
+        bool _internalTexutreInstance; //true if Init Created its own RTexture instance. Used for cleanup.
 };
 #endif
