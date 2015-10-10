@@ -33,6 +33,8 @@ class RSprite
         void SetFrame(uint16_t frame); // set current frame
         void NextFrame(); // go to next frame
         void PreviousFrame(); //go to previous frame
+        void Pause();
+        void Play();
         
         void UpdateAnimation(); //update animation logic
         void Render(SDL_Renderer* renderer, int x, int y); //render sprite at point
@@ -54,6 +56,11 @@ class RSprite
         
         void UpdateTexture();
         void RenderBackground(SDL_Renderer* renderer, SDL_Rect frame);
+    
+        void ResetAnimCounter();
+    private:
+        int _animCount;
+        bool _paused;
 };
 
 class RUnicodeSprite: public RSprite

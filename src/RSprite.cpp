@@ -120,11 +120,13 @@ void RSprite::SetAnimation(std::string animation, uint16_t frame)
 {
     _currentAnimation = animation;
     _currentframe = frame;
+    ResetAnimCounter();
 }
 
 void RSprite::SetFrame( uint16_t frame )
 {
     _currentframe = frame;
+    ResetAnimCounter();
 }
 
 void RSprite::NextFrame()
@@ -149,12 +151,21 @@ void RSprite::PreviousFrame()
     }
 }
 
+void RSprite::Pause()
+{
+    _paused = true;
+}
+
+void RSprite::Play()
+{
+    _paused = false;
+}
+
 void RSprite::UpdateAnimation() 
 {
-    static int i = 0;
-    if(_animSpeed != 0)
+    if(_animSpeed != 0 || _paused)
     {
-        if ( i > abs(_animSpeed))
+        if ( _animCount > abs(_animSpeed))
         {   
             if(_animSpeed > 0)
             {
@@ -163,9 +174,9 @@ void RSprite::UpdateAnimation()
             {
                 PreviousFrame();
             }
-            i = 0;
+            ResetAnimCounter();
         }
-        i++;
+        _animCount++;
     }
 }
 
@@ -212,6 +223,11 @@ void RSprite::RenderBackground(SDL_Renderer* renderer, SDL_Rect frame)
     SDL_RenderFillRect(renderer, &frame);
 }
 
+void RSprite::ResetAnimCounter()
+{
+    _animCount = 0;
+}
+
 RSprite::RSprite()
 {
     _texture = NULL;
@@ -221,6 +237,8 @@ RSprite::RSprite()
     _center = {0,0};
     _angle = 0.0;
     _currentframe = 0;
+    _animCount = 0;
+    _paused = false;
 }
 RSprite::~RSprite(){}
 
