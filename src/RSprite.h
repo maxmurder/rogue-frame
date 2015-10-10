@@ -1,6 +1,7 @@
 #ifndef RSPRITE_H
 #define RSPRITE_H
 
+#include <array>
 #include <vector>
 #include <map>
 #include <SDL2/SDL.h>
@@ -10,7 +11,7 @@
 class RSprite
 {
     public:
-        void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 0, SDL_Color fg = {0,0,0,0}, SDL_Color bg = {0,0,0,0}, std::string animation = "DEFAULT" );
+        void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 30, SDL_Color fg = {0,0,0,0}, SDL_Color bg = {0,0,0,0}, std::string animation = "DEFAULT" );
         void SetTexture(RTexture* texture);
         void AddAnimation(std::string animation, std::vector<SDL_Rect> frames); //adds animation to animation list
         void RemoveAnimation(std::string animation); //removes an animation
@@ -52,22 +53,30 @@ class RSprite
         double _angle;
         
         void UpdateTexture();
+        void RenderBackground(SDL_Renderer* renderer, SDL_Rect frame);
 };
 
 class RUnicodeSprite: public RSprite
 {
     public:
-        void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, uint16_t symbols[], SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
-        void Init( RTexture* texture, TTF_Font* font, int pntsize, uint16_t symbols[], SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
+        //initilizes sprite and generates spritesheet from symbols[].
+        void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
+        //initilizes sprite with external spritesheet with symbols[].
+        void Init( RTexture* texture, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
+        void AddAnimation(std::string animation, std::vector<uint16_t> frames) ; //add an animation as a list of symbols
+        
+        int GetPntSize();
+    
+        void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //renders a symbol. Renders last symbol in _symbols if symbol is not in spritesheet.
         
         RUnicodeSprite(); 
        ~RUnicodeSprite();
 
     private:
-        SDL_Texture* CreateUnicodeSpriteSheet(TTF_Font* font, uint16_t symbols[]);
-        
+        void CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols);
+        uint16_t GetSymbolIndex(uint16_t symbol);
         int _pntsize;
-        uint16_t _symbols[];
+        std::vector<uint16_t> _symbols;
         bool _internalTexutreInstance; //true if Init Created its own RTexture instance. Used for cleanup.
 };
 #endif

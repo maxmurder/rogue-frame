@@ -36,7 +36,8 @@ class TestState: public RGameState {
         SDL_Event _event;
         
         RTexture* _spriteTex;
-        RSprite* _sprite;
+        RUnicodeSprite* _sprite;
+        RUnicodeSprite* _unicode;
         
         TTF_Font* _font;
         RTexture* _textTex;

@@ -6,24 +6,43 @@
 TestState TestState::_TestState;
 
 void TestState::Init(RGameEngine* game)
-{
+{   
+    //load background texture
     _texture = new RTexture();
     _texture->LoadFromFile("src/test.bmp", game->renderer);
+    
+    //setup font
     int pnt = 64;
     _font = r_SDL::LoadFont("data/font/unifont-8.0.01.ttf", pnt);
-    uint16_t sym[] = {0x263B,0x263A,0x007C,0x005C,0x2500,0x002F};
-    _spriteTex = new RTexture();
-    _spriteTex->RenderUnicode( game->renderer, sym, _font );
-    //_spriteTex->LoadFromFile("data/gfx/curses_square_16x16.png", game->renderer, 0xFF,0x00,0xFF);
     
+    //create text element
     _textTex = new RTexture();
     _textTex->RenderText( game->renderer, "Hello World!", _font, {0xFF, 0x00, 0x00, 0xFF} );
     
-    _sprite = new RSprite();
-    _sprite->Init(_spriteTex, {{0,0,pnt/2,pnt},{pnt/2,0,pnt/2,pnt}});
-    _sprite->AddAnimation("Test", {{2*(pnt/2),0,pnt/2,pnt},{3*(pnt/2),0,pnt/2,pnt},{4*(pnt/2),0,pnt/2,pnt},{5*(pnt/2),0,pnt/2,pnt}});
+    //create unicode spritesheet texture
+    std::vector<uint16_t> sym = {0x263B,0x263A,0x007C,0x005C,0x2500,0x002F};
+    uint16_t *symArray =  &sym[0];
+    
+    _spriteTex = new RTexture();
+    _spriteTex->RenderUnicode( game->renderer, symArray, _font );
+    
+    //create unicode sprite from unicode spritesheet
+    _sprite = new RUnicodeSprite();
+    _sprite->Init(_spriteTex, _font, pnt, sym);
+    _sprite->AddAnimation("Test", {0x263B,0x263A});
+    _sprite->AddAnimation("Test1", {0x007C,0x005C,0x2500,0x002F});
+    _sprite->SetAnimation("Test");
     _sprite->SetForeground({0x80,0x00,0xFF,0xFF});
     _sprite->SetBackground({0x00,0x00,0x00,0xFF});
+    
+    //create unicode sprite with internal spritesheet texture
+    _unicode = new RUnicodeSprite();
+    _unicode->Init(game->renderer, _font, pnt, {0x263B,0x263A,0x007C,0x005C,0x2500,0x002F});
+    _unicode->AddAnimation("Test", {0x263B,0x263A});
+    _unicode->AddAnimation("Test1", {0x007C,0x005C,0x2500,0x002F});
+    _unicode->SetAnimation("Test");
+    _unicode->SetForeground({0x80,0x00,0xFF,0xFF});
+    _unicode->SetBackground({0x00,0x00,0x00,0xFF});
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -55,11 +74,13 @@ void TestState::HandleEvents(RGameEngine* game)
                 static bool der;
                 if (der)
                 {
-                   _sprite->SetAnimation("DEFAULT");
+                   _sprite->SetAnimation("Test");
+                   _unicode->SetAnimation("Test");
                    der = false;
                 }else
                 {
-                    _sprite->SetAnimation("Test");
+                    _sprite->SetAnimation("Test1");
+                    _unicode->SetAnimation("Test1");
                     der = true;
                 }
             }
@@ -69,14 +90,8 @@ void TestState::HandleEvents(RGameEngine* game)
 
 void TestState::Update(RGameEngine* game)
 {
-    static int i = 0;
-    
-    if ( i > 30)
-    {
-        _sprite->NextFrame();
-        i = 0;
-    }
-    i++;
+    _sprite->UpdateAnimation();
+    _unicode->UpdateAnimation();
 }
 
 void TestState::Draw(RGameEngine* game)
@@ -88,6 +103,7 @@ void TestState::Draw(RGameEngine* game)
   
     _textTex->Render(game->renderer, 320 - _textTex->GetWidth() / 2, 240 - _textTex->GetHeight() / 2 );
     _sprite->Render(game->renderer, 0, 0);
+    _unicode->Render(game->renderer, 640-_unicode->GetPntSize()/2, 480 - _unicode->GetPntSize());
     
     SDL_RenderPresent( game->renderer );
 } 

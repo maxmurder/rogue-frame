@@ -76,7 +76,7 @@ void RTexture::SetBlendMode( SDL_BlendMode blending)
     SDL_SetTextureBlendMode( _texture, blending);
 }
 
-void RTexture::Render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
+void RTexture::Render( SDL_Renderer* renderer, const int x, const int y, const SDL_Rect* clip, const double angle, const SDL_Point* center, const SDL_RendererFlip flip )
 {
     SDL_Rect renderQuad = {x, y, _width, _height};
     
@@ -104,10 +104,10 @@ void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font*
     }
 }
 
-void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t text[], TTF_Font* font, SDL_Color color )
+void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t symbols[], TTF_Font* font, SDL_Color color )
 {
     FreeTexture();
-    _texture = r_SDL::RenderUnicode(text, font, renderer, color, _texture);
+    _texture = r_SDL::RenderUnicode(symbols, font, renderer, color, _texture);
     if (_texture == NULL)
     {
         cout << "Symbol could not be rendered :: " << SDL_GetError() << "\n";
@@ -116,6 +116,7 @@ void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t text[], TTF_Font*
         SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 
     }
 }
+
 
 int RTexture::GetWidth()
 {
