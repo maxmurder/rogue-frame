@@ -22,7 +22,7 @@ void TestState::Init(RGameEngine* game)
     std::vector<SDL_Rect> frames = {f1,f2};
     
     _sprite = new RSprite(_spriteTex, frames);
-    _sprite->SetRGBA({0x80,0x00,0xFF,0xFF});
+    _sprite->SetForeground({0x80,0x00,0xFF,0xFF});
 }
 
 void TestState::Cleanup(RGameEngine* game)

@@ -65,6 +65,7 @@ void RGameEngine::Cleanup()
     SDL_DestroyWindow( window );
     SDL_DestroyRenderer( renderer);
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit();
     
     cout << "RGameEngine Cleanup\n";

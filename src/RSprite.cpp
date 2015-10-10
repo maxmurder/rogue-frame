@@ -1,3 +1,4 @@
+#include <iostream>
 #include "RSprite.h"
 
 void RSprite::SetTexture(RTexture* texture)
@@ -5,19 +6,32 @@ void RSprite::SetTexture(RTexture* texture)
     _texture = texture;
 }
 
-void RSprite::PushFrames(std::vector<SDL_Rect> frames)
+void RSprite::AddAnimation(std::string animation, std::vector<SDL_Rect> frames)
+{
+    _animations.insert( std::pair<std::string, std::vector<SDL_Rect>>(animation, frames) );
+}
+
+void RSprite::RemoveAnimation(std::string animation)
+{
+    _animations.erase( animation );
+}
+
+void RSprite::ClearAnimations()
+{
+    _animations.clear();
+}
+
+void RSprite::PushFrames(std::string animation, std::vector<SDL_Rect> frames)
 {
     for (auto &f : frames)
     {
-        _frames.push_back(f);
+        _animations[animation].push_back(f);
     }  
 }
 
-void RSprite::ClearFrames()
+void RSprite::ClearFrames(std::string animation)
 {
-    _frames.clear();
-    _currentframe = 0;
-    _animSpeed = 0;
+    _animations[animation].clear();
 }
 
 void RSprite::SetAnimationSpeed( int animationSpeed )
@@ -25,27 +39,22 @@ void RSprite::SetAnimationSpeed( int animationSpeed )
     _animSpeed = animationSpeed;
 }
 
-void RSprite::SetRGBA( RGBA rgba )
+void RSprite::SetForeground(SDL_Color color)
 {
-    _fg = rgba;
-    if (_texture != NULL) 
-    { 
-        _texture->SetColor(_fg.r, _fg.g, _fg.b);
-        _texture->SetAlpha(_fg.a);
-    }
+    _fg = color;
 }
 
-void RSprite::SetColor(uint8_t red, uint8_t green, uint8_t blue)
+void RSprite::SetBackground(SDL_Color color)
 {
-    if(red != _fg.r || green != _fg.g || blue != _fg.b)
+    _bg = color;
+}
+
+void RSprite::UpdateTexture()
+{
+    if (_texture != NULL) 
     {
-        _fg.r = red;
-        _fg.g = green;
-        _fg.b = blue;
-        if (_texture != NULL) 
-        {
-            _texture->SetColor(_fg.r, _fg.g, _fg.b);
-        }
+        _texture->SetColor(_fg.r, _fg.g, _fg.b);
+        _texture->SetAlpha(_fg.a);
     }
 }
 
@@ -59,11 +68,14 @@ void RSprite::SetAlpha(uint8_t alpha)
             _texture->SetAlpha( _fg.a );
         }
     }
-}
-
-void RSprite::SetBackground(RGBA rgba)
-{
-    _bg = rgba;
+    if(alpha != _bg.a)
+    {
+        _bg.a = alpha;
+        if (_texture != NULL) 
+        {
+            _texture->SetAlpha( _bg.a );
+        }
+    }
 }
 
 void RSprite::SetBlendMode(SDL_BlendMode blending)
@@ -89,14 +101,20 @@ void RSprite::SetCenter(SDL_Point center)
     _center = center;
 }
 
-void RSprite::SetFrame( int frame )
+void RSprite::SetAnimation(std::string animation, uint16_t frame)
+{
+    _currentAnimation = animation;
+    _currentframe = frame;
+}
+
+void RSprite::SetFrame( uint16_t frame )
 {
     _currentframe = frame;
 }
 
 void RSprite::NextFrame()
 {
-    if ( _currentframe < _frames.size()-1 )
+    if ( _currentframe < _animations[_currentAnimation].size()-1 )
     {
         _currentframe++;    
     }else
@@ -112,7 +130,7 @@ void RSprite::PreviousFrame()
         _currentframe--;
     }else
     {
-        _currentframe = _frames.size()-1;
+        _currentframe = _animations[_currentAnimation].size()-1;
     }
 }
 
@@ -125,35 +143,51 @@ void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
 {
     if (_texture != NULL)
     {
-        if (_currentframe >= _frames.size()-1)
+        if (_animations.size() > 0)
         {
-            _currentframe = _frames.size()-1;
-        }
+            if (_animations.count(_currentAnimation) == 0 )
+            {
+                _currentAnimation = _animations.begin()->first;
+            }
+            if (_currentframe >= _animations[_currentAnimation].size()-1)
+            {
+                _currentframe = _animations[_currentAnimation].size()-1;
+            }
+            
+            SDL_Rect* curFrame = &_animations[_currentAnimation].at(_currentframe);
         
-        SDL_Rect* curFrame = &_frames.at(_currentframe);
-        
-        //render background
-        if (_bg.a > 0)
+            //render background
+            if (_bg.a > 0)
+            {
+                SDL_Rect bgRect = {x, y, curFrame->w, curFrame->h};
+                SDL_SetRenderDrawColor(renderer, _bg.r, _bg.g, _bg.b, _bg.a);
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_RenderFillRect(renderer, &bgRect);
+            }
+            //update texture
+            UpdateTexture();
+            //render texture
+            _texture->Render(renderer, x, y, curFrame, _angle, &_center, _flip);
+        }else
         {
-            SDL_Rect bgRect = {x, y, curFrame->w, curFrame->h};
-            SDL_SetRenderDrawColor(renderer, _bg.r, _bg.g, _bg.b, _bg.a);
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_RenderFillRect(renderer, &bgRect);
+            std::cout << "Sprite could not be rendered :: Missing animation \n";
         }
-        //render texture
-        _texture->Render(renderer, x, y, curFrame, _angle, &_center, _flip);
+    }else
+    {
+        std::cout << "Sprite could not be rendered :: Missing texture \n";
     }
 }
 
-RSprite::RSprite( RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed, RGBA rgba )
+RSprite::RSprite( RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed, SDL_Color fg, SDL_Color bg, std::string animation )
 {
     _texture = texture;
-    _frames = frames;
     _animSpeed = animationSpeed;
-    _fg = rgba;
-    _bg = {0,0,0,0};
+    _fg = fg;
+    _bg = bg;
     _center = {0,0};
     _angle = 0.0;
+    AddAnimation(animation, frames );
+    SetAnimation(animation);
     SetBlendMode( SDL_BLENDMODE_BLEND );
     SetFlipMode( SDL_FLIP_NONE );
     _currentframe = 0;
