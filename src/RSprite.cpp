@@ -349,24 +349,40 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
     }
 }
 
-void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string symbols)
+void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string symbols, int width)
 {
     if(_texture != NULL )
-    {   
-        for (uint16_t i = 0; i < symbols.length(); i++)
+    { 
+        int i = 0;
+        for (auto &c : symbols)
         {
-            SDL_Rect symFrame = {0,0,_w,_h};
-            symFrame = { GetSymbolIndex( symbols[i] ) * _w , 0 , _w , _h };
+            int xOffset = 0;
+            int yOffset = 0;
+            SDL_Rect frame = {0,0,_w,_h};   
+            
+            //calculate offsets
+            if (width >= _w)
+            {
+                xOffset = (i * _w ) % width;
+                yOffset = _h * ( ( i * _w ) / width );
+            }else
+            {
+              xOffset = (i * _w);
+            }
+            i++;
+            
+            //choose frame
+            frame = { GetSymbolIndex(c) * _w , 0 , _w , _h };
             
             //render background
             if (_bg.a > 0)
             {
-                RenderBackground(renderer , { x + i * _w , y, _w, _h});
+                RenderBackground(renderer , { x + xOffset , y + yOffset, _w, _h});
             }
-            //update texture
+            
+            //update texture and render
             UpdateTexture();
-            //render texture
-            _texture->Render(renderer, x + i * _w , y, &symFrame, _angle, &_center, _flip);
+            _texture->Render(renderer, x + xOffset , y + yOffset, &frame, _angle, &_center, _flip);
         }
     }else
     {

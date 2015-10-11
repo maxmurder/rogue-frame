@@ -28,11 +28,16 @@ class RGameEngine
     SDL_Window* window;
     SDL_Renderer* renderer;
     
+    int GetWindowWidth();
+    int GetWindowHeight();
+    
     private:
     std::vector<RGameState*> states; //game state stack
     
     bool m_fullscreen;
     bool m_running;
+    
+    int m_window_width, m_window_height; 
 };
 
 #endif

@@ -38,6 +38,8 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
         cout << "Error setting up SDL window" << " :: " << SDL_GetError() << endl;
         return false;
     }
+    SDL_GetWindowSize(window, &m_window_width, &m_window_height);
+    
     //initilize renderer
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if (renderer == NULL)
@@ -131,3 +133,14 @@ void RGameEngine::PopState()
         states.back()->Resume(this);
     }
 }
+
+int RGameEngine::GetWindowWidth()
+{
+    return m_window_width;
+}
+
+int RGameEngine::GetWindowHeight()
+{
+    return m_window_height;
+}
+

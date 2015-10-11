@@ -1,7 +1,10 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include "TestState.h"
 #include "r_SDL.h"
+
+using namespace std;
 
 TestState TestState::_TestState;
 
@@ -10,7 +13,6 @@ void TestState::Init(RGameEngine* game)
     //setup font
     int pnt = 16;
     _font = r_SDL::LoadFont("data/font/unifont-8.0.01.ttf", pnt);
-    //_font = r_SDL::LoadFont("/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf", pnt);
     
     //load background texture
     _textures.push_back(new RTexture());
@@ -53,18 +55,31 @@ void TestState::Init(RGameEngine* game)
     _sprites[2]->SetBackground({0x00,0x00,0x00,0xFF});
 
     TTF_CloseFont(_font);
+    
+    //setup timer
+    _timers.push_back(new RTimer());
+    _timers[0]->Start();
+    
+    //start text input
+    SDL_StartTextInput();
+    _y = game->GetWindowHeight() / 2;
+    _x = game->GetWindowWidth() / 2;
 }
 
 void TestState::Cleanup(RGameEngine* game)
 {
-    for (auto &p : _textures)
+    for (auto &spr : _sprites)
     {
-        delete p;
-    }   
-    for (auto &p : _sprites)
-    {
-        delete p;
+        delete spr;
     }
+    for (auto &tex : _textures)
+    {
+        delete tex;
+    }   
+    for (auto &tim : _timers)
+    {
+        delete tim;
+    }    
 }
 void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
@@ -78,11 +93,36 @@ void TestState::HandleEvents(RGameEngine* game)
         } else if ( _event.type == SDL_MOUSEMOTION || _event.type == SDL_MOUSEBUTTONDOWN || _event.type == SDL_MOUSEBUTTONUP )
         {
             SDL_GetMouseState( &_mouse_x, &_mouse_y);
+            if ( _event.type == SDL_MOUSEBUTTONDOWN )
+            {
+                _x = _mouse_x;
+                _y = _mouse_y;
+            }
+            
+            //handle text input
+        } else if ( _event.type == SDL_KEYDOWN )
+        {
+            if( _event.key.keysym.sym == SDLK_BACKSPACE && _input.length() > 0 )
+            {
+                _input.pop_back();
+            } else if ( _event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
+            {
+                SDL_SetClipboardText( _input.c_str() );
+            } else if ( _event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
+            {
+                _input = SDL_GetClipboardText();
+            }
+        } else if ( _event.type == SDL_TEXTINPUT )
+        {
+            if( !( ( _event.text.text[0] == 'c' || _event.text.text[0] == 'C') && (_event.text.text[0] == 'v' && _event.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL ) )
+            {
+                _input += _event.text.text;
+            }
         }
     }
     
     const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-    if ( currentKeyStates[SDL_SCANCODE_RETURN] )
+    if ( currentKeyStates[SDL_SCANCODE_ESCAPE] )
     {
         game->Quit();
     }
@@ -99,17 +139,35 @@ void TestState::HandleEvents(RGameEngine* game)
             der = true;
         }
     }
+    if ( currentKeyStates[SDL_SCANCODE_UP] )
+    {
+        _y-=1;
+    }
+    if ( currentKeyStates[SDL_SCANCODE_DOWN] )
+    {
+        _y+=1;
+    }
+    if ( currentKeyStates[SDL_SCANCODE_LEFT] )
+    {
+        _x-=1;
+    }
+    if ( currentKeyStates[SDL_SCANCODE_RIGHT] )
+    {
+        _x+=1;
+    }
+    
 }
 
 void TestState::Update(RGameEngine* game)
 {
-
-    int last = _ticks;
-    _ticks = SDL_GetTicks();
-    _ms = (_ticks - last);
-    _fps = _ms * 1000;
+    //calculate fps
+    int thisT = _timers[0]->GetTicks();
+    static int lastT;
+    _ms =  thisT - lastT;
+    lastT = thisT;
+    _fps = _count / (thisT / 1000.f);
     
-    
+    //update animations
     for(auto &s : _sprites)
     {
         s->UpdateAnimation();
@@ -124,15 +182,32 @@ void TestState::Draw(RGameEngine* game)
     //render background
     _textures[0]->Render(game->renderer, 0, 0);
     
-    std::string msg;
-    msg = "x:" + std::to_string(_mouse_x) + " y:" + std::to_string(_mouse_y);
+    //render mouse and fps
+    stringstream msg;
+    msg.precision(4);
+    msg << "x:" << _mouse_x << " y:" << _mouse_y;
+    _sprites[0]->RenderSymbol(game->renderer, 0, game->GetWindowHeight() - _sprites[0]->GetHeight(), msg.str());
+    msg.str(std::string());
+    msg << "fps:" << _fps << " ms:" << _ms;
+    _sprites[0]->RenderSymbol(game->renderer, game->GetWindowWidth() - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
     
-    _sprites[0]->RenderSymbol(game->renderer, 0, 480 - _sprites[0]->GetHeight(), msg);
-    msg = "fps:" + std::to_string(_fps) + " ms:" + std::to_string(_ms);
-    _sprites[0]->RenderSymbol(game->renderer, 640 - msg.length() * _sprites[0]->GetWidth()  , 0 , msg);
-    
+    //render test sprites
     _sprites[1]->Render(game->renderer, 0 , 0);
-    _sprites[2]->Render(game->renderer, 640 - _sprites[2]->GetWidth() , 480 - _sprites[2]->GetHeight());
+    _sprites[2]->Render(game->renderer, game->GetWindowWidth() - _sprites[2]->GetWidth() , game->GetWindowHeight() - _sprites[2]->GetHeight());
+    _sprites[0]->RenderSymbol(game->renderer, _x, _y, '@');
+    
+    
+    //render test latin set
+    string latin;
+    for( auto &s : UNICODE_LATIN_BASIC)
+    {
+        latin += s;
+    }
+    _sprites[0]->RenderSymbol(game->renderer, 0 , _sprites[0]->GetHeight(), latin, game->GetWindowWidth() );
+    
+    //render input text
+    _sprites[0]->RenderSymbol(game->renderer, game->GetWindowWidth() / 2 - ( _input.size() * _sprites[0]->GetWidth() ) / 2, game->GetWindowHeight() / 2 - _sprites[0]->GetHeight(), _input );
     
     SDL_RenderPresent( game->renderer );
+    _count++;
 } 
