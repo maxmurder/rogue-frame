@@ -24,7 +24,7 @@ bool RTexture::LoadFromFile( std::string path, SDL_Renderer* renderer )
     newTexture = r_SDL::LoadTexture( path, renderer );
     if ( newTexture == NULL )
     {
-        cout << "RTexture could not load " << SDL_GetError() << "\n";
+        cout << "RTexture could not load " << SDL_GetError() << endl;
     } else
     {
        SDL_QueryTexture( newTexture, NULL, NULL, &_width, &_height );
@@ -41,7 +41,7 @@ bool RTexture::LoadFromFile( std::string path, SDL_Renderer* renderer, int red, 
     newTexture = r_SDL::LoadTexture( path, renderer, red, green, blue );
     if ( newTexture == NULL )
     {
-        cout << "RTexture could not load :: " << SDL_GetError() << "\n";
+        cout << "RTexture could not load :: " << SDL_GetError() << endl;
     } else
     {
        SDL_QueryTexture( newTexture, NULL, NULL, &_width, &_height ); 
@@ -97,7 +97,7 @@ void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font*
         
     if (_texture == NULL)
     {
-        cout << "Text could not be rendered :: " << SDL_GetError() << "\n";
+        cout << "Text could not be rendered :: " << SDL_GetError() << endl;
     } else
     {
         SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 
@@ -110,7 +110,7 @@ void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t symbols[], TTF_Fo
     _texture = r_SDL::RenderUnicode(symbols, font, renderer, color, _texture);
     if (_texture == NULL)
     {
-        cout << "Symbol could not be rendered :: " << SDL_GetError() << "\n";
+        cout << "Symbol could not be rendered :: " << SDL_GetError() << endl;
     } else
     {
         SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 

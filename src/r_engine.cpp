@@ -12,18 +12,18 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     //initialize SDL
     if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
     {
-        cout << "SDL initilization failure" << " :: " << SDL_GetError() << "\n";
+        cout << "SDL initilization failure" << " :: " << SDL_GetError() << endl;
         return false;
     }
     if ( !(IMG_Init( imgFlag) & imgFlag ) )
     {
-        cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << "\n";
+        cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << endl;
         return false;
     }
     
     if ( TTF_Init() == -1 )
     {
-        cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << "\n";
+        cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << endl;
         return false;
     }
 
@@ -35,14 +35,14 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags );
     if (window == NULL)
     {
-        cout << "Error setting up SDL window" << " :: " << SDL_GetError() << "\n";
+        cout << "Error setting up SDL window" << " :: " << SDL_GetError() << endl;
         return false;
     }
     //initilize renderer
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if (renderer == NULL)
     {
-        cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << "\n";
+        cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << endl;
         return false;
     }
     SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -68,7 +68,7 @@ void RGameEngine::Cleanup()
     TTF_Quit();
     SDL_Quit();
     
-    cout << "RGameEngine Cleanup\n";
+    cout << "RGameEngine Cleanup" << endl;
 }
 
 void RGameEngine::HandleEvents() 

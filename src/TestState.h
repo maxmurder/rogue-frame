@@ -35,9 +35,8 @@ class TestState: public RGameState {
         RTexture* _texture;
         SDL_Event _event;
         
+        std::vector<RUnicodeSprite*> _sprites;
         RTexture* _spriteTex;
-        RUnicodeSprite* _sprite;
-        RUnicodeSprite* _unicode;
         
         TTF_Font* _font;
         RTexture* _textTex;

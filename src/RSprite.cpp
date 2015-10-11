@@ -1,7 +1,9 @@
 #include <iostream>
 #include "RSprite.h"
 
-void RSprite::Init( RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed, SDL_Color fg, SDL_Color bg, std::string animation )
+using namespace std;
+
+void RSprite::Init( RTexture* texture, vector<SDL_Rect> frames, int animationSpeed, SDL_Color fg, SDL_Color bg, string animation )
 {
     _texture = texture;
     _animSpeed = animationSpeed;
@@ -21,12 +23,12 @@ void RSprite::SetTexture(RTexture* texture)
     _texture = texture;
 }
 
-void RSprite::AddAnimation(std::string animation, std::vector<SDL_Rect> frames)
+void RSprite::AddAnimation(string animation, vector<SDL_Rect> frames)
 {
-    _animations.insert( std::pair<std::string, std::vector<SDL_Rect>>(animation, frames) );
+    _animations.insert( pair<string, vector<SDL_Rect>>(animation, frames) );
 }
 
-void RSprite::RemoveAnimation(std::string animation)
+void RSprite::RemoveAnimation(string animation)
 {
     _animations.erase( animation );
 }
@@ -36,7 +38,7 @@ void RSprite::ClearAnimations()
     _animations.clear();
 }
 
-void RSprite::PushFrames(std::string animation, std::vector<SDL_Rect> frames)
+void RSprite::PushFrames(string animation, vector<SDL_Rect> frames)
 {
     for (auto &f : frames)
     {
@@ -44,7 +46,7 @@ void RSprite::PushFrames(std::string animation, std::vector<SDL_Rect> frames)
     }  
 }
 
-void RSprite::ClearFrames(std::string animation)
+void RSprite::ClearFrames(string animation)
 {
     _animations[animation].clear();
 }
@@ -116,7 +118,7 @@ void RSprite::SetCenter(SDL_Point center)
     _center = center;
 }
 
-void RSprite::SetAnimation(std::string animation, uint16_t frame)
+void RSprite::SetAnimation(string animation, uint16_t frame)
 {
     _currentAnimation = animation;
     _currentframe = frame;
@@ -208,11 +210,11 @@ void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
             _texture->Render(renderer, x, y, curFrame, _angle, &_center, _flip);
         }else
         {
-            std::cout << "Sprite could not be rendered :: Missing animation \n";
+            cout << "Sprite could not be rendered :: Missing animation" << endl;
         }
     }else
     {
-        std::cout << "Sprite could not be rendered :: Missing texture \n";
+        cout << "Sprite could not be rendered :: Missing texture" << endl;
     }
 }
 
@@ -244,7 +246,7 @@ RSprite::~RSprite(){}
 
 /*-----------------------------------------RUnicodeSprite--------------------------------------------------*/
 
-void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg, SDL_Color bg, std::string animation, int animationSpeed)
+void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, vector<uint16_t> symbols, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
     //init variables
     _fg = fg;
@@ -275,7 +277,7 @@ void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, 
     SetFlipMode( SDL_FLIP_NONE );
 }
 
-void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg, SDL_Color bg, std::string animation, int animationSpeed)
+void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vector<uint16_t> symbols, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
     //init variables
     _texture = texture;
@@ -303,13 +305,13 @@ void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, std::
         SetFlipMode( SDL_FLIP_NONE );
     }else
     {
-        std::cout << "Sprite could not be initilized :: Missing texture \n";
+        cout << "Sprite could not be initilized :: Missing texture" << endl;
     }
 }
 
-void RUnicodeSprite::AddAnimation( std::string animation, std::vector<uint16_t> frames)
+void RUnicodeSprite::AddAnimation( string animation, vector<uint16_t> frames)
 {
-    std::vector<SDL_Rect> animationFrames;
+    vector<SDL_Rect> animationFrames;
     for( auto &s : frames)
     {
         uint16_t frame = 0;
@@ -323,20 +325,9 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
 {
     if(_texture != NULL )
     {   
-        bool success = false;
         SDL_Rect symFrame = {0,0,_pntsize/2,_pntsize};
-        for( uint16_t s = 0; s < _symbols.size(); s++ )
-        {
-            if( _symbols[s] == symbol)
-            {
-                symFrame = {s*(_pntsize/2),0,_pntsize/2,_pntsize};
-                success = true;
-            }   
-        }
-        if (!success)
-        {
-            std::cout << "RSprite :: Symbol not found in list \n";
-        }
+        symFrame = { GetSymbolIndex(symbol)*(_pntsize/2) , 0 , _pntsize/2 , _pntsize };
+        
         //render background
         if (_bg.a > 0)
         {
@@ -348,7 +339,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
         _texture->Render(renderer, x, y, &symFrame, _angle, &_center, _flip);
     }else
     {
-        std::cout << "Sprite could not be rendered :: Missing texture \n";
+        cout << "Sprite could not be rendered :: Missing texture" << endl;
     }
 }
 
@@ -357,7 +348,7 @@ int RUnicodeSprite::GetPntSize()
     return _pntsize;
 }
 
-void RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols)
+void RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, vector<uint16_t> symbols)
 {
     if (_texture != NULL)
     {
@@ -370,7 +361,7 @@ void RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* 
         _texture->RenderUnicode(renderer, symArray, font);
     } else
     {
-        std::cout << "Unicode spritesheet could not be rendered :: Missing texture \n";
+        cout << "Unicode spritesheet could not be rendered :: Missing texture" << endl;
     }
 }
 
@@ -383,7 +374,7 @@ uint16_t RUnicodeSprite::GetSymbolIndex(uint16_t symbol)
             return i;
         }
     }
-    std::cout << "RSprite :: Symbol not found in list.\n";
+    cout << "RUnicodeSprite :: Symbol: '" << hex << symbol << "' not found in list." << endl;
     return 0;
 }
 
