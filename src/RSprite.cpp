@@ -255,10 +255,11 @@ void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, 
     _fg = fg;
     _bg = bg;
     _animSpeed = animationSpeed;
-    _center = {pntsize/4,pntsize/2};
     _angle = 0.0;
     _currentframe = 0;
     _pntsize = pntsize;
+    TTF_SizeText(font, " ", &_w, &_h); 
+    _center = { _w / 2 , _h / 2 };
     
     //check if _texture exists
     if (_texture == NULL)
@@ -274,7 +275,7 @@ void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, 
     CreateUnicodeSpriteSheet(renderer, font, symbols);
 
     //initilize sprite
-    RSprite::AddAnimation(animation, {{0,0,pntsize/2,pntsize}});
+    RSprite::AddAnimation(animation, {{0,0,_w,_h}});
     SetAnimation(animation);
     SetBlendMode( SDL_BLENDMODE_BLEND );
     SetFlipMode( SDL_FLIP_NONE );
@@ -287,10 +288,12 @@ void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vecto
     _fg = fg;
     _bg = bg;
     _animSpeed = animationSpeed;
-    _center = {pntsize/4,pntsize/2};
     _angle = 0.0;
     _currentframe = 0;
     _pntsize = pntsize;
+    TTF_SizeText(font, " ", &_w, &_h);
+    _center = { _w / 2 , _h / 2 };
+    
     for(auto &sym : symbols)
     {
         _symbols.push_back(sym);
@@ -319,7 +322,7 @@ void RUnicodeSprite::AddAnimation( string animation, vector<uint16_t> frames)
     {
         uint16_t frame = 0;
         frame = GetSymbolIndex(s);
-        animationFrames.push_back({frame*(_pntsize/2),0,_pntsize/2,_pntsize});
+        animationFrames.push_back( { frame * _w , 0 , _w , _h } );
     }
     RSprite::AddAnimation(animation, animationFrames);
 }
@@ -328,13 +331,13 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
 {
     if(_texture != NULL )
     {   
-        SDL_Rect symFrame = {0,0,_pntsize/2,_pntsize};
-        symFrame = { GetSymbolIndex(symbol)*(_pntsize/2) , 0 , _pntsize/2 , _pntsize };
+        SDL_Rect symFrame = {0,0,_w,_h};
+        symFrame = { GetSymbolIndex(symbol) * _w , 0 , _w , _h };
         
         //render background
         if (_bg.a > 0)
         {
-            RenderBackground(renderer, {x, y, symFrame.w, symFrame.h});
+            RenderBackground(renderer, {x, y, _w, _h});
         }
         //update texture
         UpdateTexture();
@@ -352,18 +355,18 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
     {   
         for (uint16_t i = 0; i < symbols.length(); i++)
         {
-            SDL_Rect symFrame = {0,0,_pntsize/2,_pntsize};
-            symFrame = { GetSymbolIndex( symbols[i] ) * ( _pntsize / 2 ) , 0 , _pntsize / 2 , _pntsize };
+            SDL_Rect symFrame = {0,0,_w,_h};
+            symFrame = { GetSymbolIndex( symbols[i] ) * _w , 0 , _w , _h };
             
             //render background
             if (_bg.a > 0)
             {
-                RenderBackground(renderer , { x + i * ( _pntsize / 2 ) , y, symFrame.w, symFrame.h});
+                RenderBackground(renderer , { x + i * _w , y, _w, _h});
             }
             //update texture
             UpdateTexture();
             //render texture
-            _texture->Render(renderer, x + i * ( _pntsize / 2 ) , y, &symFrame, _angle, &_center, _flip);
+            _texture->Render(renderer, x + i * _w , y, &symFrame, _angle, &_center, _flip);
         }
     }else
     {
@@ -374,6 +377,30 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
 int RUnicodeSprite::GetPntSize()
 {
     return _pntsize;
+}
+
+void RUnicodeSprite::SetPntSize(int pnt)
+{
+    _pntsize = pnt;
+    _h = _pntsize;
+    _w = _pntsize/2;
+}
+
+
+int RUnicodeSprite::GetWidth()
+{
+    return _w;
+}
+
+int RUnicodeSprite::GetHeight()
+{
+    return _h;
+}
+
+void RUnicodeSprite::SetDimensions(int width, int height )
+{
+    _w = width;
+    _h = height;
 }
 
 void RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, vector<uint16_t> symbols)
@@ -409,6 +436,8 @@ uint16_t RUnicodeSprite::GetSymbolIndex(uint16_t symbol)
 RUnicodeSprite::RUnicodeSprite() : RSprite()
 {
     _pntsize = 0;
+    _h = 0;
+    _w = 0;
 }
 
 RUnicodeSprite::~RUnicodeSprite()

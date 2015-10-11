@@ -132,7 +132,7 @@ SDL_Texture* r_SDL::RenderUnicode( const uint16_t symbols[], TTF_Font* font, SDL
         SDL_DestroyTexture (texture);
     }
     
-    SDL_Surface* textSurface = TTF_RenderUNICODE_Solid( font, symbols, color );
+    SDL_Surface* textSurface = TTF_RenderUNICODE_Blended( font, symbols, color );
     if (textSurface == NULL )
     {
         cout << "Unable to render text: " << symbols << " :: " << SDL_GetError() << endl;

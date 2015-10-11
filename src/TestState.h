@@ -34,15 +34,16 @@ class TestState: public RGameState {
     private:
         static TestState _TestState;
         SDL_Renderer* _renderer;
-        RTexture* _texture;
         SDL_Event _event;
         
+        std::vector<RTexture*> _textures;
         std::vector<RUnicodeSprite*> _sprites;
-        RTexture* _spriteTex;
         
         TTF_Font* _font;
-        RTexture* _textTex;
-        
+        int _mouse_x, _mouse_y;  
+        int _ticks;
+        int _ms;
+        int _fps;
 };
 
 #endif

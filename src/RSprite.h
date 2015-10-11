@@ -8,6 +8,10 @@
 #include "r_SDL.h"
 #include "RTexture.h"
 
+/*  
+    RSprite contains functionality for handeling RTexture graphics and displaing them on screen.
+*/
+
 class RSprite
 {
     public:
@@ -63,26 +67,37 @@ class RSprite
         bool _paused;
 };
 
+/*  
+    RUnicodeSprite has support for handeling and generating pre-rendered Unicode text and symbols
+    for display on screen.
+*/
 class RUnicodeSprite: public RSprite
 {
     public:
-        //initilizes sprite and generates spritesheet from symbols[].
+        //Initilizes sprite and generates internal spritesheet from an array of Unicode symbols[].
         void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
-        //initilizes sprite with external spritesheet with symbols[].
+        //Initilizes sprite with external spritesheet with symbols[].
         void Init( RTexture* texture, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
-        void AddAnimation(std::string animation, std::vector<uint16_t> frames) ; //add an animation as a list of symbols
+        void AddAnimation(std::string animation, std::vector<uint16_t> frames) ; //Adds an animation as a list of symbols.
         
-        int GetPntSize();
-    
-        void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //renders a symbol. Renders last symbol in _symbols if symbol is not in spritesheet.
-        void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols);
+        int GetPntSize(); //Returns font size.
+        void SetPntSize(int pnt);
+        int GetWidth();
+        int GetHeight();
+        void SetDimensions(int width, int height );//sets symbol dimensions for size calculations
+       
+        
+        void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //Renders a symbol. Renders first symbol in the sheet if symbol does not exist in the symbol list.
+        void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.
+        
         RUnicodeSprite(); 
        ~RUnicodeSprite();
 
     private:
-        void CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols);
+        void CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols); //Generates an internal sprite sheet from a list of symbols.
         uint16_t GetSymbolIndex(uint16_t symbol);
         int _pntsize;
+        int _w, _h;
         std::vector<uint16_t> _symbols;
         bool _internalTexutreInstance; //true if Init Created its own RTexture instance. Used for cleanup.
 };
