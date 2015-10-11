@@ -15,24 +15,23 @@ void TestState::Init(RGameEngine* game)
     int pnt = 32;
     _font = r_SDL::LoadFont("data/font/unifont-8.0.01.ttf", pnt);
     
-    //create text element
+    //create rendered unicode sheet
     _textTex = new RTexture();
-    _textTex->RenderText( game->renderer, "Hello World!", _font, {0xFF, 0x00, 0x00, 0xFF} );
+    _textTex->RenderUnicode(game->renderer, UNICODE_LATIN_BASIC, _font );
+    std::vector<uint16_t> latin(UNICODE_LATIN_BASIC, UNICODE_LATIN_BASIC + sizeof(UNICODE_LATIN_BASIC) / sizeof(UNICODE_LATIN_BASIC[0]));
+    
     
     //create unicode spritesheet texture
     std::vector<uint16_t> sym = {0x263B,0x263A,0x007C,0x005C,0x2500,0x002F};
     uint16_t *symArray =  &sym[0];
-    
-    
-    //create sprite using unicode spritesheet
+
+    //create spritesheet using unicode
     _spriteTex = new RTexture();
     _spriteTex->RenderUnicode( game->renderer, symArray, _font );
     
+    //enw
     _sprites.push_back(new RUnicodeSprite());
-    _sprites[0]->Init(_spriteTex, _font, pnt, sym);
-    _sprites[0]->AddAnimation("Test", {0x263B,0x263A});
-    _sprites[0]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
-    _sprites[0]->SetAnimation("Test");
+    _sprites[0]->Init(_textTex, _font, pnt, latin );
     _sprites[0]->SetForeground({0x80,0x00,0xFF,0xFF});
     _sprites[0]->SetBackground({0x00,0x00,0x00,0xFF});
     
@@ -40,9 +39,9 @@ void TestState::Init(RGameEngine* game)
     _sprites[1]->Init(_spriteTex, _font, pnt, sym);
     _sprites[1]->AddAnimation("Test", {0x263B,0x263A});
     _sprites[1]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
-    _sprites[1]->SetAnimation("Test1");
-    _sprites[1]->SetForeground({0x00,0x00,0xFF,0xFF});
-    _sprites[1]->SetBackground({0x00,0x00,0x00,0xFF});
+    _sprites[1]->SetAnimation("Test");
+    _sprites[1]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _sprites[1]->SetBackground({0x80,0x00,0x00,0xFF});
     
     //create unicode sprite with internal spritesheet texture
     _sprites.push_back(new RUnicodeSprite());
@@ -85,11 +84,11 @@ void TestState::HandleEvents(RGameEngine* game)
                 static bool der;
                 if (der)
                 {
-                    _sprites[0]->SetAnimation("Test");
+                    _sprites[1]->SetAnimation("Test");
                    der = false;
                 }else
                 {
-                    _sprites[0]->SetAnimation("Test1");
+                    _sprites[1]->SetAnimation("Test1");
                     der = true;
                 }
             }
@@ -113,13 +112,10 @@ void TestState::Draw(RGameEngine* game)
     //render background
     _texture->Render(game->renderer, 0, 0);
     
-    _textTex->Render(game->renderer, 320-_textTex->GetWidth()/2 , 240-_textTex->GetHeight()/2 ); 
+    _sprites[0]->RenderSymbol(game->renderer, 320, 240, "Hello World!");
     //render sprites
-    _sprites[0]->Render(game->renderer, 0 , 0);
-    _sprites[1]->Render(game->renderer, _sprites[1]->GetPntSize()/2 , 0);
-    _sprites[2]->Render(game->renderer, 640-_sprites[2]->GetPntSize()/2 , 480-_sprites[2]->GetPntSize());
-    _sprites[0]->Render(game->renderer, _sprites[0]->GetPntSize(), 0);
-    _sprites[0]->RenderSymbol(game->renderer, 3*(_sprites[0]->GetPntSize()/2), 0, 0x651A);
+    _sprites[1]->Render(game->renderer, 0 , 0);
+    _sprites[2]->Render(game->renderer, 640 - _sprites[2]->GetPntSize()/2 , 480 - _sprites[2]->GetPntSize());
     
     SDL_RenderPresent( game->renderer );
 } 

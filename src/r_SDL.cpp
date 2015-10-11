@@ -124,7 +124,7 @@ SDL_Texture* r_SDL::RenderText( std::string string, TTF_Font* font, SDL_Renderer
     return texture;
 }
 
-SDL_Texture* r_SDL::RenderUnicode( uint16_t text[], TTF_Font* font, SDL_Renderer* renderer, SDL_Color color, SDL_Texture* texture)
+SDL_Texture* r_SDL::RenderUnicode( const uint16_t symbols[], TTF_Font* font, SDL_Renderer* renderer, SDL_Color color, SDL_Texture* texture)
 {
     //free texture
     if (texture != NULL) 
@@ -132,16 +132,16 @@ SDL_Texture* r_SDL::RenderUnicode( uint16_t text[], TTF_Font* font, SDL_Renderer
         SDL_DestroyTexture (texture);
     }
     
-    SDL_Surface* textSurface = TTF_RenderUNICODE_Solid( font, text, color );
+    SDL_Surface* textSurface = TTF_RenderUNICODE_Solid( font, symbols, color );
     if (textSurface == NULL )
     {
-        cout << "Unable to render text: " << text << " :: " << SDL_GetError() << endl;
+        cout << "Unable to render text: " << symbols << " :: " << SDL_GetError() << endl;
     }else
     {
         texture = SDL_CreateTextureFromSurface( renderer, textSurface );
         if (texture == NULL)
         {
-            cout << "Unable to create texture from rendered text surface: " << text << " :: " << SDL_GetError() << endl;  
+            cout << "Unable to create texture from rendered text surface: " << symbols << " :: " << SDL_GetError() << endl;  
         }
         SDL_FreeSurface(textSurface);
     }

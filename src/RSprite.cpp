@@ -188,15 +188,18 @@ void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
     {
         if (_animations.size() > 0)
         {
+            //verify there is an animation to play
             if (_animations.count(_currentAnimation) == 0 )
             {
                 _currentAnimation = _animations.begin()->first;
             }
+            //verify current frame is not out of range
             if (_currentframe >= _animations[_currentAnimation].size()-1)
             {
                 _currentframe = _animations[_currentAnimation].size()-1;
             }
             
+            //select frame to render
             SDL_Rect* curFrame = &_animations[_currentAnimation].at(_currentframe);
         
             //render background
@@ -337,6 +340,31 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
         UpdateTexture();
         //render texture
         _texture->Render(renderer, x, y, &symFrame, _angle, &_center, _flip);
+    }else
+    {
+        cout << "Sprite could not be rendered :: Missing texture" << endl;
+    }
+}
+
+void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string symbols)
+{
+    if(_texture != NULL )
+    {   
+        for (uint16_t i = 0; i < symbols.length(); i++)
+        {
+            SDL_Rect symFrame = {0,0,_pntsize/2,_pntsize};
+            symFrame = { GetSymbolIndex( symbols[i] ) * ( _pntsize / 2 ) , 0 , _pntsize / 2 , _pntsize };
+            
+            //render background
+            if (_bg.a > 0)
+            {
+                RenderBackground(renderer , { x + i * ( _pntsize / 2 ) , y, symFrame.w, symFrame.h});
+            }
+            //update texture
+            UpdateTexture();
+            //render texture
+            _texture->Render(renderer, x + i * ( _pntsize / 2 ) , y, &symFrame, _angle, &_center, _flip);
+        }
     }else
     {
         cout << "Sprite could not be rendered :: Missing texture" << endl;

@@ -75,7 +75,7 @@ class RUnicodeSprite: public RSprite
         int GetPntSize();
     
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //renders a symbol. Renders last symbol in _symbols if symbol is not in spritesheet.
-        
+        void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols);
         RUnicodeSprite(); 
        ~RUnicodeSprite();
 
