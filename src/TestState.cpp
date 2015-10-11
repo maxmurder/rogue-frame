@@ -121,6 +121,9 @@ void TestState::HandleEvents(RGameEngine* game)
         }
     }
     
+    static int velx;
+    static int vely;
+    
     const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
     if ( currentKeyStates[SDL_SCANCODE_ESCAPE] )
     {
@@ -141,21 +144,38 @@ void TestState::HandleEvents(RGameEngine* game)
     }
     if ( currentKeyStates[SDL_SCANCODE_UP] )
     {
-        _y-=1;
+        vely = -1;
     }
     if ( currentKeyStates[SDL_SCANCODE_DOWN] )
     {
-        _y+=1;
+        vely = 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_LEFT] )
     {
-        _x-=1;
+        velx = -1;
     }
     if ( currentKeyStates[SDL_SCANCODE_RIGHT] )
     {
-        _x+=1;
+        velx = 1;
     }
     
+    if( _x > game->GetWindowWidth() - _sprites[0]->GetWidth())
+    {
+        velx = -1;
+    }else if ( _x < 0)
+    {
+        velx = 1;
+    }
+    if( _y > game->GetWindowHeight() - _sprites[0]->GetHeight())
+    {
+        vely = -1;
+    }else if ( _y < 0)
+    {
+        vely = 1;
+    }
+    
+    _x += velx;
+    _y += vely;
 }
 
 void TestState::Update(RGameEngine* game)
@@ -203,7 +223,7 @@ void TestState::Draw(RGameEngine* game)
     {
         latin += s;
     }
-    _sprites[0]->RenderSymbol(game->renderer, 0 , _sprites[0]->GetHeight(), latin, game->GetWindowWidth() );
+    _sprites[0]->RenderSymbol(game->renderer, 0 , _sprites[0]->GetHeight(), latin, _sprites[0]->GetWidth() * 15 );
     
     //render input text
     _sprites[0]->RenderSymbol(game->renderer, game->GetWindowWidth() / 2 - ( _input.size() * _sprites[0]->GetWidth() ) / 2, game->GetWindowHeight() / 2 - _sprites[0]->GetHeight(), _input );
