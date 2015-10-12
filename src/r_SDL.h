@@ -17,7 +17,7 @@ class r_SDL
         static TTF_Font* LoadFont( std::string path , int pointSize = 16);
         
         static SDL_Texture* RenderText( std::string string, TTF_Font* font, SDL_Renderer* renderer, SDL_Texture* texture = NULL, SDL_Color color = {0xFF,0xFF,0xFF,0xFF}); //renders a string to a texture
-        static SDL_Texture* RenderUnicode( const uint16_t symbols[], TTF_Font* font, SDL_Renderer* renderer, Uint32 format, SDL_Texture* texture = NULL, SDL_Color color = {0xFF,0xFF,0xFF,0xFF}, SDL_Rect charDimensions = {0,0,0,0}); // renders a unicode symbol
+        static SDL_Texture* RenderUnicode( uint16_t symbols[], TTF_Font* font, SDL_Renderer* renderer, SDL_Texture* texture = NULL, SDL_Color color = {0xFF,0xFF,0xFF,0xFF}); // renders a unicode symbol
         static void ApplySurface( int x, int y, SDL_Surface* source, SDL_Surface* destination ); // apply sdl surface
 };
 

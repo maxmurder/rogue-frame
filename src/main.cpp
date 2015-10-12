@@ -6,7 +6,7 @@ int main( int argc, char* args[] )
 {
     RGameEngine game;
 
-    if (game.Init("Test") == false)
+    if (game.Init("Test", 1920, 1080, 0, true) == false)
     {
         return 1;
     }

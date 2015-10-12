@@ -93,7 +93,7 @@ void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font*
 
     //update the texture
     FreeTexture();
-    _texture = r_SDL::RenderText(string, font, renderer, color, _texture);
+    _texture = r_SDL::RenderText(string, font, renderer, _texture, color);
         
     if (_texture == NULL)
     {
@@ -104,10 +104,10 @@ void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font*
     }
 }
 
-void RTexture::RenderUnicode( SDL_Renderer* renderer, const uint16_t symbols[], TTF_Font* font, SDL_Color color )
+void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t symbols[], TTF_Font* font, SDL_Color color )
 {
     FreeTexture();
-    _texture = r_SDL::RenderUnicode(symbols, font, renderer, color, _texture);
+    _texture = r_SDL::RenderUnicode(symbols, font, renderer, _texture, color);
     if (_texture == NULL)
     {
         cout << "Symbol could not be rendered :: " << SDL_GetError() << endl;
@@ -116,7 +116,6 @@ void RTexture::RenderUnicode( SDL_Renderer* renderer, const uint16_t symbols[], 
         SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 
     }
 }
-
 
 int RTexture::GetWidth()
 {

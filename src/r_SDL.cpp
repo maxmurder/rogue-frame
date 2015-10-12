@@ -124,52 +124,21 @@ SDL_Texture* r_SDL::RenderText( std::string string, TTF_Font* font, SDL_Renderer
     return texture;
 }
 
-SDL_Texture* r_SDL::RenderUnicode( const uint16_t symbols[], TTF_Font* font, SDL_Renderer* renderer, Uint32 format, SDL_Texture* texture, SDL_Color color, SDL_Rect charDimensions)
-{
-    //get valid character dimensions 
-    if( ( charDimensions.w == 0 ) || ( charDimensions.h == 0) )
-    {
-        TTF_SizeText(font, "_", &charDimensions.w, &charDimensions.h);
-    }    
-    
+SDL_Texture* r_SDL::RenderUnicode( uint16_t symbols[], TTF_Font* font, SDL_Renderer* renderer, SDL_Texture* texture, SDL_Color color)
+{ 
     //free texture
     if (texture != NULL) 
     {
         SDL_DestroyTexture (texture);
     }
-    
-    //create blank texture
-    texture = SDL_CreateTexture( renderer, format, SDL_TEXTUREACCESS_STREAMING, charDimensions.w * sizeof(symbols), charDimensions.h);
-    
-    if( texture == NULL )
-    {
-        cout << "Unable to create texture"  << " :: " << SDL_GetError() << endl;
-    } else {
-        int i = 0; 
-        for (auto &s : symbols)
-        {
-            void *pixels;
-            int pitch;
-            if ( SDL_LockTexture(texture, { charDimensions.w * i, charDimensions.h, charDimensions.w, charDimensions.h }, &pixels, &pitch) != 0 )
-            {
-                cout << "Unable to lock texture"  << " :: " << SDL_GetError() << endl;
-            } else
-            {
-                SDL_Surface charSurface = TTF_RenderUNICODE_Blended( font, s, color );
-                memcpy( pixels, charSurface->pixles, charSurface->pitch * charSurface->h);
-                SDL_LockTexture( texture );
-                SDL_FreeSurface(charSurface);
-            }
-            i++;
-        }
-    }
-   /* 
+    //render characters   
     SDL_Surface* textSurface = TTF_RenderUNICODE_Blended( font, symbols, color );
     if (textSurface == NULL )
     {
         cout << "Unable to render text: " << symbols << " :: " << SDL_GetError() << endl;
     }else
-    {
+    {   
+        //create texture
         texture = SDL_CreateTextureFromSurface( renderer, textSurface );
         if (texture == NULL)
         {
@@ -177,7 +146,7 @@ SDL_Texture* r_SDL::RenderUnicode( const uint16_t symbols[], TTF_Font* font, SDL
         }
         SDL_FreeSurface(textSurface);
     }
-    return texture;*/
+    return texture;
 }
 
 TTF_Font* r_SDL::LoadFont( std::string path, int pointSize )
