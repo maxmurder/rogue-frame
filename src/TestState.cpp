@@ -1,8 +1,10 @@
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <vector>
 #include "TestState.h"
 #include "r_SDL.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -10,8 +12,35 @@ TestState TestState::_TestState;
 
 void TestState::Init(RGameEngine* game)
 {   
-    int sz;
-    hello = r_SDL::ReadFile("data/Hello", &sz);
+    // file writing test
+    stringstream ls;
+    for( uint32_t i = 0; i <= sizeof(UNICODE_LATIN_BASIC) / sizeof(uint16_t); i++ )
+    {
+        if (i == 0)
+        {   ls << "0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << UNICODE_LATIN_BASIC[i]; 
+        }else 
+        {
+            ls << ",0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << UNICODE_LATIN_BASIC[i]; 
+        }
+    } 
+    string lstring = ls.str();
+    r_SDL::WriteFile("data/raw/latin_basic", lstring.c_str());
+    
+    
+    //file reading test
+    char* data = r_SDL::ReadFile("data/raw/latin_basic");
+    string str = data;
+    string newString;
+    
+    size_t pos = 0;
+    string token;
+    while ( ( pos = str.find(',') ) != string::npos)
+    {
+         token = str.substr(0,pos);
+         _latin.push_back( (int)strtol( token.c_str(), NULL, 0 ) );
+         newString += _latin.back();
+         str.erase(0, pos + 1);
+    }
     
     //setup font
     int pnt = 16;
@@ -23,12 +52,11 @@ void TestState::Init(RGameEngine* game)
     
     //create rendered unicode sheet for basic latin set
     _textures.push_back(new RTexture());
-    _textures[1]->RenderUnicode(game->renderer, UNICODE_LATIN_BASIC, _font);
-    vector<uint16_t> latin(UNICODE_LATIN_BASIC, UNICODE_LATIN_BASIC + sizeof(UNICODE_LATIN_BASIC) / sizeof(UNICODE_LATIN_BASIC[0]));
+    _textures[1]->RenderUnicode(game->renderer, &_latin[0], _font);
     
     //create RUnicodeSprite() for basic latin set
     _sprites.push_back(new RUnicodeSprite());
-    _sprites[0]->Init(_textures[1], _font, pnt, latin );
+    _sprites[0]->Init(_textures[1], _font, pnt, _latin );
     _sprites[0]->SetForeground({0x80,0x00,0xFF,0xFF});
     _sprites[0]->SetBackground({0x00,0x00,0x00,0xFF});
     
@@ -65,8 +93,8 @@ void TestState::Init(RGameEngine* game)
     
     //start text input
     SDL_StartTextInput();
-    _y = game->GetWindowHeight() / 2;
-    _x = game->GetWindowWidth() / 2;
+    _y = game->window->GetHeight() / 2;
+    _x = game->window->GetWidth() / 2;
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -165,14 +193,14 @@ void TestState::HandleEvents(RGameEngine* game)
         velx = 1;
     }
     
-    if( _x > game->GetWindowWidth() - _sprites[0]->GetWidth())
+    if( _x > game->window->GetWidth() - _sprites[0]->GetWidth())
     {
         velx = -1;
     }else if ( _x < 0)
     {
         velx = 1;
     }
-    if( _y > game->GetWindowHeight() - _sprites[0]->GetHeight())
+    if( _y > game->window->GetHeight() - _sprites[0]->GetHeight())
     {
         vely = -1;
     }else if ( _y < 0)
@@ -212,30 +240,21 @@ void TestState::Draw(RGameEngine* game)
     stringstream msg;
     msg.precision(4);
     msg << "x:" << _mouse_x << " y:" << _mouse_y;
-    _sprites[0]->RenderSymbol(game->renderer, 0, game->GetWindowHeight() - _sprites[0]->GetHeight(), msg.str());
+    _sprites[0]->RenderSymbol(game->renderer, 0, game->window->GetHeight() - _sprites[0]->GetHeight(), msg.str());
     msg.str(string());
     msg << "fps:" << _fps << " ms:" << _ms;
-    _sprites[0]->RenderSymbol(game->renderer, game->GetWindowWidth() - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
+    _sprites[0]->RenderSymbol(game->renderer, game->window->GetWidth() - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
     
     //render test sprites
     _sprites[1]->Render(game->renderer, 0 , 0);
-    _sprites[2]->Render(game->renderer, game->GetWindowWidth() - _sprites[2]->GetWidth() , game->GetWindowHeight() - _sprites[2]->GetHeight());
+    _sprites[2]->Render(game->renderer, game->window->GetWidth() - _sprites[2]->GetWidth() , game->window->GetHeight() - _sprites[2]->GetHeight());
     _sprites[0]->RenderSymbol(game->renderer, _x, _y, '@');
     
-    //render test latin set
-    string latin;
-    for( auto &s : UNICODE_LATIN_BASIC)
-    {
-        latin += s;
-    }
-    _sprites[0]->RenderSymbol(game->renderer, 0 , _sprites[0]->GetHeight(), latin, _sprites[0]->GetWidth() * 15 );
+    _sprites[0]->RenderSymbol(game->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 15 );
     
     //render input text
-    _sprites[0]->RenderSymbol(game->renderer, game->GetWindowWidth() / 2 - (32 * _sprites[0]->GetWidth() ) / 2, game->GetWindowHeight() / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
-    
-    _sprites[0]->RenderSymbol(game->renderer, 0, game->GetWindowHeight() / 2 - _sprites[0]->GetHeight(), hello );
-    
-    
+    _sprites[0]->RenderSymbol(game->renderer, game->window->GetWidth() / 2 - (32 * _sprites[0]->GetWidth() ) / 2, game->window->GetHeight() / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
+      
     SDL_RenderPresent( game->renderer );
     _count++;
 } 

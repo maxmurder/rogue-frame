@@ -11,7 +11,7 @@ char* r_SDL::ReadFile(const char* filename, int* size)
     
     if( file == NULL )
     {
-        cout << "Could not read file: " << filename << " :: " << SDL_GetError() << endl;
+        cout << "Could not load file: " << filename << " :: " << SDL_GetError() << endl;
         return NULL;
     }
     
@@ -51,6 +51,26 @@ char* r_SDL::ReadFile(const char* filename, int* size)
     }
     
     return reserved;
+}
+
+bool r_SDL::WriteFile (const char* filename, const char* data)
+{
+    //open file
+    SDL_RWops *file = SDL_RWFromFile(filename, "wb");
+    if( file == NULL )
+    {
+        cout << "Could not create/open file: " << filename << " :: " << SDL_GetError() << endl;       
+        return false;
+    }else
+    {
+        uint32_t len = SDL_strlen(data);
+        if( SDL_RWwrite( file, data, 1, len) != len)
+        {
+            cout << "Did not fully write data to: " << filename << " :: " << SDL_GetError() << endl;
+        }
+        SDL_RWclose( file );
+    }
+    return true;
 }
 
 SDL_Surface* r_SDL::LoadSurface( std::string path )

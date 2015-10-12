@@ -89,6 +89,7 @@ class RUnicodeSprite: public RSprite
         
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //Renders a symbol. Renders first symbol in the sheet if symbol does not exist in the symbol list.
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
+        void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::vector<uint16_t> symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
         RUnicodeSprite(); 
        ~RUnicodeSprite();
 

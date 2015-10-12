@@ -397,6 +397,54 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
     }
 }
 
+void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<uint16_t> symbols, int width)
+{
+    if(_texture != NULL )
+    { 
+        int i = 0, r = 0;
+        for (auto &c : symbols)
+        {
+            int xOffset = 0;
+            int yOffset = 0;
+            SDL_Rect frame = {0,0,_w,_h};   
+            
+            //handle carrige return and line feed characters
+            if ( (c == 0x000A) || (c == 0x000D) )
+            {
+                r++;
+                i = 0;
+            } else {
+                //calculate offsets
+                xOffset = (i * _w);
+                yOffset = (r * _h);
+                
+                if (width >= _w)
+                {
+                    xOffset = xOffset % width;
+                    yOffset = yOffset + ( _h * ( ( i * _w ) / width ) );
+                }
+                
+                //choose frame
+                frame = { GetSymbolIndex(c) * _w , 0 , _w , _h };
+                
+                //render background
+                if (_bg.a > 0)
+                {
+                    RenderBackground(renderer , { x + xOffset , y + yOffset, _w, _h});
+                }
+                
+                //update texture and render
+                UpdateTexture();
+                _texture->Render(renderer, x + xOffset , y + yOffset, &frame, _angle, &_center, _flip);
+                i++;
+            }
+        }
+    }else
+    {
+        cout << "Sprite could not be rendered :: Missing texture" << endl;
+    }
+}
+
 int RUnicodeSprite::GetPntSize()
 {
     return _pntsize;
@@ -451,7 +499,7 @@ uint16_t RUnicodeSprite::GetSymbolIndex(uint16_t symbol)
             return i;
         }
     }
-    cout << "RUnicodeSprite :: Symbol: '" << symbol << "' not found in list." << endl;
+    cout << "RUnicodeSprite :: Symbol: '" << hex << symbol << "' not found in list." << endl;
     return 0;
 }
 

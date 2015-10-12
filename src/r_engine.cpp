@@ -6,9 +6,7 @@ using namespace std;
 
 bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
 {
-    int flags = 0;
-    int imgFlag = IMG_INIT_PNG;
-    
+    int imgFlag = IMG_INIT_PNG;   
     //initialize SDL
     if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
     {
@@ -28,20 +26,20 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     }
 
     if ( fullscreen ) {
-        flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+        //todo: add fullscreen
     }
-    
+     
     //initialize window
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags );
-    if (window == NULL)
+    string s = string(title);
+    window = new RWindow();
+    if ( !( window->Init( s, width, height) ) )
     {
         cout << "Error setting up SDL window" << " :: " << SDL_GetError() << endl;
         return false;
     }
-    SDL_GetWindowSize(window, &m_window_width, &m_window_height);
-    
+
     //initilize renderer
-    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+    renderer = window->CreateRenderer();
     if (renderer == NULL)
     {
         cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << endl;
@@ -49,8 +47,8 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     }
     SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
     
-    m_fullscreen = fullscreen;
-    m_running = true;
+    _fullscreen = fullscreen;
+    _running = true;
     
     cout << "RGameEngine Init\n";
     return true;
@@ -64,8 +62,7 @@ void RGameEngine::Cleanup()
         states.pop_back();
     }
     
-    SDL_DestroyWindow( window );
-    SDL_DestroyRenderer( renderer);
+    window->Free();
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
@@ -132,15 +129,5 @@ void RGameEngine::PopState()
     if ( !states.empty() ) {
         states.back()->Resume(this);
     }
-}
-
-int RGameEngine::GetWindowWidth()
-{
-    return m_window_width;
-}
-
-int RGameEngine::GetWindowHeight()
-{
-    return m_window_height;
 }
 

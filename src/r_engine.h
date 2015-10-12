@@ -6,6 +6,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "RWindow.h"
+
 class RGameState;
 
 class RGameEngine
@@ -18,26 +20,20 @@ class RGameEngine
     void Update();
     void Draw();
     
-    bool Running() {return m_running;}
-    void Quit() {m_running = false;}
+    bool Running() {return _running;}
+    void Quit() {_running = false;}
     
     void ChangeState(RGameState*);
     void PushState(RGameState*);
     void PopState();
     
-    SDL_Window* window;
+    RWindow* window;
     SDL_Renderer* renderer;
-    
-    int GetWindowWidth();
-    int GetWindowHeight();
     
     private:
     std::vector<RGameState*> states; //game state stack
-    
-    bool m_fullscreen;
-    bool m_running;
-    
-    int m_window_width, m_window_height; 
+    bool _fullscreen;
+    bool _running;
 };
 
 #endif

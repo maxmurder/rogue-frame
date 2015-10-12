@@ -9,8 +9,8 @@
 class r_SDL
 {
     public:
-        static char* ReadFile(const char* filename, int* size = NULL);
-        static bool* WriteFile( const char* filename, char* data );
+        static char* ReadFile(const char* filename, int* size = NULL); //reads a file at filename
+        static bool WriteFile( const char* filename, const char* data ); // writes/creates a file at filename
          
         static SDL_Surface* LoadSurface( std::string path ); //load surface from fike 
         static SDL_Surface* LoadSurface( std::string path, int red, int green, int blue ); //load surface with color keying
