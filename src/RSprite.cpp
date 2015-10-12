@@ -353,36 +353,43 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
 {
     if(_texture != NULL )
     { 
-        int i = 0;
+        int i = 0, r = 0;
         for (auto &c : symbols)
         {
             int xOffset = 0;
             int yOffset = 0;
             SDL_Rect frame = {0,0,_w,_h};   
             
-            //calculate offsets
-            if (width >= _w)
+            //handle carrige return and line feed characters
+            if ( (c == 0x000A) || (c == 0x000D) )
             {
-                xOffset = (i * _w ) % width;
-                yOffset = _h * ( ( i * _w ) / width );
-            }else
-            {
-              xOffset = (i * _w);
+                r++;
+                i = 0;
+            } else {
+                //calculate offsets
+                xOffset = (i * _w);
+                yOffset = (r * _h);
+                
+                if (width >= _w)
+                {
+                    xOffset = xOffset % width;
+                    yOffset = yOffset + ( _h * ( ( i * _w ) / width ) );
+                }
+                
+                //choose frame
+                frame = { GetSymbolIndex(c) * _w , 0 , _w , _h };
+                
+                //render background
+                if (_bg.a > 0)
+                {
+                    RenderBackground(renderer , { x + xOffset , y + yOffset, _w, _h});
+                }
+                
+                //update texture and render
+                UpdateTexture();
+                _texture->Render(renderer, x + xOffset , y + yOffset, &frame, _angle, &_center, _flip);
+                i++;
             }
-            i++;
-            
-            //choose frame
-            frame = { GetSymbolIndex(c) * _w , 0 , _w , _h };
-            
-            //render background
-            if (_bg.a > 0)
-            {
-                RenderBackground(renderer , { x + xOffset , y + yOffset, _w, _h});
-            }
-            
-            //update texture and render
-            UpdateTexture();
-            _texture->Render(renderer, x + xOffset , y + yOffset, &frame, _angle, &_center, _flip);
         }
     }else
     {
@@ -401,7 +408,6 @@ void RUnicodeSprite::SetPntSize(int pnt)
     _h = _pntsize;
     _w = _pntsize/2;
 }
-
 
 int RUnicodeSprite::GetWidth()
 {
@@ -445,7 +451,7 @@ uint16_t RUnicodeSprite::GetSymbolIndex(uint16_t symbol)
             return i;
         }
     }
-    cout << "RUnicodeSprite :: Symbol: '" << hex << symbol << "' not found in list." << endl;
+    cout << "RUnicodeSprite :: Symbol: '" << symbol << "' not found in list." << endl;
     return 0;
 }
 

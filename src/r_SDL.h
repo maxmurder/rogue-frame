@@ -9,9 +9,13 @@
 class r_SDL
 {
     public:
+        static char* ReadFile(const char* filename, int* size = NULL);
+        static bool* WriteFile( const char* filename, char* data );
+         
         static SDL_Surface* LoadSurface( std::string path ); //load surface from fike 
         static SDL_Surface* LoadSurface( std::string path, int red, int green, int blue ); //load surface with color keying
         static SDL_Surface* LoadSurface( std::string path , SDL_PixelFormat* format); //load optomised surface from file
+        
         static SDL_Texture* LoadTexture( std::string path, SDL_Renderer* renderer ); //Load optomised texure from file
         static SDL_Texture* LoadTexture( std::string path, SDL_Renderer* renderer, int red, int green, int blue ); //Load optomised texure from file with color keying
         static TTF_Font* LoadFont( std::string path , int pointSize = 16);

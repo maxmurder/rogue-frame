@@ -4,6 +4,55 @@
 
 using namespace std;
 
+char* r_SDL::ReadFile(const char* filename, int* size)
+{
+    //open file
+    SDL_RWops *file = SDL_RWFromFile(filename, "rb");
+    
+    if( file == NULL )
+    {
+        cout << "Could not read file: " << filename << " :: " << SDL_GetError() << endl;
+        return NULL;
+    }
+    
+    //allocate memory
+    Sint64 data_size = SDL_RWsize(file);
+    char *reserved = (char*)malloc( data_size + 1 );
+    
+    //initilize buffer 
+    Sint64 read_total = 0, bits_read = 1;
+    char *buf = reserved;
+
+    //read data to buffer
+    while (read_total < data_size && bits_read != 0)
+    {
+        bits_read = SDL_RWread( file, buf, 1, (data_size - read_total) );
+        read_total += bits_read;
+        buf += bits_read;
+    }
+    
+    //close file
+    SDL_RWclose(file);
+    
+    //check that correct # of bits were read
+    if( read_total != data_size )
+    {
+        free( reserved );
+        return NULL;
+    }
+    
+    //add an escape
+    reserved[read_total] = '\0';
+
+    // set size 
+    if (size != NULL)
+    {
+        *size = read_total;
+    }
+    
+    return reserved;
+}
+
 SDL_Surface* r_SDL::LoadSurface( std::string path )
 {
     SDL_Surface* loadedSurface = NULL;
@@ -131,7 +180,7 @@ SDL_Texture* r_SDL::RenderUnicode( uint16_t symbols[], TTF_Font* font, SDL_Rende
     {
         SDL_DestroyTexture (texture);
     }
-    //render characters   
+    //render characters
     SDL_Surface* textSurface = TTF_RenderUNICODE_Blended( font, symbols, color );
     if (textSurface == NULL )
     {

@@ -10,7 +10,9 @@ TestState TestState::_TestState;
 
 void TestState::Init(RGameEngine* game)
 {   
-
+    int sz;
+    hello = r_SDL::ReadFile("data/Hello", &sz);
+    
     //setup font
     int pnt = 16;
     _font = r_SDL::LoadFont("data/font/unifont-8.0.01.ttf", pnt);
@@ -106,7 +108,10 @@ void TestState::HandleEvents(RGameEngine* game)
             if( _event.key.keysym.sym == SDLK_BACKSPACE && _input.length() > 0 )
             {
                 _input.pop_back();
-            } else if ( _event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
+            } else if( _event.key.keysym.sym == SDLK_RETURN )
+            {
+                _input.push_back(0x000D);
+            }else if ( _event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
             {
                 SDL_SetClipboardText( _input.c_str() );
             } else if ( _event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
@@ -217,7 +222,6 @@ void TestState::Draw(RGameEngine* game)
     _sprites[2]->Render(game->renderer, game->GetWindowWidth() - _sprites[2]->GetWidth() , game->GetWindowHeight() - _sprites[2]->GetHeight());
     _sprites[0]->RenderSymbol(game->renderer, _x, _y, '@');
     
-    
     //render test latin set
     string latin;
     for( auto &s : UNICODE_LATIN_BASIC)
@@ -228,6 +232,9 @@ void TestState::Draw(RGameEngine* game)
     
     //render input text
     _sprites[0]->RenderSymbol(game->renderer, game->GetWindowWidth() / 2 - (32 * _sprites[0]->GetWidth() ) / 2, game->GetWindowHeight() / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
+    
+    _sprites[0]->RenderSymbol(game->renderer, 0, game->GetWindowHeight() / 2 - _sprites[0]->GetHeight(), hello );
+    
     
     SDL_RenderPresent( game->renderer );
     _count++;
