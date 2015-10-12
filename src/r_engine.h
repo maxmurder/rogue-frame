@@ -27,9 +27,6 @@ class RGameEngine
     void PushState(RGameState*);
     void PopState();
     
-    RWindow* window;
-    SDL_Renderer* renderer;
-    
     private:
     std::vector<RGameState*> states; //game state stack
     bool _fullscreen;

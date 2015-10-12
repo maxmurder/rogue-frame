@@ -12,6 +12,9 @@ TestState TestState::_TestState;
 
 void TestState::Init(RGameEngine* game)
 {   
+    _windows.push_back(new RWindow());
+    _windows[0]->Init();
+    
     // file writing test
     stringstream ls;
     for( uint32_t i = 0; i <= sizeof(UNICODE_LATIN_BASIC) / sizeof(uint16_t); i++ )
@@ -48,11 +51,11 @@ void TestState::Init(RGameEngine* game)
     
     //load background texture
     _textures.push_back(new RTexture());
-    _textures[0]->LoadFromFile("data/gfx/checker.png", game->renderer);
+    _textures[0]->LoadFromFile("data/gfx/checker.png", _windows[0]->renderer);
     
     //create rendered unicode sheet for basic latin set
     _textures.push_back(new RTexture());
-    _textures[1]->RenderUnicode(game->renderer, &_latin[0], _font);
+    _textures[1]->RenderUnicode(_windows[0]->renderer, &_latin[0], _font);
     
     //create RUnicodeSprite() for basic latin set
     _sprites.push_back(new RUnicodeSprite());
@@ -66,7 +69,7 @@ void TestState::Init(RGameEngine* game)
 
     //create spritesheet using unicode
     _textures.push_back(new RTexture());
-    _textures[2]->RenderUnicode( game->renderer, symArray, _font );
+    _textures[2]->RenderUnicode( _windows[0]->renderer, symArray, _font );
     
     _sprites.push_back(new RUnicodeSprite());
     _sprites[1]->Init(_textures[2], _font, pnt, sym);
@@ -78,7 +81,7 @@ void TestState::Init(RGameEngine* game)
     
     //create unicode sprite with internal spritesheet texture
     _sprites.push_back(new RUnicodeSprite());
-    _sprites[2]->Init(game->renderer, _font, pnt, sym);
+    _sprites[2]->Init(_windows[0]->renderer, _font, pnt, sym);
     _sprites[2]->AddAnimation("Test", {0x263A,0x263B});
     _sprites[2]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
     _sprites[2]->SetAnimation("Test");
@@ -93,8 +96,8 @@ void TestState::Init(RGameEngine* game)
     
     //start text input
     SDL_StartTextInput();
-    _y = game->window->GetHeight() / 2;
-    _x = game->window->GetWidth() / 2;
+    _y = _windows[0]->GetHeight() / 2;
+    _x = _windows[0]->GetWidth()  / 2;
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -110,6 +113,10 @@ void TestState::Cleanup(RGameEngine* game)
     for (auto &tim : _timers)
     {
         delete tim;
+    }
+    for (auto &win : _windows)
+    {
+        delete win;
     }    
 }
 void TestState::Pause(RGameEngine* game){}
@@ -193,14 +200,14 @@ void TestState::HandleEvents(RGameEngine* game)
         velx = 1;
     }
     
-    if( _x > game->window->GetWidth() - _sprites[0]->GetWidth())
+    if( _x > _windows[0]->GetWidth()  - _sprites[0]->GetWidth())
     {
         velx = -1;
     }else if ( _x < 0)
     {
         velx = 1;
     }
-    if( _y > game->window->GetHeight() - _sprites[0]->GetHeight())
+    if( _y > _windows[0]->GetHeight()  - _sprites[0]->GetHeight())
     {
         vely = -1;
     }else if ( _y < 0)
@@ -230,31 +237,31 @@ void TestState::Update(RGameEngine* game)
 
 void TestState::Draw(RGameEngine* game)
 {
-    SDL_SetRenderDrawColor( game->renderer, 0x00, 0x00, 0x00, 0xFF );
-    SDL_RenderClear( game->renderer );
+    SDL_SetRenderDrawColor( _windows[0]->renderer, 0x00, 0x00, 0x00, 0xFF );
+    SDL_RenderClear( _windows[0]->renderer );
     
     //render background
-    _textures[0]->Render(game->renderer, 0, 0);
+    _textures[0]->Render(_windows[0]->renderer, 0, 0);
     
     //render mouse and fps
     stringstream msg;
     msg.precision(4);
     msg << "x:" << _mouse_x << " y:" << _mouse_y;
-    _sprites[0]->RenderSymbol(game->renderer, 0, game->window->GetHeight() - _sprites[0]->GetHeight(), msg.str());
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0, _windows[0]->GetHeight()  - _sprites[0]->GetHeight(), msg.str());
     msg.str(string());
     msg << "fps:" << _fps << " ms:" << _ms;
-    _sprites[0]->RenderSymbol(game->renderer, game->window->GetWidth() - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
     
     //render test sprites
-    _sprites[1]->Render(game->renderer, 0 , 0);
-    _sprites[2]->Render(game->renderer, game->window->GetWidth() - _sprites[2]->GetWidth() , game->window->GetHeight() - _sprites[2]->GetHeight());
-    _sprites[0]->RenderSymbol(game->renderer, _x, _y, '@');
+    _sprites[1]->Render(_windows[0]->renderer, 0 , 0);
+    _sprites[2]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[2]->GetWidth() , _windows[0]->GetHeight()  - _sprites[2]->GetHeight());
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, _x, _y, '@');
     
-    _sprites[0]->RenderSymbol(game->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 15 );
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 15 );
     
     //render input text
-    _sprites[0]->RenderSymbol(game->renderer, game->window->GetWidth() / 2 - (32 * _sprites[0]->GetWidth() ) / 2, game->window->GetHeight() / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  / 2 - (32 * _sprites[0]->GetWidth() ) / 2, _windows[0]->GetHeight()  / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
       
-    SDL_RenderPresent( game->renderer );
+    SDL_RenderPresent( _windows[0]->renderer );
     _count++;
 } 

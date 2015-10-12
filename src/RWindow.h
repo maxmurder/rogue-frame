@@ -6,12 +6,11 @@
 class RWindow
 {
     public:         
-        bool Init(std::string title = "Default" , int width = 640, int height = 480);
-        
-        SDL_Renderer* CreateRenderer();
+        bool Init(std::string title = "Default" , int width = 640, int height = 480);    
         
         void HandleEvent(SDL_Event &event);
-        
+        void Focus();
+        void Render();
         void Free();
         
         int GetWidth();
@@ -20,12 +19,17 @@ class RWindow
         bool HasMouseFocus();
         bool HasKeyboardFocus();
         bool IsMinimized();
+        bool IsShown();
+        
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        
         RWindow();
 
     private:
-        SDL_Window* _window;
         std::string _name;
+        uint32_t _windowID;
         int _height, _width;
-        bool _mouseFocus, _keyboardFocus, _fullScreen, _minimized;
+        bool _mouseFocus, _keyboardFocus, _fullScreen, _minimized, _shown;
 };
 #endif

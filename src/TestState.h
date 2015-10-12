@@ -35,6 +35,7 @@ class TestState: public RGameState {
         SDL_Renderer* _renderer;
         SDL_Event _event;
         
+        std::vector<RWindow*> _windows;
         std::vector<RTexture*> _textures;
         std::vector<RUnicodeSprite*> _sprites;
         std::vector<RTimer*> _timers;

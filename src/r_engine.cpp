@@ -31,25 +31,17 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
      
     //initialize window
     string s = string(title);
-    window = new RWindow();
+    
+    /*
     if ( !( window->Init( s, width, height) ) )
     {
         cout << "Error setting up SDL window" << " :: " << SDL_GetError() << endl;
         return false;
-    }
-
-    //initilize renderer
-    renderer = window->CreateRenderer();
-    if (renderer == NULL)
-    {
-        cout << "Error initilizing SDL renderer"  << " :: " << SDL_GetError() << endl;
-        return false;
-    }
-    SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    }*/
     
     _fullscreen = fullscreen;
     _running = true;
-    
+    //renderer = window->GetRenderer();
     cout << "RGameEngine Init\n";
     return true;
 }
@@ -62,7 +54,6 @@ void RGameEngine::Cleanup()
         states.pop_back();
     }
     
-    window->Free();
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
