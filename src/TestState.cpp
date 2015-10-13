@@ -114,10 +114,6 @@ void TestState::Cleanup(RGameEngine* game)
     {
         delete tim;
     }
-    for (auto &win : _windows)
-    {
-        delete win;
-    }    
 }
 void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
@@ -159,6 +155,10 @@ void TestState::HandleEvents(RGameEngine* game)
             {
                 _input += _event.text.text;
             }
+        }
+        for (auto &win : _windows)
+        {
+            win->HandleEvent(_event);
         }
     }
     

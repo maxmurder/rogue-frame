@@ -28,20 +28,9 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     if ( fullscreen ) {
         //todo: add fullscreen
     }
-     
-    //initialize window
-    string s = string(title);
-    
-    /*
-    if ( !( window->Init( s, width, height) ) )
-    {
-        cout << "Error setting up SDL window" << " :: " << SDL_GetError() << endl;
-        return false;
-    }*/
     
     _fullscreen = fullscreen;
     _running = true;
-    //renderer = window->GetRenderer();
     cout << "RGameEngine Init\n";
     return true;
 }
@@ -53,7 +42,6 @@ void RGameEngine::Cleanup()
         states.back()->Cleanup(this);
         states.pop_back();
     }
-    
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();

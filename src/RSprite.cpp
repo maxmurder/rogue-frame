@@ -353,7 +353,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
 {
     if(_texture != NULL )
     { 
-        int i = 0, r = 0;
+        int  i = 0, r = 0;
         for (auto &c : symbols)
         {
             int xOffset = 0;
@@ -368,13 +368,16 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
             } else {
                 //calculate offsets
                 xOffset = (i * _w);
-                yOffset = (r * _h);
                 
                 if (width >= _w)
                 {
+                    if ( xOffset % width == 0 && i > 0)
+                    {
+                        r++;
+                    }
                     xOffset = xOffset % width;
-                    yOffset = yOffset + ( _h * ( ( i * _w ) / width ) );
                 }
+                yOffset = (r * _h);
                 
                 //choose frame
                 frame = { GetSymbolIndex(c) * _w , 0 , _w , _h };
@@ -416,13 +419,16 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<
             } else {
                 //calculate offsets
                 xOffset = (i * _w);
-                yOffset = (r * _h);
                 
                 if (width >= _w)
                 {
+                    if ( xOffset % width == 0 && i > 0)
+                    {
+                        r++;
+                    }
                     xOffset = xOffset % width;
-                    yOffset = yOffset + ( _h * ( ( i * _w ) / width ) );
                 }
+                yOffset = (r * _h);
                 
                 //choose frame
                 frame = { GetSymbolIndex(c) * _w , 0 , _w , _h };
