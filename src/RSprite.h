@@ -23,6 +23,7 @@ class RSprite
         void PushFrames(std::string animation, std::vector<SDL_Rect> frames); // adds frames to animation
         void ClearFrames(std::string animation); //clears frames for an animation from the list
         
+        //property getting/setting
         void SetForeground( SDL_Color color ); // set foreground color
         void SetBackground(SDL_Color color); //set background render color
         void SetAlpha(uint8_t alpha); //sprite texture alpha
@@ -30,8 +31,13 @@ class RSprite
         void SetFlipMode(SDL_RendererFlip flip); //set flip mode
         void SetCenter(SDL_Point center); //set pivot point
         void SetAngle(double angle); //set rotation angle
-        void SetRenderOffset(int wOffset, int hOffset); //sprite render offset (for centering sprites)
-         
+        void SetRenderOffset(int xOffset, int yOffset); //sprite render offset (for centering sprites)
+        void SetDimensions(int width, int height );//sets symbol dimensions for size calculations
+        int GetWidth();
+        int GetHeight();
+        int GetRenderOffsetx();
+        int GetRenderOffsety();
+        
         //animation interface
         void SetAnimation(std::string animation, uint16_t frame = 0); //set current animation
         void SetAnimationSpeed(int animationSpeed);
@@ -40,7 +46,7 @@ class RSprite
         void PreviousFrame(); //go to previous frame
         void Pause();
         void Play();
-        
+
         void UpdateAnimation(); //update animation logic
         void Render(SDL_Renderer* renderer, int x, int y); //render sprite at point
         
@@ -53,7 +59,8 @@ class RSprite
         std::string _currentAnimation;
         uint16_t _currentframe;
         int _animSpeed;
-        int _w, _h, _xRenderOffset, _yRenderOffset;
+        int _w, _h; // width and height of sprite background
+        int _xRenderOffset, _yRenderOffset; // render offset for texture relative to the background
         SDL_Color _fg;
         SDL_Color _bg;
         SDL_RendererFlip _flip;
@@ -76,17 +83,15 @@ class RSprite
 class RUnicodeSprite: public RSprite
 {
     public:
+        enum TextMode {TEXT = 0, UNICODE = 1, UTF8 = 2};
         //Initilizes sprite and generates internal spritesheet from an array of Unicode symbols[].
-        void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
+        void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, int mode = 1, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
         //Initilizes sprite with external spritesheet with symbols[].
-        void Init( RTexture* texture, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
+        void Init( RTexture* texture, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, int mode = 1, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
         void AddAnimation(std::string animation, std::vector<uint16_t> frames) ; //Adds an animation as a list of symbols.
         
         int GetPntSize(); //Returns font size.
-        void SetPntSize(int pnt);
-        int GetWidth();
-        int GetHeight();
-        void SetDimensions(int width, int height );//sets symbol dimensions for size calculations
+        void SetTextMode(int mode, int pntsize); //resizes sprite based on TTF_SizeText|TTF_SizeUNICODE|TTF_SizeUTF8.
         
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //Renders a symbol. Renders first symbol in the sheet if symbol does not exist in the symbol list.
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
@@ -96,11 +101,12 @@ class RUnicodeSprite: public RSprite
        ~RUnicodeSprite();
 
     private:
+        int _pntsize, _charw, _charh;
+        std::vector<uint16_t> _symbols;
+        bool _internalTexutreInstance; //true if Init Created its own RTexture instance. Used for cleanup.
+    
         void CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols); //Generates an internal sprite sheet from a list of symbols.
         void CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int c); //calculates offsets for rendering text. 'r' is # of newlines, 'c' is number of charaters. 
         uint16_t GetSymbolIndex(uint16_t symbol);
-        int _pntsize;
-        std::vector<uint16_t> _symbols;
-        bool _internalTexutreInstance; //true if Init Created its own RTexture instance. Used for cleanup.
 };
 #endif

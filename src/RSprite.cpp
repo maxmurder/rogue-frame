@@ -121,6 +121,29 @@ void RSprite::SetCenter(SDL_Point center)
     _center = center;
 }
 
+void RSprite::SetDimensions(int width, int height )
+{
+    _w = width;
+    _h = height;
+}
+
+void RSprite::SetRenderOffset( int xOffset, int yOffset)
+{
+    _xRenderOffset = xOffset;
+    _yRenderOffset = yOffset;
+}
+
+int RSprite::GetWidth()
+{
+    return _w;
+}
+
+int RSprite::GetHeight()
+{
+    return _h;
+}
+
+
 void RSprite::SetAnimation(string animation, uint16_t frame)
 {
     _currentAnimation = animation;
@@ -213,7 +236,7 @@ void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
             //update texture
             UpdateTexture();
             //render texture
-            _texture->Render(renderer, x + _xRenderOffset / 2, y, curFrame, _angle, &_center, _flip);
+            _texture->Render(renderer, x + _xRenderOffset, y + _yRenderOffset, curFrame, _angle, &_center, _flip);
         }else
         {
             cout << "Sprite could not be rendered :: Missing animation" << endl;
@@ -236,12 +259,6 @@ void RSprite::ResetAnimCounter()
     _animCount = 0;
 }
 
-void RSprite::SetRenderOffset( int xOffset, int yOffset)
-{
-    _xRenderOffset = xOffset;
-    _yRenderOffset = yOffset;
-}
-
 RSprite::RSprite()
 {
     _texture = NULL;
@@ -262,7 +279,7 @@ RSprite::~RSprite(){}
 
 /*-----------------------------------------RUnicodeSprite--------------------------------------------------*/
 
-void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, vector<uint16_t> symbols, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
+void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
     //init variables
     _fg = fg;
@@ -270,11 +287,13 @@ void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, 
     _animSpeed = animationSpeed;
     _angle = 0.0;
     _currentframe = 0;
-    _pntsize = pntsize;
-    uint16_t t[] = {symbols[0]};  
-    TTF_SizeUNICODE(font, t, &_w, &_h);
-    SetRenderOffset( _w / 2, 0);
-    _center = { _w / 2 , _h / 2 };
+    SetTextMode(mode, pntsize);
+    
+    //fill the sembols table
+    for(auto &sym : symbols)
+    {
+        _symbols.push_back(sym);
+    }
     
     //check if _texture exists
     if (_texture == NULL)
@@ -296,7 +315,7 @@ void RUnicodeSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, 
     SetFlipMode( SDL_FLIP_NONE );
 }
 
-void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vector<uint16_t> symbols, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
+void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
     //init variables
     _texture = texture;
@@ -305,12 +324,9 @@ void RUnicodeSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vecto
     _animSpeed = animationSpeed;
     _angle = 0.0;
     _currentframe = 0;
-    _pntsize = pntsize;
-    uint16_t t[1] = {symbols[0]};  
-    TTF_SizeUNICODE(font, t, &_w, &_h);
-    SetRenderOffset( _w / 2, 0);
-    _center = { _w / 2 , _h / 2 };
-    
+    SetTextMode(mode, pntsize);
+
+    //fill the sembols table
     for(auto &sym : symbols)
     {
         _symbols.push_back(sym);
@@ -339,7 +355,7 @@ void RUnicodeSprite::AddAnimation( string animation, vector<uint16_t> frames)
     {
         uint16_t frame = 0;
         frame = GetSymbolIndex(s);
-        animationFrames.push_back( { frame * _xRenderOffset, 0 , _xRenderOffset, _h } );
+        animationFrames.push_back( { frame * _charw, 0 , _charw, _charh } );
     }
     RSprite::AddAnimation(animation, animationFrames);
 }
@@ -376,7 +392,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
         {
             int xOffset = 0;
             int yOffset = 0;
-            SDL_Rect frame = {0,0,_xRenderOffset,_h};   
+            SDL_Rect frame = {0,0,_charw,_charh};   
             
             //handle carrige return and line feed characters
             if ( (c == 0x000A) || (c == 0x000D) )
@@ -388,7 +404,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
                 CalculateOffset( &xOffset, &yOffset, &r, width, i);
                 
                 //choose frame
-                frame = { GetSymbolIndex(c) * _xRenderOffset , 0 , _xRenderOffset , _h };
+                frame = { GetSymbolIndex(c) * _charw , 0 , _charw , _charh };
                 
                 //render background
                 if (_bg.a > 0)
@@ -398,7 +414,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string 
                 
                 //update texture and render
                 UpdateTexture();
-                _texture->Render(renderer, x + xOffset + _xRenderOffset / 2 , y + yOffset, &frame, _angle, &_center, _flip);
+                _texture->Render(renderer, x + xOffset + _xRenderOffset , y + yOffset + _yRenderOffset, &frame, _angle, &_center, _flip);
                 i++;
             }
         }
@@ -417,7 +433,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<
         {
             int xOffset = 0;
             int yOffset = 0;
-            SDL_Rect frame = {0,0,_xRenderOffset,_h};   
+            SDL_Rect frame = {0,0,_charw,_charh};   
             
             //handle carrige return and line feed characters
             if ( (c == 0x000A) || (c == 0x000D) )
@@ -428,7 +444,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<
                 CalculateOffset( &xOffset, &yOffset, &r, width, i);
                 
                 //choose frame
-                frame = { GetSymbolIndex(c) * _xRenderOffset , 0 , _xRenderOffset , _h };
+                frame = { GetSymbolIndex(c) * _charw , 0 , _charw , _charh };
                 
                 //render background
                 if (_bg.a > 0)
@@ -438,7 +454,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<
                 
                 //update texture and render
                 UpdateTexture();
-                _texture->Render(renderer, x + xOffset + _xRenderOffset / 2 , y + yOffset, &frame, _angle, &_center, _flip);
+                _texture->Render(renderer, x + xOffset + _xRenderOffset, y + yOffset + _yRenderOffset, &frame, _angle, &_center, _flip);
                 i++;
             }
         }
@@ -453,27 +469,33 @@ int RUnicodeSprite::GetPntSize()
     return _pntsize;
 }
 
-void RUnicodeSprite::SetPntSize(int pnt)
-{
-    _pntsize = pnt;
-    _h = _pntsize;
-    _w = _pntsize/2;
-}
-
-int RUnicodeSprite::GetWidth()
-{
-    return _w;
-}
-
-int RUnicodeSprite::GetHeight()
-{
-    return _h;
-}
-
-void RUnicodeSprite::SetDimensions(int width, int height )
-{
-    _w = width;
-    _h = height;
+void RUnicodeSprite::SetTextMode(int mode, int pntsize)
+{   
+    _pntsize = pntsize;
+    switch (mode)
+    {
+    case TEXT:
+        _charw = pntsize / 2;
+        _charh = pntsize;
+        SetDimensions(_charw, _charh);
+        SetRenderOffset( 0 , 0);
+        break;
+    case UNICODE:
+        _charw = pntsize / 2;
+        _charh = pntsize;
+        SetDimensions(pntsize, pntsize);
+        SetRenderOffset( _charw / 2, 0);
+        break;
+    case UTF8:
+        _charw = pntsize / 2;
+        _charh = pntsize;
+        SetDimensions(pntsize, pntsize);
+        SetRenderOffset( _charw / 2, 0);
+    break;
+    default:
+        cout << "Unkown TextMode: " << mode;
+    }
+    cout << _charw <<" "<< _charh << endl;
 }
 
 void RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, vector<uint16_t> symbols)
@@ -527,8 +549,8 @@ void RUnicodeSprite::CalculateOffset(int *xOffset, int *yOffset, int *r, int wid
 RUnicodeSprite::RUnicodeSprite() : RSprite()
 {
     _pntsize = 0;
-    _h = 0;
-    _w = 0;
+    _charh = 0;
+    _charw = 0;
 }
 
 RUnicodeSprite::~RUnicodeSprite()

@@ -44,30 +44,34 @@ void TestState::Init(RGameEngine* game)
     _sprites[0]->SetForeground({0x80,0x00,0xFF,0xFF});
     _sprites[0]->SetBackground({0x00,0x00,0x00,0xFF});
     
-    //create test unicode spritesheet texture
-    vector<uint16_t> sym = {0x263B,0x263A,0x007C,0x005C,0x2500,0x002F};
+    //create text style (rectangular) unicode sprite for latin set
+    _sprites.push_back(new RUnicodeSprite());
+    _sprites[1]->Init(_textures[1], _font, pnt, _latin, 0);
+    _sprites[1]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _sprites[1]->SetBackground({0x00,0x00,0x00,0xFF});
+    
+    //generate custom spritesheet using unicode
+    vector<uint16_t> sym = {0x263A,0x263B,0x007C,0x005C,0x2500,0x002F};
     uint16_t *symArray =  &sym[0];
-
-    //create spritesheet using unicode
     _textures.push_back(new RTexture());
     _textures[2]->RenderUnicode( _windows[0]->renderer, symArray, _font );
     
     _sprites.push_back(new RUnicodeSprite());
-    _sprites[1]->Init(_textures[2], _font, pnt, sym);
-    _sprites[1]->AddAnimation("Test", {0x263B,0x263A});
-    _sprites[1]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
-    _sprites[1]->SetAnimation("Test");
-    _sprites[1]->SetForeground({0x80,0x00,0xFF,0xFF});
-    _sprites[1]->SetBackground({0xBA,0xDA,0x55,0xFF});
-    
-    //create unicode sprite with internal spritesheet texture
-    _sprites.push_back(new RUnicodeSprite());
-    _sprites[2]->Init(_windows[0]->renderer, _font, pnt, sym);
+    _sprites[2]->Init(_textures[2], _font, pnt, sym);
     _sprites[2]->AddAnimation("Test", {0x263A,0x263B});
     _sprites[2]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
     _sprites[2]->SetAnimation("Test");
     _sprites[2]->SetForeground({0x80,0x00,0xFF,0xFF});
-    _sprites[2]->SetBackground({0x00,0x00,0x00,0xFF});
+    _sprites[2]->SetBackground({0xBA,0xDA,0x55,0xFF});
+    
+    //create unicode sprite with internal spritesheet texture
+    _sprites.push_back(new RUnicodeSprite());
+    _sprites[3]->Init(_windows[0]->renderer, _font, pnt, sym);
+    _sprites[3]->AddAnimation("Test", {0x263A,0x263B});
+    _sprites[3]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
+    _sprites[3]->SetAnimation("Test");
+    _sprites[3]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _sprites[3]->SetBackground({0x00,0x00,0x00,0xFF});
 
     TTF_CloseFont(_font);
     
@@ -233,16 +237,22 @@ void TestState::Draw(RGameEngine* game)
     msg << "fps:" << _fps << " ms:" << _ms;
     _sprites[0]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
     
-    //render test sprites
-    _sprites[1]->Render(_windows[0]->renderer, 0 , 0);
-    _sprites[2]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[2]->GetWidth() , _windows[0]->GetHeight()  - _sprites[2]->GetHeight());
-    _sprites[0]->RenderSymbol(_windows[0]->renderer, _x, _y, '@');
-    
-    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 15 );
-    
     //render input text
     _sprites[0]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  / 2 - (32 * _sprites[0]->GetWidth() ) / 2, _windows[0]->GetHeight()  / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
-      
+   
+    //render test sprites:
+    //latin set text
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 15 );
+    _sprites[1]->RenderSymbol(_windows[0]->renderer, _sprites[0]->GetWidth() * 16 , _sprites[1]->GetHeight(), _latin, _sprites[1]->GetWidth() * 15 );
+   
+    _sprites[1]->Render(_windows[0]->renderer, 240, 180);
+    //test sprites
+    _sprites[2]->Render(_windows[0]->renderer, 0 , 0);
+    _sprites[3]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[2]->GetWidth() , _windows[0]->GetHeight()  - _sprites[2]->GetHeight());
+    
+    //"player"
+    _sprites[1]->RenderSymbol(_windows[0]->renderer, _x, _y, '@');
+     
     SDL_RenderPresent( _windows[0]->renderer );
     _count++;
 } 
