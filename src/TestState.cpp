@@ -252,7 +252,7 @@ void TestState::Draw(RGameEngine* game)
     _sprites[3]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[3]->GetWidth() , _windows[0]->GetHeight()  - _sprites[3]->GetHeight());
     
     //"player"
-    _sprites[1]->RenderSymbol(_windows[0]->renderer, _x, _y, '@');
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, _x, _y, '@');
      
     SDL_RenderPresent( _windows[0]->renderer );
     _count++;

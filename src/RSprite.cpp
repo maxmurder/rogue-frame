@@ -384,43 +384,12 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
 
 void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, string symbols, int width)
 {
-    if(_texture != NULL )
-    { 
-        int  i = 0, r = 0;
-        for (auto &c : symbols)
-        {
-            int xOffset = 0;
-            int yOffset = 0;
-            SDL_Rect frame = {0,0,_charw,_charh};   
-            
-            //handle carrige return and line feed characters
-            if ( (c == 0x000A) || (c == 0x000D) )
-            {
-                r++;
-                i = 0;
-            } else {
-               //calculate offsets
-                CalculateOffset( &xOffset, &yOffset, &r, width, i);
-                
-                //choose frame
-                frame = { GetSymbolIndex(c) * _charw , 0 , _charw , _charh };
-                
-                //render background
-                if (_bg.a > 0)
-                {
-                    RenderBackground(renderer , { x + xOffset , y + yOffset, _w, _h});
-                }
-                
-                //update texture and render
-                UpdateTexture();
-                _texture->Render(renderer, x + xOffset + _xRenderOffset , y + yOffset + _yRenderOffset, &frame, _angle, &_center, _flip);
-                i++;
-            }
-        }
-    }else
+    vector<uint16_t> vec;
+    for (auto &s : symbols)
     {
-        cout << "Sprite could not be rendered :: Missing texture" << endl;
+        vec.push_back(s);
     }
+    RenderSymbol(renderer, x, y, vec, width);
 }
 
 void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<uint16_t> symbols, int width)
