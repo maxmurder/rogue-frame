@@ -72,11 +72,13 @@ void RWindow::HandleEvent( SDL_Event& event )
             
         case SDL_WINDOWEVENT_FOCUS_GAINED:
             _mouseFocus = true;
+            _keyboardFocus = true;
             updateCaption = true;
             break;
             
         case SDL_WINDOWEVENT_FOCUS_LOST:
             _mouseFocus = false;
+            _keyboardFocus = false;
             updateCaption = true;
             break;
             
@@ -182,7 +184,7 @@ RWindow::RWindow()
 {
     window = NULL;
     _mouseFocus = false;
-     _keyboardFocus = false;
+    _keyboardFocus = false;
     _fullScreen = false;
     _minimized = false;
     _height = 0;

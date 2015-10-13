@@ -71,7 +71,9 @@ void TestState::Init(RGameEngine* game)
     _sprites[3]->AddAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
     _sprites[3]->SetAnimation("Test");
     _sprites[3]->SetForeground({0x80,0x00,0xFF,0xFF});
-    _sprites[3]->SetBackground({0x00,0x00,0x00,0xFF});
+    _sprites[3]->SetBackground({0xBA,0xDA,0x55,0xFF});
+    _sprites[3]->SetDimensions(24, 24);
+    _sprites[3]->SetRenderOffset(8,4);
 
     TTF_CloseFont(_font);
     
@@ -232,23 +234,22 @@ void TestState::Draw(RGameEngine* game)
     stringstream msg;
     msg.precision(4);
     msg << "x:" << _mouse_x << " y:" << _mouse_y;
-    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0, _windows[0]->GetHeight()  - _sprites[0]->GetHeight(), msg.str());
+    _sprites[1]->RenderSymbol(_windows[0]->renderer, 0, _windows[0]->GetHeight()  - _sprites[1]->GetHeight(), msg.str());
     msg.str(string());
     msg << "fps:" << _fps << " ms:" << _ms;
-    _sprites[0]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _sprites[0]->GetWidth()  , 0 , msg.str());
+    _sprites[1]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _sprites[1]->GetWidth()  , 0 , msg.str());
     
     //render input text
     _sprites[0]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  / 2 - (32 * _sprites[0]->GetWidth() ) / 2, _windows[0]->GetHeight()  / 2 - _sprites[0]->GetHeight(), _input,_sprites[0]->GetWidth() * 32);
    
     //render test sprites:
     //latin set text
-    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 15 );
-    _sprites[1]->RenderSymbol(_windows[0]->renderer, _sprites[0]->GetWidth() * 16 , _sprites[1]->GetHeight(), _latin, _sprites[1]->GetWidth() * 15 );
+    _sprites[0]->RenderSymbol(_windows[0]->renderer, 0 , _sprites[0]->GetHeight(), _latin, _sprites[0]->GetWidth() * 16 );
+    _sprites[1]->RenderSymbol(_windows[0]->renderer, _sprites[1]->GetWidth() + _sprites[0]->GetWidth() * 16 , _sprites[1]->GetHeight(), _latin, _sprites[1]->GetWidth() * 16 );
    
-    _sprites[1]->Render(_windows[0]->renderer, 240, 180);
     //test sprites
     _sprites[2]->Render(_windows[0]->renderer, 0 , 0);
-    _sprites[3]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[2]->GetWidth() , _windows[0]->GetHeight()  - _sprites[2]->GetHeight());
+    _sprites[3]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[3]->GetWidth() , _windows[0]->GetHeight()  - _sprites[3]->GetHeight());
     
     //"player"
     _sprites[1]->RenderSymbol(_windows[0]->renderer, _x, _y, '@');

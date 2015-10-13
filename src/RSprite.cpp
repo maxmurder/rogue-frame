@@ -364,9 +364,8 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
 {
     if(_texture != NULL )
     {   
-        int _xRenderOffset = _w / 2;
-        SDL_Rect symFrame = {0,0, _xRenderOffset , _h};
-        symFrame = { GetSymbolIndex(symbol) * _xRenderOffset , 0 , _xRenderOffset , _h };
+        SDL_Rect symFrame = {0,0, _charw , _charh};
+        symFrame = { GetSymbolIndex(symbol) * _charw , 0 , _charw , _charh };
         
         //render background
         if (_bg.a > 0)
@@ -376,7 +375,7 @@ void RUnicodeSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_
         //update texture
         UpdateTexture();
         //render texture
-        _texture->Render(renderer, x + _xRenderOffset / 2, y , &symFrame, _angle, &_center, _flip);
+        _texture->Render(renderer, x + _xRenderOffset, y + _yRenderOffset, &symFrame, _angle, &_center, _flip);
     }else
     {
         cout << "Sprite could not be rendered :: Missing texture" << endl;
@@ -495,7 +494,6 @@ void RUnicodeSprite::SetTextMode(int mode, int pntsize)
     default:
         cout << "Unkown TextMode: " << mode;
     }
-    cout << _charw <<" "<< _charh << endl;
 }
 
 void RUnicodeSprite::CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, vector<uint16_t> symbols)
