@@ -7,7 +7,6 @@
 class RTexture
 {
     public:
-        
         bool LoadFromFile( std::string path, SDL_Renderer* renderer); // load from file
         bool LoadFromFile( std::string path, SDL_Renderer* renderer, int red, int green, int blue); // load from file with color keying
         void RenderText( SDL_Renderer* renderer, std::string string, TTF_Font* font, SDL_Color color = {0xFF,0xFF,0xFF,0xFF} ); //Renders a string to the texture

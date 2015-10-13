@@ -104,7 +104,7 @@ void RTexture::RenderText( SDL_Renderer* renderer, std::string string, TTF_Font*
     }
 }
 
-void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t symbols[], TTF_Font* font, SDL_Color color )
+void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t symbols[], TTF_Font* font, SDL_Color color)
 {
     FreeTexture();
     _texture = r_SDL::RenderUnicode(symbols, font, renderer, _texture, color);

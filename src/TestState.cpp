@@ -2,9 +2,11 @@
 #include <iomanip>
 #include <sstream>
 #include <vector>
+#include <stdlib.h>
 #include "TestState.h"
 #include "r_SDL.h"
-#include <stdlib.h>
+#include "r_utils.h"
+
 
 using namespace std;
 
@@ -12,38 +14,17 @@ TestState TestState::_TestState;
 
 void TestState::Init(RGameEngine* game)
 {   
+    //initilize window
     _windows.push_back(new RWindow());
     _windows[0]->Init();
     
     // file writing test
-    stringstream ls;
-    for( uint32_t i = 0; i <= sizeof(UNICODE_LATIN_BASIC) / sizeof(uint16_t); i++ )
-    {
-        if (i == 0)
-        {   ls << "0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << UNICODE_LATIN_BASIC[i]; 
-        }else 
-        {
-            ls << ",0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << UNICODE_LATIN_BASIC[i]; 
-        }
-    } 
-    string lstring = ls.str();
-    r_SDL::WriteFile("data/raw/latin_basic", lstring.c_str());
+    string lstring = r_utils::UnicodeToHexString (UNICODE_LATIN_BASIC, ",") ;
+    r_SDL::WriteFile( "data/raw/latin_basic", lstring.c_str() );
     
-    
-    //file reading test
+    //file read test
     char* data = r_SDL::ReadFile("data/raw/latin_basic");
-    string str = data;
-    string newString;
-    
-    size_t pos = 0;
-    string token;
-    while ( ( pos = str.find(',') ) != string::npos)
-    {
-         token = str.substr(0,pos);
-         _latin.push_back( (int)strtol( token.c_str(), NULL, 0 ) );
-         newString += _latin.back();
-         str.erase(0, pos + 1);
-    }
+    _latin = r_utils::HexStringToUnicode(data, ",");
     
     //setup font
     int pnt = 16;

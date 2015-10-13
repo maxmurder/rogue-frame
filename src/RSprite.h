@@ -30,7 +30,8 @@ class RSprite
         void SetFlipMode(SDL_RendererFlip flip); //set flip mode
         void SetCenter(SDL_Point center); //set pivot point
         void SetAngle(double angle); //set rotation angle
-        
+        void SetRenderOffset(int wOffset, int hOffset); //sprite render offset (for centering sprites)
+         
         //animation interface
         void SetAnimation(std::string animation, uint16_t frame = 0); //set current animation
         void SetAnimationSpeed(int animationSpeed);
@@ -52,6 +53,7 @@ class RSprite
         std::string _currentAnimation;
         uint16_t _currentframe;
         int _animSpeed;
+        int _w, _h, _xRenderOffset, _yRenderOffset;
         SDL_Color _fg;
         SDL_Color _bg;
         SDL_RendererFlip _flip;
@@ -85,19 +87,19 @@ class RUnicodeSprite: public RSprite
         int GetWidth();
         int GetHeight();
         void SetDimensions(int width, int height );//sets symbol dimensions for size calculations
-       
         
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, uint16_t symbol); //Renders a symbol. Renders first symbol in the sheet if symbol does not exist in the symbol list.
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::vector<uint16_t> symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
+        
         RUnicodeSprite(); 
        ~RUnicodeSprite();
 
     private:
         void CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols); //Generates an internal sprite sheet from a list of symbols.
+        void CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int c); //calculates offsets for rendering text. 'r' is # of newlines, 'c' is number of charaters. 
         uint16_t GetSymbolIndex(uint16_t symbol);
         int _pntsize;
-        int _w, _h;
         std::vector<uint16_t> _symbols;
         bool _internalTexutreInstance; //true if Init Created its own RTexture instance. Used for cleanup.
 };
