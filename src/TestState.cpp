@@ -92,12 +92,14 @@ void TestState::Init(RGameEngine* game)
     _timers.push_back(new RTimer());
     _timers[0]->Start();
     
-    //start text input
-    SDL_StartTextInput();
     _y = _windows[0]->GetHeight() / 2;
     _x = _windows[0]->GetWidth()  / 2;
     
     TTF_CloseFont(_font);
+
+    //start input
+    SDL_StartTextInput();    
+    currentKeyStates = SDL_GetKeyboardState(NULL);
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -118,17 +120,21 @@ void TestState::Cleanup(RGameEngine* game)
     {
         delete win;
     }
+    
+    SDL_StopTextInput(); 
 }
 
 void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
 void TestState::HandleEvents(RGameEngine* game)
 {
+    //handle important key events
     while( SDL_PollEvent( &_event ) )
     {
         if( _event.type == SDL_QUIT )
         {
             game->Quit();
+            
         } else if ( _event.type == SDL_MOUSEMOTION || _event.type == SDL_MOUSEBUTTONDOWN || _event.type == SDL_MOUSEBUTTONUP )
         {
             SDL_GetMouseState( &_mouse_x, &_mouse_y);
@@ -137,93 +143,66 @@ void TestState::HandleEvents(RGameEngine* game)
                 _x = _mouse_x;
                 _y = _mouse_y;
             }
-            
-            //handle text input
-        } else if ( _event.type == SDL_KEYDOWN )
-        {
-            if( _event.key.keysym.sym == SDLK_BACKSPACE && _input.length() > 0 )
-            {
-                _input.pop_back();
-            } else if( _event.key.keysym.sym == SDLK_RETURN )
-            {
-                _input.push_back(0x000D);
-            }else if ( _event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
-            {
-                SDL_SetClipboardText( _input.c_str() );
-            } else if ( _event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
-            {
-                _input = SDL_GetClipboardText();
-            }
-        } else if ( _event.type == SDL_TEXTINPUT )
-        {
-            if( !( ( _event.text.text[0] == 'c' || _event.text.text[0] == 'C') && (_event.text.text[0] == 'v' && _event.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL ) )
-            {
-                _input += _event.text.text;
-            }
         }
+        
+        //get keyboard text input
+        _input = r_SDL::TextInputHandler(_event, _input);
+        
+        //handle window events
         for (auto &win : _windows)
         {
             win->HandleEvent(_event);
         }
     }
     
-    static int velx;
-    static int vely;
-    
-    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
     if ( currentKeyStates[SDL_SCANCODE_ESCAPE] )
     {
         game->Quit();
     }
+    
+    static bool sp_down;
+    
     if ( currentKeyStates[SDL_SCANCODE_SPACE] )
     {
-        static bool der;
-        if (der)
+        if(!sp_down)
         {
-            _sprites[1]->SetAnimation("Test");
-           der = false;
-        }else
-        {
-            _sprites[1]->SetAnimation("Test1");
-            der = true;
+            static bool der;
+            if (der)
+            {
+                _sprites[2]->SetAnimation("Test");
+               der = false;
+            }else
+            {
+                _sprites[2]->SetAnimation("Test1");
+                der = true;
+            }
         }
+        sp_down = true;
+    }else{
+        sp_down = false;
     }
+    
+    //'player' movement
     if ( currentKeyStates[SDL_SCANCODE_UP] )
     {
-        vely = -1;
+        _y -= 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_DOWN] )
     {
-        vely = 1;
+        _y += 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_LEFT] )
     {
         _sprites[0]->SetTextMode( RSprite::TEXT );
-        velx = -1;
+        _sprites[2]->SetTextMode( RSprite::TEXT );
+        _x -= 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_RIGHT] )
     {
         _sprites[0]->SetTextMode( RSprite::UNICODE );
-        velx = 1;
+        _sprites[2]->SetTextMode( RSprite::UNICODE );
+        _x += 1;
     }
-    
-    if( _x > _windows[0]->GetWidth()  - _sprites[0]->GetWidth())
-    {
-        velx = -1;
-    }else if ( _x < 0)
-    {
-        velx = 1;
-    }
-    if( _y > _windows[0]->GetHeight()  - _sprites[0]->GetHeight())
-    {
-        vely = -1;
-    }else if ( _y < 0)
-    {
-        vely = 1;
-    }
-    
-    _x += velx;
-    _y += vely;
 }
 
 void TestState::Update(RGameEngine* game)
@@ -239,6 +218,22 @@ void TestState::Update(RGameEngine* game)
     for(auto &s : _sprites)
     {
         s->UpdateAnimation();
+    }
+    
+    //keep player in bounds
+    if( _x > _windows[0]->GetWidth()  - _sprites[0]->GetWidth())
+    {
+        _x -= 1;
+    }else if ( _x < 0)
+    {
+        _x += 1;
+    }
+    if( _y > _windows[0]->GetHeight()  - _sprites[0]->GetHeight())
+    {
+        _y -= 1;
+    }else if ( _y < 0)
+    {
+        _y += 1;
     }
 }
 
@@ -256,7 +251,7 @@ void TestState::Draw(RGameEngine* game)
     msg << "x:" << _mouse_x << " y:" << _mouse_y;
     _sprites[1]->RenderSymbol(_windows[0]->renderer, 0, _windows[0]->GetHeight()  - _sprites[1]->GetHeight(), msg.str());
     msg.str(string());
-    msg << "fps:" << _fps << " ms:" << _ms;
+    msg << "fps:" << std::setfill('0') << std::setw(5) << _fps << " ms:" << _ms;
     _sprites[1]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _sprites[1]->GetWidth()  , 0 , msg.str());
     
     //render input text
@@ -272,7 +267,7 @@ void TestState::Draw(RGameEngine* game)
     _sprites[3]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _sprites[3]->GetWidth() , _windows[0]->GetHeight()  - _sprites[3]->GetHeight());
     
     _sprites[4]->Render(_windows[0]->renderer, _x, _y);
-     
+
     SDL_RenderPresent( _windows[0]->renderer );
     _count++;
 } 

@@ -41,7 +41,8 @@ class RSprite
         void SetCenter(SDL_Point center); //set pivot point
         void SetAngle(double angle); //set rotation angle
         void SetRenderOffset(int xOffset, int yOffset); //sprite render offset (for centering sprites)
-        void SetDimensions(int width, int height );//sets symbol dimensions for size calculations
+        void SetDimensions(int width, int height );//sets sprite dimensions for size calculations
+        void SetCellDimensions(int width, int height );//sets spritesheet cell dimensions for size calculations
         
         int GetWidth();
         int GetHeight();

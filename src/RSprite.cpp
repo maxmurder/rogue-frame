@@ -421,6 +421,12 @@ int RSprite::GetPntSize()
     return _pntsize;
 }
 
+void RSprite::SetCellDimensions(int width, int height)
+{
+    _cell_w = width;
+    _cell_h = height;
+}
+
 void RSprite::SetTextMode(int mode, int pntsize)
 {   
     if (pntsize != 0)

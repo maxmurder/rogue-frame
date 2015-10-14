@@ -35,6 +35,7 @@ class TestState: public RGameState {
         static TestState _TestState;
         SDL_Renderer* _renderer;
         SDL_Event _event;
+        const Uint8* currentKeyStates;
         
         std::vector<RWindow*> _windows;
         std::vector<RTexture*> _textures;

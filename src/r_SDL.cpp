@@ -236,3 +236,31 @@ void r_SDL::ApplySurface( int x, int y, SDL_Surface* source, SDL_Surface* destin
     
     SDL_BlitSurface( source, NULL, destination, &offset );
 }
+
+std::string r_SDL::TextInputHandler(SDL_Event &event, std::string inputString)
+{
+    if ( event.type == SDL_KEYDOWN )
+    {
+        if( event.key.keysym.sym == SDLK_BACKSPACE && inputString.length() > 0 )
+        {
+            inputString.pop_back();
+        } else if( event.key.keysym.sym == SDLK_RETURN )
+        {
+            inputString.push_back(0x000D);
+        }else if ( event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
+        {
+            SDL_SetClipboardText( inputString.c_str() );
+        } else if ( event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
+        {
+            inputString = SDL_GetClipboardText();
+        }
+    } else if ( event.type == SDL_TEXTINPUT )
+    {
+        if( !( ( event.text.text[0] == 'c' || event.text.text[0] == 'C') && (event.text.text[0] == 'v' && event.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL ) )
+        {
+            inputString += event.text.text;
+        }
+    }
+    return inputString;
+}
+
