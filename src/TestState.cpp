@@ -40,13 +40,13 @@ void TestState::Init(RGameEngine* game)
     
     //create RSprite() for basic latin set
     _sprites.push_back(new RSprite());
-    _sprites[0]->Init(_textures[1], _font, pnt, _latin );
+    _sprites[0]->Init(_textures[1], _font, pnt, _latin, 2 );
     _sprites[0]->SetForeground({0x80,0x00,0xFF,0xFF});
     _sprites[0]->SetBackground({0x00,0x00,0x00,0xFF});
     
     //create text style (rectangular) unicode sprite for latin set
     _sprites.push_back(new RSprite());
-    _sprites[1]->Init(_textures[1], _font, pnt, _latin, 0);
+    _sprites[1]->Init(_textures[1], _font, pnt, _latin );
     _sprites[1]->SetForeground({0x80,0x00,0xFF,0xFF});
     _sprites[1]->SetBackground({0x00,0x00,0x00,0xFF});
     
@@ -198,10 +198,12 @@ void TestState::HandleEvents(RGameEngine* game)
     }
     if ( currentKeyStates[SDL_SCANCODE_LEFT] )
     {
+        _sprites[0]->SetTextMode( RSprite::TEXT );
         velx = -1;
     }
     if ( currentKeyStates[SDL_SCANCODE_RIGHT] )
     {
+        _sprites[0]->SetTextMode( RSprite::UNICODE );
         velx = 1;
     }
     

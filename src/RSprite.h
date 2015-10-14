@@ -15,7 +15,7 @@
 class RSprite
 {
     public:
-        enum TextMode {TEXT = 0, UNICODE = 1, UTF8 = 2};
+        enum TextMode {NONE = 0, TEXT = 1,  UNICODE = 2, UTF8 = 3};
         //Initilizes sprite using supplied texture;
         void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 30, SDL_Color fg = {0x00,0x00,0x00,0xFF}, SDL_Color bg = {0x00,0x00,0x00,0x00}, std::string animation = "DEFAULT" );
         //Initilizes sprite and generates internal spritesheet from an array of Unicode symbols[].
@@ -50,7 +50,7 @@ class RSprite
         
         //text
         int GetPntSize(); //Returns font size.
-        void SetTextMode(int mode, int pntsize); //resizes sprite based on TTF_SizeText|TTF_SizeUNICODE|TTF_SizeUTF8.
+        void SetTextMode(int mode, int pntsize  = 0); //resizes sprite based on TTF_SizeText|TTF_SizeUNICODE|TTF_SizeUTF8.
       
         //animation interface
         void SetAnimation(std::string animation, uint16_t frame = 0); //set current animation

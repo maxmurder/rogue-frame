@@ -423,26 +423,35 @@ int RSprite::GetPntSize()
 
 void RSprite::SetTextMode(int mode, int pntsize)
 {   
-    _pntsize = pntsize;
+    if (pntsize != 0)
+    {
+        _pntsize = pntsize;
+    }
+    
     switch (mode)
     {
     case TEXT:
-        _cell_w = pntsize / 2;
-        _cell_h = pntsize;
+        _cell_w = _pntsize / 2;
+        _cell_h = _pntsize;
         SetDimensions(_cell_w, _cell_h);
         SetRenderOffset( 0 , 0);
         break;
     case UNICODE:
-        _cell_w = pntsize / 2;
-        _cell_h = pntsize;
-        SetDimensions(pntsize, pntsize);
+        _cell_w = _pntsize / 2;
+        _cell_h = _pntsize;
+        SetDimensions(_pntsize, _pntsize);
         SetRenderOffset( _cell_w / 2, 0);
         break;
     case UTF8:
-        _cell_w = pntsize / 2;
-        _cell_h = pntsize;
-        SetDimensions(pntsize, pntsize);
+        _cell_w = _pntsize / 2;
+        _cell_h = _pntsize;
+        SetDimensions(_pntsize, _pntsize);
         SetRenderOffset( _cell_w / 2, 0);
+    case NONE:
+        _cell_w = _w;
+        _cell_h = _h;
+        SetDimensions(_cell_w,_cell_h);
+        SetRenderOffset( 0 , 0 );
     break;
     default:
         cout << "Unkown TextMode: " << mode;
@@ -485,7 +494,7 @@ void RSprite::CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int
     *xOffset = (c * _w);
     int i = *r;
     
-    if (width >= _w)
+    if (width >= _w && width > 0)
     {
         if ( *xOffset % width == 0 && c > 0)
         {
