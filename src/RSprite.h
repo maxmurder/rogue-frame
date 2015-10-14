@@ -15,7 +15,7 @@
 class RSprite
 {
     public:
-        void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 30, SDL_Color fg = {0,0,0,0}, SDL_Color bg = {0,0,0,0}, std::string animation = "DEFAULT" );
+        void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 30, SDL_Color fg = {0x00,0x00,0x00,0xFF}, SDL_Color bg = {0x00,0x00,0x00,0x00}, std::string animation = "DEFAULT" );
         void SetTexture(RTexture* texture);
         void AddAnimation(std::string animation, std::vector<SDL_Rect> frames); //adds animation to animation list
         void RemoveAnimation(std::string animation); //removes an animation
@@ -33,6 +33,7 @@ class RSprite
         void SetAngle(double angle); //set rotation angle
         void SetRenderOffset(int xOffset, int yOffset); //sprite render offset (for centering sprites)
         void SetDimensions(int width, int height );//sets symbol dimensions for size calculations
+        
         int GetWidth();
         int GetHeight();
         int GetRenderOffsetx();

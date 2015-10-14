@@ -38,7 +38,8 @@ class TestState: public RGameState {
         
         std::vector<RWindow*> _windows;
         std::vector<RTexture*> _textures;
-        std::vector<RUnicodeSprite*> _sprites;
+        std::vector<RSprite*> _sprites;
+        std::vector<RUnicodeSprite*> _unicodeSprites;
         std::vector<RTimer*> _timers;
         
         TTF_Font* _font;
