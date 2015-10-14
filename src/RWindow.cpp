@@ -168,7 +168,7 @@ bool RWindow::IsShown()
     return _shown;
 }
 
-void RWindow::Free()
+void RWindow::FreeWindow()
 {   
     if(window != NULL)
     {
@@ -191,4 +191,7 @@ RWindow::RWindow()
     _width = 0;
 }
 
-
+RWindow::~RWindow()
+{
+    FreeWindow();
+}

@@ -11,7 +11,7 @@ class RWindow
         void HandleEvent(SDL_Event &event);
         void Focus();
         void Render();
-        void Free();
+        void FreeWindow();
         
         int GetWidth();
         int GetHeight();
@@ -25,6 +25,7 @@ class RWindow
         SDL_Renderer* renderer;
         
         RWindow();
+        ~RWindow();
 
     private:
         std::string _name;

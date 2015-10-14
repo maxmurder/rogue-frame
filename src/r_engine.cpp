@@ -37,14 +37,16 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
 
 void RGameEngine::Cleanup() 
 {
-    while ( !states.empty() ) 
+    for (auto s : states )
     {
-        states.back()->Cleanup(this);
-        states.pop_back();
+        s->Cleanup(this);
     }
+    states.clear();
+    
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
+    
     
     cout << "RGameEngine Cleanup" << endl;
 }
