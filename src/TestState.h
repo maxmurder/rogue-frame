@@ -44,8 +44,8 @@ class TestState: public RGameState {
         System<RenderComponent> _renderSystem;
         System<RTimer> _timerSystem;
         
-        EntityID SPRITE_LATIN_UNI = 1;
-        EntityID SPRITE_LATIN_TEXT = 2;
+        EntityID SPRITE_LATIN_UNI;
+        EntityID SPRITE_LATIN_TEXT;
     
         std::vector<RWindow*> _windows;
         std::vector<RTexture*> _textures;
