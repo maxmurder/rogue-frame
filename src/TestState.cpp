@@ -38,16 +38,16 @@ void TestState::Init(RGameEngine* game)
     _textures[1]->RenderUnicode(_windows[0]->renderer, &_latin[0], _font);
         
     //create sprite for basic latin set
-    _spriteSystem.components[SPRITE_LATIN_UNI] = new SpriteComponent(SPRITE_LATIN_UNI);
-    _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->Init(_textures[1], _font, pnt, _latin, 2 );
-    _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->SetForeground({0x80,0x00,0xFF,0xFF});
-    _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->SetBackground({0x00,0x00,0x00,0xFF});
+    _spriteSystem.components[SPRITE_LATIN_UNI] = new RSprite(SPRITE_LATIN_UNI);
+    _spriteSystem.components[SPRITE_LATIN_UNI]->Init(_textures[1], _font, pnt, _latin, 2 );
+    _spriteSystem.components[SPRITE_LATIN_UNI]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _spriteSystem.components[SPRITE_LATIN_UNI]->SetBackground({0x00,0x00,0x00,0xFF});
     
     //create text style (rectangular) unicode sprite for latin set
-    _spriteSystem.components[SPRITE_LATIN_TEXT] = new SpriteComponent(SPRITE_LATIN_TEXT);
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->Init(_textures[1], _font, pnt, _latin );
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->SetForeground({0x80,0x00,0xFF,0xFF});
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->SetBackground({0x00,0x00,0x00,0xFF});
+    _spriteSystem.components[SPRITE_LATIN_TEXT] = new RSprite(SPRITE_LATIN_TEXT);
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->Init(_textures[1], _font, pnt, _latin );
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->SetBackground({0x00,0x00,0x00,0xFF});
     
     //generate custom spritesheet using unicode
     vector<uint16_t> sym = {0x263A,0x263B,0x007C,0x005C,0x2500,0x002F};
@@ -55,24 +55,24 @@ void TestState::Init(RGameEngine* game)
     _textures.push_back(new RTexture());
     _textures[2]->RenderUnicode( _windows[0]->renderer, symArray, _font );
     
-    _spriteSystem.components[3] = new SpriteComponent(3);
-    _spriteSystem.components[3]->sprite->Init(_textures[2], _font, pnt, sym);
-    _spriteSystem.components[3]->sprite->AddUnicodeAnimation("Test", {0x263A,0x263B});
-    _spriteSystem.components[3]->sprite->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
-    _spriteSystem.components[3]->sprite->SetAnimation("Test");
-    _spriteSystem.components[3]->sprite->SetForeground({0x80,0x00,0xFF,0xFF});
-    _spriteSystem.components[3]->sprite->SetBackground({0xBA,0xDA,0x55,0xFF});
+    _spriteSystem.components[3] = new RSprite(3);
+    _spriteSystem.components[3]->Init(_textures[2], _font, pnt, sym);
+    _spriteSystem.components[3]->AddUnicodeAnimation("Test", {0x263A,0x263B});
+    _spriteSystem.components[3]->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
+    _spriteSystem.components[3]->SetAnimation("Test");
+    _spriteSystem.components[3]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _spriteSystem.components[3]->SetBackground({0xBA,0xDA,0x55,0xFF});
     
     //create unicode sprite with internal spritesheet texture
-    _spriteSystem.components[4] = new SpriteComponent(4);
-    _spriteSystem.components[4]->sprite->Init(_windows[0]->renderer, _font, pnt, sym);
-    _spriteSystem.components[4]->sprite->AddUnicodeAnimation("Test", {0x263A,0x263B});
-    _spriteSystem.components[4]->sprite->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
-    _spriteSystem.components[4]->sprite->SetAnimation("Test");
-    _spriteSystem.components[4]->sprite->SetForeground({0x80,0x00,0xFF,0xFF});
-    _spriteSystem.components[4]->sprite->SetBackground({0xBA,0xDA,0x55,0xFF});
-    _spriteSystem.components[4]->sprite->SetDimensions(24, 24);
-    _spriteSystem.components[4]->sprite->SetRenderOffset(8,4);
+    _spriteSystem.components[4] = new RSprite(4);
+    _spriteSystem.components[4]->Init(_windows[0]->renderer, _font, pnt, sym);
+    _spriteSystem.components[4]->AddUnicodeAnimation("Test", {0x263A,0x263B});
+    _spriteSystem.components[4]->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
+    _spriteSystem.components[4]->SetAnimation("Test");
+    _spriteSystem.components[4]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _spriteSystem.components[4]->SetBackground({0xBA,0xDA,0x55,0xFF});
+    _spriteSystem.components[4]->SetDimensions(24, 24);
+    _spriteSystem.components[4]->SetRenderOffset(8,4);
 
     //create spritesheet from png
     _textures.push_back(new RTexture());
@@ -85,10 +85,10 @@ void TestState::Init(RGameEngine* game)
     _positionSystem.components[5] = new PositionComponent(5);
     _positionSystem.components[5]->x = _windows[0]->GetWidth()  / 2;
     _positionSystem.components[5]->y = _windows[0]->GetHeight() / 2;
-    _spriteSystem.components[5] = new SpriteComponent(5);
-    _spriteSystem.components[5]->sprite->Init(_textures[3], frames);
-    _spriteSystem.components[5]->sprite->SetForeground({0x80,0x00,0xFF,0xFF});
-    _spriteSystem.components[5]->sprite->SetBackground({0xBA,0xDA,0x55,0xFF});
+    _spriteSystem.components[5] = new RSprite(5);
+    _spriteSystem.components[5]->Init(_textures[3], frames);
+    _spriteSystem.components[5]->SetForeground({0x80,0x00,0xFF,0xFF});
+    _spriteSystem.components[5]->SetBackground({0xBA,0xDA,0x55,0xFF});
     _renderSystem.components[5] = new RenderComponent(5, _positionSystem, _spriteSystem);
     
     //setup timer
@@ -178,11 +178,11 @@ void TestState::HandleEvents(RGameEngine* game)
             static bool der;
             if (der)
             {
-                _spriteSystem.components[3]->sprite->SetAnimation("Test");
+                _spriteSystem.components[3]->SetAnimation("Test");
                der = false;
             }else
             {
-                _spriteSystem.components[3]->sprite->SetAnimation("Test1");
+                _spriteSystem.components[3]->SetAnimation("Test1");
                 der = true;
             }
         }
@@ -202,14 +202,14 @@ void TestState::HandleEvents(RGameEngine* game)
     }
     if ( currentKeyStates[SDL_SCANCODE_LEFT] )
     {
-        _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->SetTextMode( RSprite::TEXT );
-        _spriteSystem.components[3]->sprite->SetTextMode( RSprite::TEXT );
+        _spriteSystem.components[SPRITE_LATIN_UNI]->SetTextMode( RSprite::TEXT );
+        _spriteSystem.components[3]->SetTextMode( RSprite::TEXT );
         _positionSystem.components[5]->x -= 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_RIGHT] )
     {
-        _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->SetTextMode( RSprite::UNICODE );
-        _spriteSystem.components[3]->sprite->SetTextMode( RSprite::UNICODE );
+        _spriteSystem.components[SPRITE_LATIN_UNI]->SetTextMode( RSprite::UNICODE );
+        _spriteSystem.components[3]->SetTextMode( RSprite::UNICODE );
         _positionSystem.components[5]->x += 1;
     }
 }
@@ -225,18 +225,18 @@ void TestState::Update(RGameEngine* game)
     
     for(auto &s : _spriteSystem.components)
     {
-        s.second->sprite->UpdateAnimation();
+        s.second->UpdateAnimation();
     }
     
     //keep player in bounds
-    if( _positionSystem.components[5]->x > _windows[0]->GetWidth()  - _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->GetWidth())
+    if( _positionSystem.components[5]->x > _windows[0]->GetWidth()  - _spriteSystem.components[SPRITE_LATIN_UNI]->GetWidth())
     {
         _positionSystem.components[5]->x -= 1;
     }else if ( _positionSystem.components[5]->x < 0)
     {
         _positionSystem.components[5]->x += 1;
     }
-    if( _positionSystem.components[5]->y > _windows[0]->GetHeight()  - _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->GetHeight())
+    if( _positionSystem.components[5]->y > _windows[0]->GetHeight()  - _spriteSystem.components[SPRITE_LATIN_UNI]->GetHeight())
     {
         _positionSystem.components[5]->y -= 1;
     }else if ( _positionSystem.components[5]->y < 0)
@@ -257,22 +257,22 @@ void TestState::Draw(RGameEngine* game)
     stringstream msg;
     msg.precision(4);
     msg << "x:" << _mouse_x << " y:" << _mouse_y;
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->RenderSymbol(_windows[0]->renderer, 0, _windows[0]->GetHeight()  - _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetHeight(), msg.str());
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, 0, _windows[0]->GetHeight()  - _spriteSystem.components[SPRITE_LATIN_TEXT]->GetHeight(), msg.str());
     msg.str(string());
     msg << "fps:" << std::setfill('0') << std::setw(5) << _fps << " ms:" << _ms;
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetWidth()  , 0 , msg.str());
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth()  , 0 , msg.str());
     
     //render input text
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  / 2 - (32 * _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetWidth() ) / 2, _windows[0]->GetHeight()  / 2 - _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetHeight(), _input,_spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetWidth() * 32);
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  / 2 - (32 * _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth() ) / 2, _windows[0]->GetHeight()  / 2 - _spriteSystem.components[SPRITE_LATIN_TEXT]->GetHeight(), _input,_spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth() * 32);
    
     //render test sprites:
     //latin set text
-    _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->RenderSymbol(_windows[0]->renderer, 0 , _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->GetHeight(), _latin, _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->GetWidth() * 16 );
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->RenderSymbol(_windows[0]->renderer, _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetWidth() + _spriteSystem.components[SPRITE_LATIN_UNI]->sprite->GetWidth() * 16 , _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetHeight(), _latin, _spriteSystem.components[SPRITE_LATIN_TEXT]->sprite->GetWidth() * 16 );
+    _spriteSystem.components[SPRITE_LATIN_UNI]->RenderSymbol(_windows[0]->renderer, 0 , _spriteSystem.components[SPRITE_LATIN_UNI]->GetHeight(), _latin, _spriteSystem.components[SPRITE_LATIN_UNI]->GetWidth() * 16 );
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth() + _spriteSystem.components[SPRITE_LATIN_UNI]->GetWidth() * 16 , _spriteSystem.components[SPRITE_LATIN_TEXT]->GetHeight(), _latin, _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth() * 16 );
    
     //test sprites
-    _spriteSystem.components[3]->sprite->Render(_windows[0]->renderer, 0 , 0);
-    _spriteSystem.components[4]->sprite->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _spriteSystem.components[4]->sprite->GetWidth() , _windows[0]->GetHeight()  - _spriteSystem.components[4]->sprite->GetHeight());
+    _spriteSystem.components[3]->Render(_windows[0]->renderer, 0 , 0);
+    _spriteSystem.components[4]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _spriteSystem.components[4]->GetWidth() , _windows[0]->GetHeight()  - _spriteSystem.components[4]->GetHeight());
     
     for (auto &ren : _renderSystem.components)
     {

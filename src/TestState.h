@@ -41,7 +41,7 @@ class TestState: public RGameState {
         
         std::vector<EntityID> _entities;
         System<PositionComponent> _positionSystem;
-        System<SpriteComponent> _spriteSystem;
+        System<RSprite> _spriteSystem;
         System<RenderComponent> _renderSystem;
         
         EntityID SPRITE_LATIN_UNI = 1;

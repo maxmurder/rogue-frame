@@ -515,7 +515,7 @@ void RSprite::CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int
     *r = i;
 }
 
-RSprite::RSprite()
+RSprite::RSprite(EntityID id) : Component(id)
 {
     _texture = NULL;
     _animSpeed = 0;

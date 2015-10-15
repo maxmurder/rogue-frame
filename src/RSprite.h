@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <SDL2/SDL.h>
+#include "r_entity.h"
 #include "r_SDL.h"
 #include "RTexture.h"
 
@@ -12,7 +13,7 @@
     RSprite contains functionality for handeling RTexture graphics and displaing them on screen.
 */
 
-class RSprite
+class RSprite : public Component
 {
     public:
         enum TextMode {NONE = 0, TEXT = 1,  UNICODE = 2, UTF8 = 3};
@@ -70,7 +71,7 @@ class RSprite
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::vector<uint16_t> symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
     
-        RSprite();
+        RSprite(EntityID id);
         ~RSprite();
         
     protected:
