@@ -39,17 +39,16 @@ class TestState: public RGameState {
         SDL_Event _event;
         const Uint8* currentKeyStates;
         
-        std::vector<EntityID> _entities;
         System<PositionComponent> _positionSystem;
         System<RSprite> _spriteSystem;
         System<RenderComponent> _renderSystem;
+        System<RTimer> _timerSystem;
         
         EntityID SPRITE_LATIN_UNI = 1;
         EntityID SPRITE_LATIN_TEXT = 2;
     
         std::vector<RWindow*> _windows;
         std::vector<RTexture*> _textures;
-        std::vector<RTimer*> _timers;
         
         TTF_Font* _font;
         

@@ -92,8 +92,8 @@ void TestState::Init(RGameEngine* game)
     _renderSystem.components[5] = new RenderComponent(5, _positionSystem, _spriteSystem);
     
     //setup timer
-    _timers.push_back(new RTimer());
-    _timers[0]->Start();
+    _timerSystem.components[0] = new RTimer(0);
+    _timerSystem.components[0]->Start();
     
     TTF_CloseFont(_font);
 
@@ -108,15 +108,14 @@ void TestState::Cleanup(RGameEngine* game)
     {
         delete tex;
     }   
-    for (auto &tim : _timers)
-    {
-        delete tim;
-    }
     for (auto &win : _windows)
     {
         delete win;
     }
-    
+    for (auto &tim : _timerSystem.components)
+    {
+        delete tim.second;
+    }
     for (auto &pos: _positionSystem.components)
     {
         delete pos.second;
@@ -217,7 +216,7 @@ void TestState::HandleEvents(RGameEngine* game)
 void TestState::Update(RGameEngine* game)
 {
     //calculate fps
-    int thisT = _timers[0]->GetTicks();
+    int thisT = _timerSystem.components[0]->GetTicks();
     static int lastT;
     _ms =  thisT - lastT;
     lastT = thisT;

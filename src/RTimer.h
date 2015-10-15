@@ -2,8 +2,9 @@
 #define TTIMER_H
 
 #include <iostream>
+#include "r_entity.h"
 
-class RTimer
+class RTimer : public Component
 {
     public:
         void Start();
@@ -16,7 +17,7 @@ class RTimer
         bool IsStarted();
         bool IsPaused();
         
-        RTimer();
+        RTimer(EntityID id);
         
     private:
         uint32_t _startTicks;
