@@ -3,8 +3,9 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "r_entity.h"
 
-class RTexture
+class RTexture : public Component
 {
     public:
         bool LoadFromFile( std::string path, SDL_Renderer* renderer); // load from file
@@ -21,7 +22,7 @@ class RTexture
         int GetWidth();
         int GetHeight();
         
-        RTexture();
+        RTexture(EntityID id);
         ~RTexture();
     private:
         SDL_Texture* _texture;

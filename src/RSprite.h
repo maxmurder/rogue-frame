@@ -20,7 +20,7 @@ class RSprite : public Component
         //Initilizes sprite using supplied texture;
         void Init(RTexture* texture, std::vector<SDL_Rect> frames, int animationSpeed = 30, SDL_Color fg = {0x00,0x00,0x00,0xFF}, SDL_Color bg = {0x00,0x00,0x00,0x00}, std::string animation = "DEFAULT" );
         //Initilizes sprite and generates internal spritesheet from an array of Unicode symbols[].
-        void Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, int mode = 1, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
+        void Init( SDL_Renderer *renderer, System<RTexture> *textureSystem, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, int mode = 1, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);
         //Initilizes sprite with external unicode/text spritesheet contining symbols[].
         void Init( RTexture* texture, TTF_Font* font, int pntsize, std::vector<uint16_t> symbols, int mode = 1, SDL_Color fg = {0xFF,0xFF,0xFF,0xFF}, SDL_Color bg = {0xFF,0xFF,0xFF,0xFF}, std::string animation = "DEFAULT", int animationSpeed = 30);    
         
@@ -99,8 +99,7 @@ class RSprite : public Component
         //text properties
         int _pntsize;
         std::vector<uint16_t> _symbols;
-        bool _internalTexutreInstance = false; //true if Init Created its own RTexture instance. Used for cleanup.
-    
+          
         void CreateUnicodeSpriteSheet(SDL_Renderer* renderer, TTF_Font* font, std::vector<uint16_t> symbols); //Generates an internal sprite sheet from a list of symbols.
         void CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int c); //calculates offsets for rendering text. 'r' is # of newlines, 'c' is number of charaters. 
         uint16_t GetSymbolIndex(uint16_t symbol);

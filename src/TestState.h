@@ -39,11 +39,13 @@ class TestState: public RGameState {
         SDL_Event _event;
         const Uint8* currentKeyStates;
         
-        System<PositionComponent> _positionSystem;
+        //component systems
         System<RSprite> _spriteSystem;
-        System<RenderComponent> _renderSystem;
+        System<RTexture> _textureSystem;
         System<RTimer> _timerSystem;
-        
+        System<PositionComponent> _positionSystem;
+        System<RenderComponent> _renderSystem;        
+                
         EntityID SPRITE_LATIN_UNI;
         EntityID SPRITE_LATIN_TEXT;
     

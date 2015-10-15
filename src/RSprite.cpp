@@ -23,7 +23,7 @@ void RSprite::Init( RTexture* texture, vector<SDL_Rect> frames, int animationSpe
     _currentframe = 0;
 }
 
-void RSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
+void RSprite::Init( SDL_Renderer *renderer, System<RTexture> *textureSystem, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
     //init variables
     _fg = fg;
@@ -42,12 +42,11 @@ void RSprite::Init( SDL_Renderer* renderer, TTF_Font* font, int pntsize, vector<
     //check if _texture exists
     if (_texture == NULL)
     {
-        _texture = new RTexture();
-        _internalTexutreInstance = true;
+        textureSystem->components[owner] = new RTexture(owner);
+        _texture = textureSystem->components[owner];
     }else
     {
         _texture->FreeTexture();
-        _internalTexutreInstance = false;
     }
     //generate sprite sheet
     CreateUnicodeSpriteSheet(renderer, font, symbols);
@@ -81,8 +80,6 @@ void RSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vector<uint1
     //check if _texture exists
     if (_texture != NULL)
     {
-        _internalTexutreInstance = false;
-        
         //initilize sprite
         AddUnicodeAnimation(animation, _symbols);
         SetAnimation(animation);
@@ -535,13 +532,6 @@ RSprite::RSprite(EntityID id) : Component(id)
     _yRenderOffset = 0;
 }
 
-RSprite::~RSprite()
-{
-    if(_internalTexutreInstance && _texture != NULL)
-    {
-        _texture->FreeTexture();
-        delete _texture;
-    }
-}
+RSprite::~RSprite(){}
 
 
