@@ -293,6 +293,8 @@ void RSprite::UpdateAnimation()
     }
 }
 
+/*------------------------RENDERING--------------------------*/
+
 void RSprite::Render( SDL_Renderer*  renderer, int x, int y )
 {
     if (_texture != NULL)
@@ -339,10 +341,6 @@ void RSprite::RenderBackground(SDL_Renderer* renderer, SDL_Rect frame)
     SDL_RenderFillRect(renderer, &frame);
 }
 
-void RSprite::ResetAnimCounter()
-{
-    _animCount = 0;
-}
 
 void RSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, uint16_t symbol)
 {
@@ -414,6 +412,11 @@ void RSprite::RenderSymbol( SDL_Renderer* renderer, int x, int y, vector<uint16_
     {
         cout << "Sprite could not be rendered :: Missing texture" << endl;
     }
+}
+
+void RSprite::ResetAnimCounter()
+{
+    _animCount = 0;
 }
 
 int RSprite::GetPntSize()
