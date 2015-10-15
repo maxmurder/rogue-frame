@@ -40,12 +40,13 @@ class TestState: public RGameState {
         const Uint8* currentKeyStates;
         
         //component systems
-        System<RSprite> _spriteSystem;
         System<RTexture> _textureSystem;
+        System<RSprite> _spriteSystem;
         System<RTimer> _timerSystem;
-        System<PositionComponent> _positionSystem;
-        System<RenderComponent> _renderSystem;        
-                
+        System<XYZComponent> _positionSystem;
+        System<XYZComponent> _velocitySystem;
+        System<RenderComponent> _renderSystem;
+        
         EntityID SPRITE_LATIN_UNI;
         EntityID SPRITE_LATIN_TEXT;
     

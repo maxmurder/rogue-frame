@@ -11,10 +11,10 @@ using namespace std;
 
 TestState TestState::_TestState;
 
-EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTSPRITE_1, TESTSPRITE_2, TESTSPRITE_3, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXTURE_2;
+EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTSPRITE_1, TESTSPRITE_2, TESTSPRITE_3, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXTURE_2, PARTICLE;
 
 void TestState::Init(RGameEngine* game)
-{   
+{    
     //initilize window
     _windows.push_back(new RWindow());
     _windows[0]->Init();
@@ -86,15 +86,18 @@ void TestState::Init(RGameEngine* game)
     TESTTEXTURE_2 = CreateEntity();
     _textureSystem.components[TESTTEXTURE_2] = new RTexture(TESTTEXTURE_2);
     _textureSystem.components[TESTTEXTURE_2]->LoadFromFile("data/gfx/curses_square_16x16.png", _windows[0]->renderer, 0xFF, 0x00, 0xFF);
-    
+       
     //create list of frames
     vector<SDL_Rect> frames = {{16,0,16,16},{32,0,16,16}};
     
     //create "player" entity
     TESTPLAYER = CreateEntity();
-    _positionSystem.components[TESTPLAYER] = new PositionComponent(TESTPLAYER);
+    _positionSystem.components[TESTPLAYER] = new XYZComponent(TESTPLAYER);
     _positionSystem.components[TESTPLAYER]->x = _windows[0]->GetWidth()  / 2;
     _positionSystem.components[TESTPLAYER]->y = _windows[0]->GetHeight() / 2;
+    _velocitySystem.components[TESTPLAYER] = new XYZComponent(TESTPLAYER);
+    _velocitySystem.components[TESTPLAYER]->x = 0;
+    _velocitySystem.components[TESTPLAYER]->y = 0;
     _spriteSystem.components[TESTPLAYER] = new RSprite(TESTPLAYER);
     _spriteSystem.components[TESTPLAYER]->Init(_textureSystem.components[TESTTEXTURE_2], frames);
     _spriteSystem.components[TESTPLAYER]->SetForeground({0x80,0x00,0xFF,0xFF});
@@ -119,25 +122,29 @@ void TestState::Cleanup(RGameEngine* game)
     {
         delete win;
     }
-    for (auto &tex : _textureSystem.components)
+     for (auto &texture : _textureSystem.components)
     {
-        delete tex.second;
+        delete texture.second;
     }
-    for (auto &tim : _timerSystem.components)
+     for (auto &sprite : _spriteSystem.components)
     {
-        delete tim.second;
+        delete sprite.second;
     }
-    for (auto &pos: _positionSystem.components)
+    for (auto &timer : _timerSystem.components)
     {
-        delete pos.second;
+        delete timer.second;
     }
-    for (auto &spr : _spriteSystem.components)
+     for (auto &position : _positionSystem.components)
     {
-        delete spr.second;
+        delete position.second;
     }
-    for (auto &ren : _renderSystem.components)
+     for (auto &velocity : _velocitySystem.components)
     {
-        delete ren.second;
+        delete velocity.second;
+    }
+     for (auto &render : _renderSystem.components)
+    {
+        delete render.second;
     }
     
     SDL_StopTextInput(); 
@@ -203,23 +210,23 @@ void TestState::HandleEvents(RGameEngine* game)
     
     if ( currentKeyStates[SDL_SCANCODE_UP] )
     {
-        _positionSystem.components[TESTPLAYER]->y -= 1;
+        _velocitySystem.components[TESTPLAYER]->y -= 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_DOWN] )
     {
-        _positionSystem.components[TESTPLAYER]->y += 1;
+        _velocitySystem.components[TESTPLAYER]->y += 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_LEFT] )
     {
         _spriteSystem.components[SPRITE_LATIN_UNI]->SetTextMode( RSprite::TEXT );
         _spriteSystem.components[TESTSPRITE_1]->SetTextMode( RSprite::TEXT );
-        _positionSystem.components[TESTPLAYER]->x -= 1;
+        _velocitySystem.components[TESTPLAYER]->x -= 1;
     }
     if ( currentKeyStates[SDL_SCANCODE_RIGHT] )
     {
         _spriteSystem.components[SPRITE_LATIN_UNI]->SetTextMode( RSprite::UNICODE );
         _spriteSystem.components[TESTSPRITE_1]->SetTextMode( RSprite::UNICODE );
-        _positionSystem.components[TESTPLAYER]->x += 1;
+        _velocitySystem.components[TESTPLAYER]->x += 1;
     }
 }
 
@@ -232,26 +239,40 @@ void TestState::Update(RGameEngine* game)
     lastT = thisT;
     _fps = _count / (thisT / 1000.f);
     
-    for(auto &s : _spriteSystem.components)
+    //apply vleocity
+    for(auto &c : _velocitySystem.components)
     {
-        s.second->UpdateAnimation();
+        if(GetEntity(c.second->owner)!=NULL)
+        {
+            _positionSystem.components[c.second->owner]->x += c.second->x;
+            _positionSystem.components[c.second->owner]->y += c.second->y;
+        }
+    }
+    
+        //update sprite animations
+    for(auto &c : _spriteSystem.components)
+    {
+        if(GetEntity(c.second->owner)!=NULL)
+        {
+            c.second->UpdateAnimation();
+        }
     }
     
     //keep player in bounds
     if( _positionSystem.components[TESTPLAYER]->x > _windows[0]->GetWidth()  - _spriteSystem.components[TESTPLAYER]->GetWidth())
     {
-        _positionSystem.components[TESTPLAYER]->x -= 1;
+        _velocitySystem.components[TESTPLAYER]->x = -1 * abs(_velocitySystem.components[TESTPLAYER]->x);
     }else if ( _positionSystem.components[TESTPLAYER]->x < 0)
     {
-        _positionSystem.components[TESTPLAYER]->x += 1;
+        _velocitySystem.components[TESTPLAYER]->x = abs(_velocitySystem.components[TESTPLAYER]->x);
     }
     if( _positionSystem.components[TESTPLAYER]->y > _windows[0]->GetHeight()  - _spriteSystem.components[TESTPLAYER]->GetHeight())
     {
-        _positionSystem.components[TESTPLAYER]->y -= 1;
+        _velocitySystem.components[TESTPLAYER]->y = -1 * abs(_velocitySystem.components[TESTPLAYER]->y);
     }else if ( _positionSystem.components[TESTPLAYER]->y < 0)
     {
-        _positionSystem.components[TESTPLAYER]->y += 1;
-    }    
+        _velocitySystem.components[TESTPLAYER]->y = abs(_velocitySystem.components[TESTPLAYER]->y);
+    }
 }
 
 void TestState::Draw(RGameEngine* game)
@@ -271,6 +292,10 @@ void TestState::Draw(RGameEngine* game)
     msg << "fps:" << std::setfill('0') << std::setw(5) << _fps << " ms:" << _ms;
     _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth()  , 0 , msg.str());
     
+    msg.str(string());
+    msg << "Entities: " << NumEntities() << " Free: " << NumFree();
+    _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  - msg.str().size() * _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth()  , _spriteSystem.components[SPRITE_LATIN_TEXT]->GetHeight() , msg.str());
+    
     //render input text
     _spriteSystem.components[SPRITE_LATIN_TEXT]->RenderSymbol(_windows[0]->renderer, _windows[0]->GetWidth()  / 2 - (32 * _spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth() ) / 2, _windows[0]->GetHeight()  / 2 - _spriteSystem.components[SPRITE_LATIN_TEXT]->GetHeight(), _input,_spriteSystem.components[SPRITE_LATIN_TEXT]->GetWidth() * 32);
    
@@ -286,9 +311,12 @@ void TestState::Draw(RGameEngine* game)
     //render system
     for (auto &ren : _renderSystem.components)
     {
-        ren.second->Render(_windows[0]->renderer);
+        if(GetEntity(ren.second->owner)!=NULL)
+        {
+            ren.second->Render(_windows[0]->renderer);
+        }
     }
-
+    
     SDL_RenderPresent( _windows[0]->renderer );
     _count++;
 } 

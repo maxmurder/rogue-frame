@@ -1,10 +1,6 @@
 #include "r_entity.h"
 #include <vector>
 
-struct Entity {
-    uint16_t version;
-};
-
 std::vector<Entity> pool; //pool of entities
 std::vector<uint16_t> freelist; //list of free indexes
 
@@ -40,3 +36,15 @@ Entity* GetEntity(EntityID id)
         return NULL; //return NULL if index or version are invalid
     }
 }
+
+int NumEntities()
+{
+    return pool.size();
+}
+
+int NumFree()
+{
+    return freelist.size();
+}
+
+
