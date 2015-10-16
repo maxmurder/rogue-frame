@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <utility>
+#include <iostream>
 
 class Component;
 
@@ -11,8 +12,8 @@ namespace r_component
 {
     namespace r_component_detail
     {
-        typedef Component *(*CreateComponentFunction)(); //pointer to the components create function
-        typedef std::map<std::string, CreateComponentFunction> ComponentRegistry; //component registry
+        typedef Component *(*CreateComponentFunction)();
+        typedef std::map<std::string, CreateComponentFunction> ComponentRegistry;
     
         inline ComponentRegistry& GetComponentRegistry()
         {
@@ -22,7 +23,7 @@ namespace r_component
         
         template<class T> Component* CreateComponent() 
         {
-            return new T;
+            return new T; //actually create the component
         }
         
         template<class T> struct RegistryEntry
@@ -36,15 +37,16 @@ namespace r_component
             private:
                 RegistryEntry(const std::string& name)
                 {
-                    ComponentRegistry& reg = GetComponentRegistry(); //get get the component registry
-                    CreateComponentFunction func = CreateComponent<T>; //get the correct creation function
+                    ComponentRegistry& reg = GetComponentRegistry(); //get get the list of registered components
+                    CreateComponentFunction func = CreateComponent<T>; //get the accosiated component's creation function
                     
                     std::pair<ComponentRegistry::iterator, bool> ret = 
-                        reg.insert(ComponentRegistry::value_type(name, func)); //get the component type from the registry
-                        
+                        reg.insert(ComponentRegistry::value_type(name, func)); //create a pair of registered components and accociated names
+                                                
                     if (ret.second == false) 
-                    {
+                    {   
                         //failure to find component with appropriate name
+                        std::cout << "Failed to find registered component with name: " << name << std::endl << "You must register a component with COMPONENT_REGISTER(ComponentName, \"ComponentName\") before using." << std::endl;
                     }
                 }
                 

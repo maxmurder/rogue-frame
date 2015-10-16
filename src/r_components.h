@@ -18,17 +18,17 @@ class RenderComponent : public Component {
     public:
         void Render(SDL_Renderer *renderer)
         {
-            if(GetEntity(owner) != NULL)
+            if(GetEntity(ownerID) != NULL)
             {
                 spriteComp->Render(renderer, positionComp->x, positionComp->y);
             }
         }
         void Init(System<XYZComponent> pos, System<RSprite> spr)
         {
-            if(GetEntity(owner) != NULL)
+            if(GetEntity(ownerID) != NULL)
             {
-                positionComp = pos.components[owner];
-                spriteComp = spr.components[owner];
+                positionComp = pos.components[ownerID];
+                spriteComp = spr.components[ownerID];
             }
         }
 };

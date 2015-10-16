@@ -33,32 +33,28 @@ void TestState::Init(RGameEngine* game)
     
     //load background texture
     BACKGROUND_TEXTURE = CreateEntity();
-    _components.push_back(r_component::Create("RTexture"));
+    _components.push_back(r_component::Create("RTexture", BACKGROUND_TEXTURE));
     _textureSystem.components[BACKGROUND_TEXTURE] = dynamic_cast<RTexture *>(_components.back());
-    _textureSystem.components[BACKGROUND_TEXTURE]->owner = BACKGROUND_TEXTURE;
     _textureSystem.components[BACKGROUND_TEXTURE]->LoadFromFile("data/gfx/checker.png", _windows[0]->renderer);
     
     UNICODE_TEXTURE = CreateEntity();
     //create rendered unicode sheet for basic latin set
-    _components.push_back(r_component::Create("RTexture"));
+    _components.push_back(r_component::Create("RTexture", UNICODE_TEXTURE));
     _textureSystem.components[UNICODE_TEXTURE] = dynamic_cast<RTexture *>(_components.back());
-    _textureSystem.components[UNICODE_TEXTURE]->owner = UNICODE_TEXTURE;
     _textureSystem.components[UNICODE_TEXTURE]->RenderUnicode(_windows[0]->renderer, &_latin[0], _font);
         
     //create sprite for basic latin set
     SPRITE_LATIN_UNI = CreateEntity();
-    _components.push_back(r_component::Create("RSprite"));
+    _components.push_back(r_component::Create("RSprite", SPRITE_LATIN_UNI));
     _spriteSystem.components[SPRITE_LATIN_UNI] = dynamic_cast<RSprite *>(_components.back());
-    _spriteSystem.components[SPRITE_LATIN_UNI]->owner = SPRITE_LATIN_UNI;
     _spriteSystem.components[SPRITE_LATIN_UNI]->Init(_textureSystem.components[UNICODE_TEXTURE], _font, pnt, _latin, 2 );
     _spriteSystem.components[SPRITE_LATIN_UNI]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[SPRITE_LATIN_UNI]->SetBackground({0x00,0x00,0x00,0xFF});
     
     //create text style (rectangular) unicode sprite for latin set
     SPRITE_LATIN_TEXT = CreateEntity();
-    _components.push_back(r_component::Create("RSprite"));
+    _components.push_back(r_component::Create("RSprite", SPRITE_LATIN_TEXT));
     _spriteSystem.components[SPRITE_LATIN_TEXT] = dynamic_cast<RSprite *>(_components.back());
-    _spriteSystem.components[SPRITE_LATIN_TEXT]->owner = SPRITE_LATIN_TEXT;
     _spriteSystem.components[SPRITE_LATIN_TEXT]->Init(_textureSystem.components[UNICODE_TEXTURE], _font, pnt, _latin );
     _spriteSystem.components[SPRITE_LATIN_TEXT]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[SPRITE_LATIN_TEXT]->SetBackground({0x00,0x00,0x00,0xFF});
@@ -67,40 +63,23 @@ void TestState::Init(RGameEngine* game)
     vector<uint16_t> sym = {0x263A,0x263B,0x007C,0x005C,0x2500,0x002F};
     uint16_t *symArray =  &sym[0];
     TESTTEXTURE_1 = CreateEntity();
-    _components.push_back(r_component::Create("RTexture"));
+    _components.push_back(r_component::Create("RTexture", TESTTEXTURE_1));
     _textureSystem.components[TESTTEXTURE_1] = dynamic_cast<RTexture *>(_components.back());
-    _textureSystem.components[TESTTEXTURE_1]->owner = TESTTEXTURE_1;
     _textureSystem.components[TESTTEXTURE_1]->RenderUnicode( _windows[0]->renderer, symArray, _font );
     TESTSPRITE_1 = CreateEntity();
-    _components.push_back(r_component::Create("RSprite"));
+    _components.push_back(r_component::Create("RSprite", TESTSPRITE_1));
     _spriteSystem.components[TESTSPRITE_1] = dynamic_cast<RSprite *>(_components.back());
-    _spriteSystem.components[TESTSPRITE_1]->owner = TESTSPRITE_1;
     _spriteSystem.components[TESTSPRITE_1]->Init(_textureSystem.components[TESTTEXTURE_1], _font, pnt, sym);
     _spriteSystem.components[TESTSPRITE_1]->AddUnicodeAnimation("Test", {0x263A,0x263B});
     _spriteSystem.components[TESTSPRITE_1]->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
     _spriteSystem.components[TESTSPRITE_1]->SetAnimation("Test");
     _spriteSystem.components[TESTSPRITE_1]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[TESTSPRITE_1]->SetBackground({0xBA,0xDA,0x55,0xFF});
-    
-    //create unicode sprite with internal spritesheet texture
-    /*TESTSPRITE_2 = CreateEntity();
-    _components.push_back(r_component::Create("RSprite"));
-    _spriteSystem.components[TESTSPRITE_2] = dynamic_cast<RSprite *>(_components.back());
-    _spriteSystem.components[TESTSPRITE_2]->owner = TESTSPRITE_2;
-    _spriteSystem.components[TESTSPRITE_2]->Init(_windows[0]->renderer, &_textureSystem, _font, pnt, sym);
-    _spriteSystem.components[TESTSPRITE_2]->AddUnicodeAnimation("Test", {0x263A,0x263B});
-    _spriteSystem.components[TESTSPRITE_2]->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
-    _spriteSystem.components[TESTSPRITE_2]->SetAnimation("Test");
-    _spriteSystem.components[TESTSPRITE_2]->SetForeground({0x80,0x00,0xFF,0xFF});
-    _spriteSystem.components[TESTSPRITE_2]->SetBackground({0xBA,0xDA,0x55,0xFF});
-    _spriteSystem.components[TESTSPRITE_2]->SetDimensions(24, 24);
-    _spriteSystem.components[TESTSPRITE_2]->SetRenderOffset(8,4);*/
 
     //create spritesheet from png
     TESTTEXTURE_2 = CreateEntity();
-    _components.push_back(r_component::Create("RTexture"));
+    _components.push_back(r_component::Create("RTexture", TESTTEXTURE_2));
     _textureSystem.components[TESTTEXTURE_2] = dynamic_cast<RTexture *>(_components.back());
-    _textureSystem.components[TESTTEXTURE_2]->owner = TESTTEXTURE_2;
     _textureSystem.components[TESTTEXTURE_2]->LoadFromFile("data/gfx/curses_square_16x16.png", _windows[0]->renderer, 0xFF, 0x00, 0xFF);
        
     //create list of frames
@@ -108,32 +87,27 @@ void TestState::Init(RGameEngine* game)
     
     //create "player" entity
     TESTPLAYER = CreateEntity();
-    _components.push_back(r_component::Create("XYZComponent"));
+    _components.push_back(r_component::Create("XYZComponent", TESTPLAYER));
     _positionSystem.components[TESTPLAYER] = dynamic_cast<XYZComponent *>(_components.back());
-    _positionSystem.components[TESTPLAYER]->owner = TESTPLAYER;
     _positionSystem.components[TESTPLAYER]->x = _windows[0]->GetWidth()  / 2;
     _positionSystem.components[TESTPLAYER]->y = _windows[0]->GetHeight() / 2;
-    _components.push_back(r_component::Create("XYZComponent"));
+    _components.push_back(r_component::Create("XYZComponent", TESTPLAYER));
     _velocitySystem.components[TESTPLAYER] = dynamic_cast<XYZComponent *>(_components.back());
-    _velocitySystem.components[TESTPLAYER]->owner = TESTPLAYER;
     _velocitySystem.components[TESTPLAYER]->x = 0;
     _velocitySystem.components[TESTPLAYER]->y = 0;
-    _components.push_back(r_component::Create("RSprite"));
+    _components.push_back(r_component::Create("RSprite", TESTPLAYER));
     _spriteSystem.components[TESTPLAYER] = dynamic_cast<RSprite *>(_components.back());
-    _spriteSystem.components[TESTPLAYER]->owner = TESTPLAYER;
     _spriteSystem.components[TESTPLAYER]->Init(_textureSystem.components[TESTTEXTURE_2], frames);
     _spriteSystem.components[TESTPLAYER]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[TESTPLAYER]->SetBackground({0xBA,0xDA,0x55,0xFF});
-    _components.push_back(r_component::Create("RenderComponent"));
+    _components.push_back(r_component::Create("RenderComponent", TESTPLAYER));
     _renderSystem.components[TESTPLAYER] = dynamic_cast<RenderComponent *>(_components.back());
-    _renderSystem.components[TESTPLAYER]->owner = TESTPLAYER;
     _renderSystem.components[TESTPLAYER]->Init(_positionSystem,_spriteSystem);
     
     //setup timer
     TESTTIMER = CreateEntity();
-    _components.push_back(r_component::Create("RTimer"));
+    _components.push_back(r_component::Create("RTimer", TESTTIMER));
     _timerSystem.components[TESTTIMER] = dynamic_cast<RTimer *>(_components.back());
-    _timerSystem.components[TESTTIMER]->owner = TESTTIMER;
     _timerSystem.components[TESTTIMER]->Start();
     
     TTF_CloseFont(_font);
@@ -153,31 +127,6 @@ void TestState::Cleanup(RGameEngine* game)
     {
         r_component::Destroy(comp);
     }
-    /* for (auto &texture : _textureSystem.components)
-    {
-        delete texture.second;
-    }
-     for (auto &sprite : _spriteSystem.components)
-    {
-        delete sprite.second;
-    }
-    for (auto &timer : _timerSystem.components)
-    {
-        delete timer.second;
-    }
-     for (auto &position : _positionSystem.components)
-    {
-        delete position.second;
-    }
-     for (auto &velocity : _velocitySystem.components)
-    {
-        delete velocity.second;
-    }
-     for (auto &render : _renderSystem.components)
-    {
-        delete render.second;
-    }*/
-    
     SDL_StopTextInput(); 
 }
 
@@ -273,17 +222,17 @@ void TestState::Update(RGameEngine* game)
     //apply vleocity
     for(auto &c : _velocitySystem.components)
     {
-        if(GetEntity(c.second->owner)!=NULL)
+        if(GetEntity(c.second->ownerID)!=NULL)
         {
-            _positionSystem.components[c.second->owner]->x += c.second->x;
-            _positionSystem.components[c.second->owner]->y += c.second->y;
+            _positionSystem.components[c.second->ownerID]->x += c.second->x;
+            _positionSystem.components[c.second->ownerID]->y += c.second->y;
         }
     }
     
         //update sprite animations
     for(auto &c : _spriteSystem.components)
     {
-        if(GetEntity(c.second->owner)!=NULL)
+        if(GetEntity(c.second->ownerID)!=NULL)
         {
             c.second->UpdateAnimation();
         }
@@ -304,46 +253,6 @@ void TestState::Update(RGameEngine* game)
     {
         _velocitySystem.components[TESTPLAYER]->y = abs(_velocitySystem.components[TESTPLAYER]->y);
     }
-    
-  /*  
-    static vector<uint32_t> particles;
-    if(particles.size() < 1000)
-    {
-        particles.push_back(CreateEntity());
-        _positionSystem.components[particles.back()] = new XYZComponent(particles.back());
-        _spriteSystem.components[particles.back()] = new RSprite(particles.back());
-        _renderSystem.components[particles.back()] = new RenderComponent(particles.back(), _positionSystem, _spriteSystem);
-        _velocitySystem.components[particles.back()] = new XYZComponent(particles.back());        
-        _timerSystem.components[particles.back()] = new RTimer(particles.back());
-        
-        _positionSystem.components[particles.back()]->x = 200;
-        _positionSystem.components[particles.back()]->y = 200;
-        
-        _velocitySystem.components[particles.back()]->x = rand() % 4 - 2;
-        _velocitySystem.components[particles.back()]->y = rand() % 4 - 2;
-        
-        _spriteSystem.components[particles.back()]->Init(_textureSystem.components[UNICODE_TEXTURE], _font, 16, UNICODE_LATIN_BASIC);
-        _spriteSystem.components[particles.back()]->SetTextMode(RSprite::UNICODE, 16);
-        _spriteSystem.components[particles.back()]->SetForeground({0x80,0x00,0xFF,0xFF});
-        _spriteSystem.components[particles.back()]->SetBackground({0xBA,0xDA,0x55,0xFF});
-        
-        _timerSystem.components[particles.back()]->Start();
-    }
-    
-    for (auto it = particles.begin(); it != particles.end(); ++it)
-    {
-        if (GetEntity(*it) != NULL)
-        {
-            if (_timerSystem.components[*it]->GetTicks() > 2000)
-            {
-                DeleteEntity(*it);
-                particles.erase(it);
-            }
-        }else
-        {
-            particles.erase(it);
-        }
-    }*/
 }
 
 void TestState::Draw(RGameEngine* game)
@@ -377,15 +286,14 @@ void TestState::Draw(RGameEngine* game)
 
     //test sprites
     _spriteSystem.components[TESTSPRITE_1]->Render(_windows[0]->renderer, 0 , 0);
-    //_spriteSystem.components[TESTSPRITE_2]->Render(_windows[0]->renderer, _windows[0]->GetWidth()  - _spriteSystem.components[TESTSPRITE_2]->GetWidth() , _windows[0]->GetHeight()  - _spriteSystem.components[TESTSPRITE_2]->GetHeight());
-    
+
     //render system
     for (auto &ren : _renderSystem.components)
     {
-        if(GetEntity(ren.second->owner)!=NULL)
+        if(GetEntity(ren.second->ownerID) != NULL)
         {
             ren.second->Render(_windows[0]->renderer);
-        }
+        }   
     }
     
     SDL_RenderPresent( _windows[0]->renderer );
