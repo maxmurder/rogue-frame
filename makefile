@@ -26,8 +26,8 @@ r_entity.o : $(SRC)r_entity/r_entity.cpp $(SRC)r_entity/r_entity.h
 r_component.o : $(SRC)r_entity/r_component.cpp $(SRC)r_entity/r_component.h
 	$(CC) $(CFLAGS) $(SRC)r_entity/r_component.cpp $(SRC)r_entity/r_component_detail.h
 
-r_components.o : $(SRC)r_components.cpp $(SRC)r_components.h 
-	$(CC) $(CFLAGS) $(SRC)r_components.cpp 
+r_util_components.o : $(SRC)r_util_components.cpp $(SRC)r_util_components.h 
+	$(CC) $(CFLAGS) $(SRC)r_util_components.cpp 
 
 RSprite.o : $(SRC)RSprite.cpp $(SRC)RSprite.h
 	$(CC) $(CFLAGS) $(SRC)RSprite.cpp

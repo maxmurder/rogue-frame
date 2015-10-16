@@ -7,7 +7,7 @@
 #include "r_SDL.h"
 #include "r_gamestate.h"
 #include "r_entity/r_entity.h"
-#include "r_components.h"
+#include "r_util_components.h"
 #include "RSprite.h"
 #include "RTexture.h"
 #include "RTimer.h"
