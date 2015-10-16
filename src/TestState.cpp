@@ -34,19 +34,19 @@ void TestState::Init(RGameEngine* game)
     //load background texture
     BACKGROUND_TEXTURE = CreateEntity();
     _components.push_back(r_component::Create("RTexture", BACKGROUND_TEXTURE));
-    _textureSystem.components[BACKGROUND_TEXTURE] = dynamic_cast<RTexture *>(_components.back());
+    _textureSystem.AddComponent(_components.back(), BACKGROUND_TEXTURE);
     _textureSystem.components[BACKGROUND_TEXTURE]->LoadFromFile("data/gfx/checker.png", _windows[0]->renderer);
     
     UNICODE_TEXTURE = CreateEntity();
     //create rendered unicode sheet for basic latin set
     _components.push_back(r_component::Create("RTexture", UNICODE_TEXTURE));
-    _textureSystem.components[UNICODE_TEXTURE] = dynamic_cast<RTexture *>(_components.back());
+    _textureSystem.AddComponent(_components.back(), UNICODE_TEXTURE);
     _textureSystem.components[UNICODE_TEXTURE]->RenderUnicode(_windows[0]->renderer, &_latin[0], _font);
         
     //create sprite for basic latin set
     SPRITE_LATIN_UNI = CreateEntity();
     _components.push_back(r_component::Create("RSprite", SPRITE_LATIN_UNI));
-    _spriteSystem.components[SPRITE_LATIN_UNI] = dynamic_cast<RSprite *>(_components.back());
+    _spriteSystem.AddComponent(_components.back(), SPRITE_LATIN_UNI);
     _spriteSystem.components[SPRITE_LATIN_UNI]->Init(_textureSystem.components[UNICODE_TEXTURE], _font, pnt, _latin, 2 );
     _spriteSystem.components[SPRITE_LATIN_UNI]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[SPRITE_LATIN_UNI]->SetBackground({0x00,0x00,0x00,0xFF});
@@ -54,7 +54,7 @@ void TestState::Init(RGameEngine* game)
     //create text style (rectangular) unicode sprite for latin set
     SPRITE_LATIN_TEXT = CreateEntity();
     _components.push_back(r_component::Create("RSprite", SPRITE_LATIN_TEXT));
-    _spriteSystem.components[SPRITE_LATIN_TEXT] = dynamic_cast<RSprite *>(_components.back());
+    _spriteSystem.AddComponent(_components.back(), SPRITE_LATIN_TEXT);
     _spriteSystem.components[SPRITE_LATIN_TEXT]->Init(_textureSystem.components[UNICODE_TEXTURE], _font, pnt, _latin );
     _spriteSystem.components[SPRITE_LATIN_TEXT]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[SPRITE_LATIN_TEXT]->SetBackground({0x00,0x00,0x00,0xFF});
@@ -64,11 +64,11 @@ void TestState::Init(RGameEngine* game)
     uint16_t *symArray =  &sym[0];
     TESTTEXTURE_1 = CreateEntity();
     _components.push_back(r_component::Create("RTexture", TESTTEXTURE_1));
-    _textureSystem.components[TESTTEXTURE_1] = dynamic_cast<RTexture *>(_components.back());
+    _textureSystem.AddComponent(_components.back(), TESTTEXTURE_1);
     _textureSystem.components[TESTTEXTURE_1]->RenderUnicode( _windows[0]->renderer, symArray, _font );
     TESTSPRITE_1 = CreateEntity();
     _components.push_back(r_component::Create("RSprite", TESTSPRITE_1));
-    _spriteSystem.components[TESTSPRITE_1] = dynamic_cast<RSprite *>(_components.back());
+    _spriteSystem.AddComponent(_components.back(), TESTSPRITE_1);
     _spriteSystem.components[TESTSPRITE_1]->Init(_textureSystem.components[TESTTEXTURE_1], _font, pnt, sym);
     _spriteSystem.components[TESTSPRITE_1]->AddUnicodeAnimation("Test", {0x263A,0x263B});
     _spriteSystem.components[TESTSPRITE_1]->AddUnicodeAnimation("Test1", {sym[2],sym[3],sym[4],sym[5]});
@@ -79,7 +79,7 @@ void TestState::Init(RGameEngine* game)
     //create spritesheet from png
     TESTTEXTURE_2 = CreateEntity();
     _components.push_back(r_component::Create("RTexture", TESTTEXTURE_2));
-    _textureSystem.components[TESTTEXTURE_2] = dynamic_cast<RTexture *>(_components.back());
+    _textureSystem.AddComponent(_components.back(), TESTTEXTURE_2);
     _textureSystem.components[TESTTEXTURE_2]->LoadFromFile("data/gfx/curses_square_16x16.png", _windows[0]->renderer, 0xFF, 0x00, 0xFF);
        
     //create list of frames
@@ -88,26 +88,26 @@ void TestState::Init(RGameEngine* game)
     //create "player" entity
     TESTPLAYER = CreateEntity();
     _components.push_back(r_component::Create("XYZComponent", TESTPLAYER));
-    _positionSystem.components[TESTPLAYER] = dynamic_cast<XYZComponent *>(_components.back());
+    _positionSystem.AddComponent(_components.back(), TESTPLAYER);
     _positionSystem.components[TESTPLAYER]->x = _windows[0]->GetWidth()  / 2;
     _positionSystem.components[TESTPLAYER]->y = _windows[0]->GetHeight() / 2;
     _components.push_back(r_component::Create("XYZComponent", TESTPLAYER));
-    _velocitySystem.components[TESTPLAYER] = dynamic_cast<XYZComponent *>(_components.back());
+    _velocitySystem.AddComponent(_components.back(), TESTPLAYER);
     _velocitySystem.components[TESTPLAYER]->x = 0;
     _velocitySystem.components[TESTPLAYER]->y = 0;
     _components.push_back(r_component::Create("RSprite", TESTPLAYER));
-    _spriteSystem.components[TESTPLAYER] = dynamic_cast<RSprite *>(_components.back());
+    _spriteSystem.AddComponent(_components.back(), TESTPLAYER);
     _spriteSystem.components[TESTPLAYER]->Init(_textureSystem.components[TESTTEXTURE_2], frames);
     _spriteSystem.components[TESTPLAYER]->SetForeground({0x80,0x00,0xFF,0xFF});
     _spriteSystem.components[TESTPLAYER]->SetBackground({0xBA,0xDA,0x55,0xFF});
     _components.push_back(r_component::Create("RenderComponent", TESTPLAYER));
-    _renderSystem.components[TESTPLAYER] = dynamic_cast<RenderComponent *>(_components.back());
+    _renderSystem.AddComponent(_components.back(), TESTPLAYER);
     _renderSystem.components[TESTPLAYER]->Init(_positionSystem,_spriteSystem);
     
     //setup timer
     TESTTIMER = CreateEntity();
     _components.push_back(r_component::Create("RTimer", TESTTIMER));
-    _timerSystem.components[TESTTIMER] = dynamic_cast<RTimer *>(_components.back());
+    _timerSystem.AddComponent(_components.back(), TESTTIMER);
     _timerSystem.components[TESTTIMER]->Start();
     
     TTF_CloseFont(_font);

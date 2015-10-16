@@ -9,6 +9,7 @@
     DeleteEntity(EntityID) frees the entity index and increment the version, this will result in subsiquent calls to GetEntity(EntityID) with out-of-date id's to return NULL.
     GetEntity(EntityID) returns a pointer to the entity if the supplied EntityID is valid. 
 */
+struct Component;
 
 struct Entity {
     uint16_t version;
@@ -26,6 +27,11 @@ int NumFree(); //returns number of free entities in the pool.
 //class for tracking system components
 template <typename C> struct System {
         std::map<EntityID, C *> components;
+        
+        void AddComponent(Component *component, EntityID ownerID)
+        {
+            components[ownerID] = dynamic_cast<C *>(component);
+        }
 };
 
 #endif
