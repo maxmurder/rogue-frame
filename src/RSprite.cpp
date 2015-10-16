@@ -23,7 +23,7 @@ void RSprite::Init( RTexture* texture, vector<SDL_Rect> frames, int animationSpe
     _currentframe = 0;
 }
 
-void RSprite::Init( SDL_Renderer *renderer, System<RTexture> *textureSystem, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
+/*void RSprite::Init( SDL_Renderer *renderer, System<RTexture> *textureSystem, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
     //init variables
     _fg = fg;
@@ -58,7 +58,7 @@ void RSprite::Init( SDL_Renderer *renderer, System<RTexture> *textureSystem, TTF
     SetAnimation(animation);
     SetBlendMode( SDL_BLENDMODE_BLEND );
     SetFlipMode( SDL_FLIP_NONE );
-}
+}*/
 
 void RSprite::Init( RTexture* texture, TTF_Font* font, int pntsize, vector<uint16_t> symbols, int mode, SDL_Color fg, SDL_Color bg, string animation, int animationSpeed)
 {
@@ -512,7 +512,7 @@ void RSprite::CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int
     *r = i;
 }
 
-RSprite::RSprite(EntityID id) : Component(id)
+RSprite::RSprite() : Component()
 {
     _texture = NULL;
     _animSpeed = 0;

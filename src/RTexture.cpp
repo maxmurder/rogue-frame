@@ -4,7 +4,7 @@
 
 using namespace std;
 
-RTexture::RTexture(EntityID id) : Component(id)
+RTexture::RTexture() : Component()
 {
     _texture = NULL;
     _width = 0;

@@ -6,7 +6,7 @@
 #include <array>
 #include "r_SDL.h"
 #include "r_gamestate.h"
-#include "r_entity.h"
+#include "r_entity/r_entity.h"
 #include "r_components.h"
 #include "RSprite.h"
 #include "RTexture.h"
@@ -40,6 +40,7 @@ class TestState: public RGameState {
         const Uint8* currentKeyStates;
         
         //component systems
+        std::vector<Component *> _components; 
         System<RTexture> _textureSystem;
         System<RSprite> _spriteSystem;
         System<RTimer> _timerSystem;

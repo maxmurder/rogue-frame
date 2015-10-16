@@ -68,7 +68,7 @@ bool RTimer::IsPaused()
     return _paused && _started;
 }
 
-RTimer::RTimer(EntityID id) : Component(id)
+RTimer::RTimer() : Component()
 {
     _startTicks = 0;
     _startTicks = 0;

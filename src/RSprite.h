@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 #include <SDL2/SDL.h>
-#include "r_entity.h"
+#include "r_entity/r_component.h"
 #include "r_SDL.h"
 #include "RTexture.h"
 
@@ -71,7 +71,7 @@ class RSprite : public Component
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::string symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
         void RenderSymbol(SDL_Renderer* renderer, int x, int y, std::vector<uint16_t> symbols, int width = 0); //Renders a string. Renders first symbol in the sheet if symbol does not exist in the symbol list.      
     
-        RSprite(EntityID id);
+        RSprite();
         ~RSprite();
         
     protected:
@@ -104,4 +104,6 @@ class RSprite : public Component
         void CalculateOffset(int *xOffset, int *yOffset, int *r, int width, int c); //calculates offsets for rendering text. 'r' is # of newlines, 'c' is number of charaters. 
         uint16_t GetSymbolIndex(uint16_t symbol);
 };
+
+COMPONENT_REGISTER(RSprite, "RSprite");
 #endif

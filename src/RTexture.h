@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "r_entity.h"
+#include "r_entity/r_component.h"
 
 class RTexture : public Component
 {
@@ -22,7 +22,7 @@ class RTexture : public Component
         int GetWidth();
         int GetHeight();
         
-        RTexture(EntityID id);
+        RTexture();
         ~RTexture();
     private:
         SDL_Texture* _texture;
@@ -30,5 +30,5 @@ class RTexture : public Component
         int _width;
         int _height;
 };
-
+COMPONENT_REGISTER(RTexture, "RTexture");
 #endif
