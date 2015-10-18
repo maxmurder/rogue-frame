@@ -15,6 +15,18 @@
 
 class TestState: public RGameState {
 
+
+            //component systems
+        System<RTexture> _textureSystem;
+        System<SpriteComponent> _spriteSystem;
+        System<RTimer> _timerSystem;
+        System<ColorComponent> _fgColorSystem;
+        System<ColorComponent> _bgColorSystem;
+        System<XYZComponent> _positionSystem;
+        System<XYZComponent> _velocitySystem;
+        System<WHComponent> _dimensionsSystem;
+        System<UnicodeSymbolComponent> _unicodeSymbolSystem;    
+
     public:
         void Init(RGameEngine* game);
         void Cleanup(RGameEngine* game);
@@ -40,19 +52,11 @@ class TestState: public RGameState {
         SDL_Event _event;
         const Uint8* currentKeyStates;
         
-        //component systems
-        std::vector<Component *> _components; 
-        System<RTexture> _textureSystem;
-        System<SpriteComponent> _spriteSystem;
-        System<RTimer> _timerSystem;
-        System<ColorComponent> _fgColorSystem;
-        System<ColorComponent> _bgColorSystem;
-        System<XYZComponent> _positionSystem;
-        System<XYZComponent> _velocitySystem;
-        System<WHComponent> _dimensionsSystem;
+        std::vector<Component *> _components; //big list of all components, used to cleanup at end of program (probobly better to handle this in a smarter way irl);
         
         RenderSystem _renderSystem;
         
+        EntityID UNICODE_LATIN_SET;
         EntityID SPRITE_LATIN_UNI;
         EntityID SPRITE_LATIN_TEXT;
     

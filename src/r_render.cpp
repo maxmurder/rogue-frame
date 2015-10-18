@@ -29,6 +29,9 @@ void RenderSystem::Render(SDL_Renderer *renderer)
                     //apply render offset
                     renderQuad.x += r.second->spriteComp->renderOffsetX;
                     renderQuad.y += r.second->spriteComp->renderOffsetY;
+                    renderQuad.w = r.second->spriteComp->cellDimensions->w;
+                    renderQuad.h = r.second->spriteComp->cellDimensions->h;
+                    
                     if(r.second->spriteComp->texture->GetTexture() != NULL)
                     {
                         //update the texture

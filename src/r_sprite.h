@@ -14,23 +14,25 @@ struct SpriteComponent : public Component
     ColorComponent *fgColor;
     ColorComponent *bgColor;
     WHComponent *dimensions;
-    int cell_w, cell_h, renderOffsetX, renderOffsetY;
+    WHComponent *cellDimensions;
+    int renderOffsetX, renderOffsetY;
     uint32_t animationSpeed;
     std::string currentAnimation;
-    std::map<std::string, std::vector<SDL_Rect>> animations;
     float angle;
     SDL_RendererFlip flip;
     SDL_Point center;
 
-    void Init( RTexture *textureComponent, int cellWidth, int cellHeight, WHComponent *dimensionsComponent, ColorComponent *foregroundColorComponent, ColorComponent *backgroundColorComponent);
+    void Init( RTexture *textureComponent,  WHComponent *cellDimensionsComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColorComponent, ColorComponent *backgroundColorComponent);
     void AddAnimation(std::string name, std::vector<SDL_Rect> frames);
     void SetAnimation(std::string animation);
     void SetFrame(int frame);
     void Update();
     SDL_Rect GetCurrentFrame();
     
+    SpriteComponent();
+    
     private:
-        uint32_t frameCount, currentFrame;
+        uint32_t currentFrame, frameCount;
 };
 
 COMPONENT_REGISTER(SpriteComponent, "SpriteComponent");

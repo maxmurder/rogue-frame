@@ -1,14 +1,17 @@
 #include "r_sprite.h"
 
-void SpriteComponent::Init( RTexture *textureComponent, int cellWidth, int cellHeight, WHComponent *dimensionsComponent, ColorComponent *foregroundColor, ColorComponent *backgroundColor )
+using namespace std;
+
+std::map<std::string, std::vector<SDL_Rect>> animations;
+
+void SpriteComponent::Init( RTexture *textureComponent, WHComponent *cellDimensionsComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColor, ColorComponent *backgroundColor )
 {
-    cell_w = cellWidth;
-    cell_h = cellHeight;
     texture = textureComponent;
     fgColor = foregroundColor;
     bgColor = backgroundColor;
     dimensions = dimensionsComponent;
-    animations.insert(std::pair<std::string, std::vector<SDL_Rect>>("DEFAULT",{{0,0,cell_w,cell_h}}));
+    cellDimensions = cellDimensionsComponent;
+    AddAnimation("DEFAULT", {{0,0,cellDimensions->w,cellDimensions->h}});
     currentAnimation = "DEFAULT";
     currentFrame = 0;
     renderOffsetX = 0;
@@ -16,7 +19,7 @@ void SpriteComponent::Init( RTexture *textureComponent, int cellWidth, int cellH
     animationSpeed = 0;
     angle = 0.0f;
     flip = SDL_FLIP_NONE;
-    center = {cell_w/2, cell_h/2};
+    center = {0,0};
 }
 
 void SpriteComponent::Update()
@@ -38,7 +41,7 @@ void SpriteComponent::Update()
 
 void SpriteComponent::AddAnimation(std::string name, std::vector<SDL_Rect> frames)
 {
-    animations[name] = frames;
+    animations.insert( pair<string, vector<SDL_Rect>>(name, frames) );
 }
 
 void SpriteComponent::SetAnimation(std::string animation)
@@ -55,4 +58,21 @@ SDL_Rect SpriteComponent::GetCurrentFrame()
 {
     SDL_Rect f = animations[currentAnimation][currentFrame];
     return f;
+}
+
+SpriteComponent::SpriteComponent() : Component()
+{
+
+    texture = NULL;
+    fgColor = 0;
+    bgColor = 0;
+    dimensions = NULL;
+    cellDimensions = NULL;
+    currentFrame = 0;
+    renderOffsetX = 0;
+    renderOffsetY = 0;
+    animationSpeed = 0;
+    angle = 0.0f;
+    flip = SDL_FLIP_NONE;
+    center = {0,0};
 }
