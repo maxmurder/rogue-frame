@@ -29,6 +29,7 @@ bool RTexture::LoadFromFile( std::string path, SDL_Renderer* renderer )
     {
        SDL_QueryTexture( newTexture, NULL, NULL, &_width, &_height );
     }
+    
     _texture = newTexture;
     return _texture != NULL;
 }
@@ -79,7 +80,6 @@ void RTexture::SetBlendMode( SDL_BlendMode blending)
 void RTexture::Render( SDL_Renderer* renderer, const int x, const int y, const SDL_Rect* clip, const double angle, const SDL_Point* center, const SDL_RendererFlip flip )
 {
     SDL_Rect renderQuad = {x, y, _width, _height};
-    
     if (clip != NULL)
     {
         renderQuad.w = clip->w;
@@ -115,6 +115,11 @@ void RTexture::RenderUnicode( SDL_Renderer* renderer, uint16_t symbols[], TTF_Fo
     {
         SDL_QueryTexture( _texture, NULL, NULL, &_width, &_height ); 
     }
+}
+
+SDL_Texture* RTexture::GetTexture()
+{
+    return _texture;
 }
 
 int RTexture::GetWidth()

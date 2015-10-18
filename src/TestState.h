@@ -8,6 +8,7 @@
 #include "r_gamestate.h"
 #include "r_entity/r_entity.h"
 #include "r_util_components.h"
+#include "r_render.h"
 #include "RSprite.h"
 #include "RTexture.h"
 #include "RTimer.h"
@@ -42,11 +43,15 @@ class TestState: public RGameState {
         //component systems
         std::vector<Component *> _components; 
         System<RTexture> _textureSystem;
-        System<RSprite> _spriteSystem;
+        System<SpriteComponent> _spriteSystem;
         System<RTimer> _timerSystem;
+        System<ColorComponent> _fgColorSystem;
+        System<ColorComponent> _bgColorSystem;
         System<XYZComponent> _positionSystem;
         System<XYZComponent> _velocitySystem;
-        System<RenderComponent> _renderSystem;
+        System<WHComponent> _dimensionsSystem;
+        
+        RenderSystem _renderSystem;
         
         EntityID SPRITE_LATIN_UNI;
         EntityID SPRITE_LATIN_TEXT;

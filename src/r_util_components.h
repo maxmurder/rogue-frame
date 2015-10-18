@@ -1,5 +1,6 @@
 #ifndef R_COMPONENTS_H
 #define R_COMPONENTS_H
+#include <vector>
 #include "r_entity/r_component.h"
 #include "RSprite.h"
 
@@ -10,29 +11,40 @@ struct XYZComponent : public Component {
 
 COMPONENT_REGISTER(XYZComponent, "XYZComponent");
 
-//renderer component (reqires positon and RSprite component)
-class RenderComponent : public Component {
-
-        XYZComponent *positionComp;
-        RSprite *spriteComp;  
-    public:
-        void Render(SDL_Renderer *renderer)
-        {
-            if(GetEntity(ownerID) != NULL)
-            {
-                spriteComp->Render(renderer, positionComp->x, positionComp->y);
-            }
-        }
-        void Init(System<XYZComponent> pos, System<RSprite> spr)
-        {
-            if(GetEntity(ownerID) != NULL)
-            {
-                positionComp = pos.components[ownerID];
-                spriteComp = spr.components[ownerID];
-            }
-        }
+struct WHComponent : public Component {
+    uint16_t w, h;
 };
 
-COMPONENT_REGISTER(RenderComponent, "RenderComponent");
+COMPONENT_REGISTER(WHComponent, "WHComponent");
+
+struct StringComponent : public Component
+{
+    std::string text;
+};
+COMPONENT_REGISTER(StringComponent, "StringComponent");
+
+struct UnicodeSymbolComponent : public Component
+{
+    std::vector<uint16_t> symbols;
+    int GetIndex(uint16_t symbol);
+};
+
+COMPONENT_REGISTER(UnicodeSymbolComponent, "UnicodeSymbolComponent");
+
+struct FontComponent : public Component
+{
+    TTF_Font *font;
+    uint32_t pntsize;
+};
+
+COMPONENT_REGISTER(FontComponent, "FontComponent");
+
+struct ColorComponent : public Component
+{
+    SDL_Color color;
+    void SetColor(SDL_Color color);
+};
+
+COMPONENT_REGISTER(ColorComponent, "ColorComponent");
 
 #endif

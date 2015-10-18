@@ -28,7 +28,7 @@ int NumFree(); //returns number of free entities in the pool.
 template <typename C> struct System {
         std::map<EntityID, C *> components;
         
-        void AddComponent(Component *component, EntityID ownerID)
+        virtual void AddComponent(Component *component, EntityID ownerID)
         {
             components[ownerID] = dynamic_cast<C *>(component);
         }

@@ -18,6 +18,8 @@ class RTexture : public Component
         void SetAlpha( uint8_t alpha );
         void SetBlendMode( SDL_BlendMode blending);
         void Render( SDL_Renderer* renderer, const int x, const int y, const SDL_Rect* clip = NULL, const double angle = 0.0, const SDL_Point* center = NULL, const SDL_RendererFlip flip = SDL_FLIP_NONE ); // render at point
+        
+        SDL_Texture* GetTexture();
         //get dimensions
         int GetWidth();
         int GetHeight();
