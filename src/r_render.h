@@ -26,21 +26,9 @@ COMPONENT_REGISTER(RenderComponent, "RenderComponent");
 
 struct RenderSystem: public System<RenderComponent>
 {
+    void AddComponent(Component *component, EntityID ownerID, System<XYZComponent> pos, System<SpriteComponent> spr, bool render = false);
+    void RemoveComponent(EntityID ownerID);
     void Render(SDL_Renderer *renderer);
-};
-
-struct TileRenderSystem: public System<RenderComponent>
-{
-    void Render(SDL_Renderer *renderer);
-    private:
-    std::vector<RenderComponent *> framebuffer;
-};
-
-struct TextRenderSystem: public System<RenderComponent>
-{
-    void Render(SDL_Renderer *renderer);
-    private:
-    std::vector<RenderComponent *> framebuffer;
 };
 
 #endif

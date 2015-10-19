@@ -9,7 +9,6 @@ int UnicodeSymbolComponent::GetIndex(uint16_t symbol)
             return i;
         }
     }
-    
     return -1;
 }
 

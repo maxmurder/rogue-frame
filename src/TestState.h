@@ -17,8 +17,10 @@ class TestState: public RGameState {
 
 
             //component systems
+        RenderSystem _renderSystem;
+        SpriteSystem _spriteSystem;
+        AnimationSystem _animationSystem;
         System<RTexture> _textureSystem;
-        System<SpriteComponent> _spriteSystem;
         System<RTimer> _timerSystem;
         System<ColorComponent> _fgColorSystem;
         System<ColorComponent> _bgColorSystem;
@@ -54,7 +56,7 @@ class TestState: public RGameState {
         
         std::vector<Component *> _components; //big list of all components, used to cleanup at end of program (probobly better to handle this in a smarter way irl);
         
-        RenderSystem _renderSystem;
+
         
         EntityID UNICODE_LATIN_SET;
         EntityID SPRITE_LATIN_UNI;

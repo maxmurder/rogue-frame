@@ -7,6 +7,7 @@
 #include "r_entity/r_entity.h"
 #include "r_entity/r_component.h"
 #include "r_util_components.h"
+#include "r_animation.h"
 
 struct SpriteComponent : public Component
 {
@@ -14,26 +15,29 @@ struct SpriteComponent : public Component
     ColorComponent *fgColor;
     ColorComponent *bgColor;
     WHComponent *dimensions;
-    WHComponent *cellDimensions;
+    AnimationComponent *animations;
+    
     int renderOffsetX, renderOffsetY;
-    uint32_t animationSpeed;
-    std::string currentAnimation;
     float angle;
     SDL_RendererFlip flip;
     SDL_Point center;
 
-    void Init( RTexture *textureComponent,  WHComponent *cellDimensionsComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColorComponent, ColorComponent *backgroundColorComponent);
-    void AddAnimation(std::string name, std::vector<SDL_Rect> frames);
-    void SetAnimation(std::string animation);
-    void SetFrame(int frame);
-    void Update();
-    SDL_Rect GetCurrentFrame();
+    void Init( RTexture *textureComponent,  AnimationComponent *animationComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColorComponent, ColorComponent *backgroundColorComponent);
     
     SpriteComponent();
-    
-    private:
-        uint32_t currentFrame, frameCount;
 };
 
 COMPONENT_REGISTER(SpriteComponent, "SpriteComponent");
+
+struct SpriteSystem: public System<SpriteComponent>
+{
+    void AddComponent(Component *component, 
+                        EntityID ownerID, 
+                        RTexture *textureComponent,
+                        AnimationComponent *animationComponent, 
+                        WHComponent *dimensionsComponent, 
+                        ColorComponent *foregroundColorComponent, 
+                        ColorComponent *backgroundColorComponent);
+};
+
 #endif

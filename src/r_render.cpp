@@ -1,6 +1,22 @@
 #include "r_render.h"
 #include <iostream>
 
+void RenderSystem::AddComponent(Component *component, EntityID ownerID, System<XYZComponent> pos, System<SpriteComponent> spr, bool render)
+{
+    System::AddComponent(component, ownerID);
+    components[ownerID]->Init(pos, spr, render);
+}
+
+void RenderSystem::RemoveComponent(EntityID ownerID)
+{
+    auto it = components.find(ownerID);
+    if (it != components.end())
+    {
+         r_component::Destroy(it->second);
+         components.erase(it);
+    }
+}
+
 void RenderSystem::Render(SDL_Renderer *renderer)
 {
     SDL_RenderClear( renderer );
@@ -13,7 +29,7 @@ void RenderSystem::Render(SDL_Renderer *renderer)
             if(r.second->spriteComp != NULL)
             {
                 //select texture frame to render
-                SDL_Rect frameRect = r.second->spriteComp->GetCurrentFrame();
+                SDL_Rect frameRect = r.second->spriteComp->animations->GetCurrentFrame();
                 if(r.second->positionComp != NULL && r.second->spriteComp->bgColor != NULL && r.second->spriteComp->fgColor != NULL)
                 {
                     //select screen area to render
@@ -29,8 +45,8 @@ void RenderSystem::Render(SDL_Renderer *renderer)
                     //apply render offset
                     renderQuad.x += r.second->spriteComp->renderOffsetX;
                     renderQuad.y += r.second->spriteComp->renderOffsetY;
-                    renderQuad.w = r.second->spriteComp->cellDimensions->w;
-                    renderQuad.h = r.second->spriteComp->cellDimensions->h;
+                    renderQuad.w = frameRect.w;
+                    renderQuad.h = frameRect.h;
                     
                     if(r.second->spriteComp->texture->GetTexture() != NULL)
                     {
@@ -51,11 +67,16 @@ void RenderSystem::Render(SDL_Renderer *renderer)
             {
                 std::cout << "Could not render, Missing sprite." << std::endl;
             }
+        }else
+        {
+            r_component::Destroy(r.second);
+            components.erase(r.first);
         }
     }
     
     SDL_RenderPresent( renderer );
 }
+
 /*
 void TileRenderSystem::Render(SDL_Renderer *renderer)
 {

@@ -9,13 +9,20 @@
     DeleteEntity(EntityID) frees the entity index and increment the version, this will result in subsiquent calls to GetEntity(EntityID) with out-of-date id's to return NULL.
     GetEntity(EntityID) returns a pointer to the entity if the supplied EntityID is valid. 
 */
-struct Component;
 
 struct Entity {
     uint16_t version;
 };
 
 typedef uint32_t EntityID; //unique index|version identifier for entities
+
+struct Component;
+
+namespace r_component
+{
+    Component* Create(const std::string& name, EntityID ownerID); //create component function
+    void Destroy(const Component* comp); //destroy component function
+}
 
 EntityID CreateEntity(); //creates a new entity and returns its identifier.
 void DeleteEntity(EntityID id); //frees the entity and increments the version.
@@ -31,6 +38,15 @@ template <typename C> struct System {
         virtual void AddComponent(Component *component, EntityID ownerID)
         {
             components[ownerID] = dynamic_cast<C *>(component);
+        }
+        
+        virtual void Cleanup()
+        {
+            for (auto &c : components)
+            {
+                r_component::Destroy(c.second);
+                components.erase(c.first);
+            }
         }
 };
 
