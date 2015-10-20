@@ -2,22 +2,6 @@
 
 using namespace std;
 
-void AnimationComponent::Update()
-{
-    if(animationSpeed > 0)
-    {
-        if(frameCount > animationSpeed)
-        {   
-            frameCount = 0;
-            currentFrame++;
-            if (currentFrame >= animations[currentAnimation].size())
-            {
-                currentFrame = 0;
-            }
-        }
-        frameCount++;
-    }
-}
 
 void AnimationComponent::AddAnimation(std::string name, std::vector<SDL_Rect> frames)
 {
@@ -63,6 +47,18 @@ void AnimationSystem::Update()
 {
     for (auto &s : components)
     {
-        s.second->Update();
+        if(s.second->animationSpeed > 0)
+        {
+            if(s.second->frameCount > s.second->animationSpeed)
+            {   
+                s.second->frameCount = 0;
+                s.second->currentFrame++;
+                if (s.second->currentFrame >= s.second->animations[s.second->currentAnimation].size())
+                {
+                    s.second->currentFrame = 0;
+                }
+            }
+            s.second->frameCount++;
+        }
     }
 }

@@ -8,8 +8,7 @@
 #include "r_gamestate.h"
 #include "r_entity/r_entity.h"
 #include "r_util_components.h"
-#include "r_render.h"
-#include "RSprite.h"
+#include "r_sprite.h"
 #include "RTexture.h"
 #include "RTimer.h"
 
@@ -17,7 +16,6 @@ class TestState: public RGameState {
 
 
             //component systems
-        RenderSystem _renderSystem;
         SpriteSystem _spriteSystem;
         AnimationSystem _animationSystem;
         System<RTexture> _textureSystem;
@@ -28,6 +26,7 @@ class TestState: public RGameState {
         System<XYZComponent> _velocitySystem;
         System<WHComponent> _dimensionsSystem;
         System<UnicodeSymbolComponent> _unicodeSymbolSystem;    
+        System<StringComponent> _stringSystem;
 
     public:
         void Init(RGameEngine* game);
@@ -55,8 +54,6 @@ class TestState: public RGameState {
         const Uint8* currentKeyStates;
         
         std::vector<Component *> _components; //big list of all components, used to cleanup at end of program (probobly better to handle this in a smarter way irl);
-        
-
         
         EntityID UNICODE_LATIN_SET;
         EntityID SPRITE_LATIN_UNI;

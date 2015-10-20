@@ -1,12 +1,9 @@
 #ifndef R_SPRITE_H
 #define R_SPRITE_H
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <vector>
-#include <map>
 #include "r_entity/r_entity.h"
 #include "r_entity/r_component.h"
 #include "r_util_components.h"
+#include "RTexture.h"
 #include "r_animation.h"
 
 struct SpriteComponent : public Component

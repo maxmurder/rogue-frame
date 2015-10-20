@@ -14,7 +14,6 @@ struct AnimationComponent : public Component
     std::string currentAnimation;
     
     void SetFrame(uint32_t frame);
-    void Update();
     void AddAnimation(std::string name, std::vector<SDL_Rect> frames);
     void SetAnimation(std::string animation);
     SDL_Rect GetCurrentFrame();

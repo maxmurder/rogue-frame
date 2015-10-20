@@ -6,12 +6,13 @@
 #include "TestState.h"
 #include "r_SDL.h"
 #include "r_utils.h"
+#include "r_renderer.h"
 
 using namespace std;
 
 TestState TestState::_TestState;
 
-EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTSPRITE_1, TESTSPRITE_2, TESTSPRITE_3, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXTURE_2, PARTICLE;
+EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTSPRITE_1, TESTSPRITE_2, TESTSPRITE_3, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXTURE_2, TESTTEXT;
 
 vector<EntityID> testchars;
 
@@ -68,7 +69,7 @@ void TestState::Init(RGameEngine* game)
     _positionSystem.components[BACKGROUND_TEXTURE]->x = 0;
     _positionSystem.components[BACKGROUND_TEXTURE]->y = 0;
     
-    _renderSystem.AddComponent(r_component::Create("RenderComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE, _positionSystem, _spriteSystem, true);
+  //  _renderSystem.AddComponent(r_component::Create("RenderComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE, _positionSystem, _spriteSystem, true);
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
@@ -114,7 +115,7 @@ void TestState::Init(RGameEngine* game)
         _positionSystem.components[testchars.back()]->x = 0 + (i % 16) * _dimensionsSystem.components[testchars.back()]->w;
         _positionSystem.components[testchars.back()]->y = 0 + r * _dimensionsSystem.components[testchars.back()]->h;
         
-        _renderSystem.AddComponent(r_component::Create("RenderComponent", testchars.back()), testchars.back(), _positionSystem, _spriteSystem, true);
+//renderSystem.AddComponent(r_component::Create("RenderComponent", testchars.back()), testchars.back(), _positionSystem, _spriteSystem, true);
     
         i++;       
         if(i % 16 == 0)
@@ -163,10 +164,10 @@ void TestState::Init(RGameEngine* game)
                                 _bgColorSystem.components[TESTTEXTURE_1]);
 
     _positionSystem.AddComponent(r_component::Create("XYZComponent", TESTTEXTURE_1), TESTTEXTURE_1);
-    _positionSystem.components[TESTTEXTURE_1]->x = 240;
-    _positionSystem.components[TESTTEXTURE_1]->y = 240;
+    _positionSystem.components[TESTTEXTURE_1]->x = _windows[0]->GetWidth() - _dimensionsSystem.components[TESTTEXTURE_1]->w;
+    _positionSystem.components[TESTTEXTURE_1]->y = _windows[0]->GetHeight() - _dimensionsSystem.components[TESTTEXTURE_1]->h;
    
-    _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTTEXTURE_1), TESTTEXTURE_1, _positionSystem, _spriteSystem, true);
+  //  _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTTEXTURE_1), TESTTEXTURE_1, _positionSystem, _spriteSystem, true);
    
     
     
@@ -209,7 +210,7 @@ void TestState::Init(RGameEngine* game)
                                 _bgColorSystem.components[TESTPLAYER]);
     
     //create renderer
-    _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTPLAYER), TESTPLAYER, _positionSystem,_spriteSystem, true);
+  //  _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTPLAYER), TESTPLAYER, _positionSystem,_spriteSystem, true);
     
     //setup timer
     TESTTIMER = CreateEntity();
@@ -220,6 +221,18 @@ void TestState::Init(RGameEngine* game)
     //start input
     SDL_StartTextInput();    
     currentKeyStates = SDL_GetKeyboardState(NULL);
+    
+    
+    
+    TESTTEXT = CreateEntity();
+    _stringSystem.AddComponent(r_component::Create("StringComponent", TESTTEXT), TESTTEXT);
+    _stringSystem.components[TESTTEXT]->text = L"Hello World";
+    _positionSystem.AddComponent(r_component::Create("XYZComponent",TESTTEXT), TESTTEXT);
+    _positionSystem.components[TESTTEXT]->x = 240;
+    _positionSystem.components[TESTTEXT]->y = 240;
+    _dimensionsSystem.AddComponent(r_component::Create("WHComponent",TESTTEXT), TESTTEXT);
+    _dimensionsSystem.components[TESTTEXT]->w = 240;
+    _dimensionsSystem.components[TESTTEXT]->h = 240;
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -228,12 +241,12 @@ void TestState::Cleanup(RGameEngine* game)
     {
         delete win;
     }
-     _renderSystem.Cleanup();
-     _spriteSystem.Cleanup();
+    _spriteSystem.Cleanup();
     _textureSystem.Cleanup();
-     _timerSystem.Cleanup();
+    _animationSystem.Cleanup();
+    _timerSystem.Cleanup();
     _fgColorSystem.Cleanup();
-     _bgColorSystem.Cleanup();
+    _bgColorSystem.Cleanup();
     _positionSystem.Cleanup();
     _velocitySystem.Cleanup();
     _dimensionsSystem.Cleanup();
@@ -265,6 +278,9 @@ void TestState::HandleEvents(RGameEngine* game)
         
         //get keyboard text input
         _input = r_SDL::TextInputHandler(_event, _input);
+        
+        
+        
         
         //handle window events
         for (auto &win : _windows)
@@ -320,7 +336,7 @@ void TestState::Update(RGameEngine* game)
 {
     
     //update sprite animations
-    _animationSystem.Update();    
+    _animationSystem.Update();
     
     //calculate fps
     int thisT = _timerSystem.components[TESTTIMER]->GetTicks();
@@ -334,8 +350,8 @@ void TestState::Update(RGameEngine* game)
     {
         if(GetEntity(c.second->ownerID)!=NULL)
         {
-            _positionSystem.components[c.second->ownerID]->x += c.second->x;
-            _positionSystem.components[c.second->ownerID]->y += c.second->y;
+            _positionSystem.components[c.first]->x += c.second->x;
+            _positionSystem.components[c.first]->y += c.second->y;
         }
     }
  
@@ -358,6 +374,10 @@ void TestState::Update(RGameEngine* game)
 
 void TestState::Draw(RGameEngine* game)
 {   
-    _renderSystem.Render(_windows[0]->renderer);
+    r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->GetTexture(), _animationSystem.components[TESTPLAYER]->GetCurrentFrame(), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
+    r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->GetTexture(), {0,0,640,480}, {0,0,640,480});
+    
+    r_renderer::Render(_windows[0]->renderer);
+    
     _count++;
 } 

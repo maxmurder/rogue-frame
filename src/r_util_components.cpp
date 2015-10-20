@@ -19,3 +19,4 @@ void ColorComponent::SetColor(SDL_Color c)
     color.b = c.b;
     color.a = c.a;
 }
+

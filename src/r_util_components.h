@@ -1,8 +1,9 @@
 #ifndef R_COMPONENTS_H
 #define R_COMPONENTS_H
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <vector>
 #include "r_entity/r_component.h"
-#include "RSprite.h"
 
 //simple position component
 struct XYZComponent : public Component {
@@ -19,7 +20,7 @@ COMPONENT_REGISTER(WHComponent, "WHComponent");
 
 struct StringComponent : public Component
 {
-    std::string text;
+    std::wstring text;
 };
 COMPONENT_REGISTER(StringComponent, "StringComponent");
 
