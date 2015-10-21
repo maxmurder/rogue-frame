@@ -2,9 +2,7 @@
 
 using namespace std;
 
-//std::map<std::string, std::vector<SDL_Rect>> animations;
-
-void SpriteComponent::Init( RTexture *textureComponent, AnimationComponent *animationComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColor, ColorComponent *backgroundColor )
+void SpriteComponent::Init( EntityID textureComponent, EntityID animationComponent, EntityID dimensionsComponent, EntityID foregroundColor, EntityID backgroundColor )
 {
     texture = textureComponent;
     fgColor = foregroundColor;
@@ -18,24 +16,20 @@ void SpriteComponent::Init( RTexture *textureComponent, AnimationComponent *anim
     center = {0,0};
 }
 
-SpriteComponent::SpriteComponent() : Component()
+void SpriteSystem::Init(System<RTexture> *tex, System<ColorComponent> *fg, System<ColorComponent> *bg, System<WHComponent> *dim, System<AnimationComponent> *anim)
 {
-
-    texture = NULL;
-    fgColor = NULL;
-    bgColor = NULL;
-    dimensions = NULL;
-    animations = NULL;
-    renderOffsetX = 0;
-    renderOffsetY = 0;
-    angle = 0.0f;
-    flip = SDL_FLIP_NONE;
-    center = {0,0};
+    textureSystem = tex;
+    fgColorSystem = fg;
+    bgColorSystem = bg;
+    dimensionSystem = dim;
+    animationSystem = anim;
+    
+    init = true;
 }
 
-void SpriteSystem::AddComponent(Component *component, EntityID ownerID, RTexture *textureComponent, AnimationComponent *animationComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColorComponent, ColorComponent *backgroundColorComponent)
+void SpriteSystem::AddComponent(Component *component, EntityID ownerID, EntityID textureID, EntityID animationID, EntityID dimensionsID, EntityID fgColorID, EntityID bgColorID)
 {
     System::AddComponent(component, ownerID);
-    components[ownerID]->Init(textureComponent, animationComponent, dimensionsComponent, foregroundColorComponent, backgroundColorComponent);
+    components[ownerID]->Init(textureID, animationID, dimensionsID, fgColorID, bgColorID);
 }
 

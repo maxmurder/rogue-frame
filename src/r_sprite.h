@@ -8,33 +8,41 @@
 
 struct SpriteComponent : public Component
 {
-    RTexture *texture;
-    ColorComponent *fgColor;
-    ColorComponent *bgColor;
-    WHComponent *dimensions;
-    AnimationComponent *animations;
+    EntityID texture;
+    EntityID fgColor;
+    EntityID bgColor;
+    EntityID dimensions;
+    EntityID animations;
     
     int renderOffsetX, renderOffsetY;
     float angle;
     SDL_RendererFlip flip;
     SDL_Point center;
 
-    void Init( RTexture *textureComponent,  AnimationComponent *animationComponent, WHComponent *dimensionsComponent, ColorComponent *foregroundColorComponent, ColorComponent *backgroundColorComponent);
-    
-    SpriteComponent();
+    void Init( EntityID textureComponent,  EntityID animationComponent, EntityID dimensionsComponent, EntityID foregroundColorComponent, EntityID backgroundColorComponent);
 };
 
 COMPONENT_REGISTER(SpriteComponent, "SpriteComponent");
 
 struct SpriteSystem: public System<SpriteComponent>
 {
+    System<RTexture> *textureSystem;
+    System<ColorComponent> *fgColorSystem;
+    System<ColorComponent> *bgColorSystem;
+    System<WHComponent> *dimensionSystem;
+    System<AnimationComponent> *animationSystem;
+    
+    void Init(System<RTexture> *textureSys, System<ColorComponent> *fgColorSys, System<ColorComponent> *bgColorSys, System<WHComponent> *dimensionSys, System<AnimationComponent> *animationSys);
+    
     void AddComponent(Component *component, 
                         EntityID ownerID, 
-                        RTexture *textureComponent,
-                        AnimationComponent *animationComponent, 
-                        WHComponent *dimensionsComponent, 
-                        ColorComponent *foregroundColorComponent, 
-                        ColorComponent *backgroundColorComponent);
+                        EntityID textureID,
+                        EntityID animationID,
+                        EntityID dimensionsID, 
+                        EntityID foregroundColorID, 
+                        EntityID backgroundColorID);
+    private:
+        bool init;
 };
 
 #endif

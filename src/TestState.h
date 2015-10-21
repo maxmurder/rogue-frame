@@ -9,8 +9,8 @@
 #include "r_entity/r_entity.h"
 #include "r_util_components.h"
 #include "r_sprite.h"
-#include "RTexture.h"
 #include "RTimer.h"
+#include "r_texture.h"
 
 class TestState: public RGameState {
 
@@ -18,7 +18,7 @@ class TestState: public RGameState {
             //component systems
         SpriteSystem _spriteSystem;
         AnimationSystem _animationSystem;
-        System<RTexture> _textureSystem;
+        TextureSystem _textureSystem;
         System<RTimer> _timerSystem;
         System<ColorComponent> _fgColorSystem;
         System<ColorComponent> _bgColorSystem;

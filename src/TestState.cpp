@@ -38,12 +38,12 @@ void TestState::Init(RGameEngine* game)
     
     //load background texture and everything needed to render
     BACKGROUND_TEXTURE = CreateEntity();
-    _textureSystem.AddComponent(r_component::Create("RTexture", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _textureSystem.components[BACKGROUND_TEXTURE]->LoadFromFile("data/gfx/checker.png", _windows[0]->renderer);
+    _textureSystem.AddComponent(r_component::Create("TextureComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
+    _textureSystem.LoadFromFile(BACKGROUND_TEXTURE, "data/gfx/checker.png", _windows[0]->renderer);
     //create metadata
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _dimensionsSystem.components[BACKGROUND_TEXTURE]->w = _textureSystem.components[BACKGROUND_TEXTURE]->GetWidth();
-    _dimensionsSystem.components[BACKGROUND_TEXTURE]->h = _textureSystem.components[BACKGROUND_TEXTURE]->GetHeight();
+    _dimensionsSystem.components[BACKGROUND_TEXTURE]->w = _textureSystem.components[BACKGROUND_TEXTURE]->width;
+    _dimensionsSystem.components[BACKGROUND_TEXTURE]->h = _textureSystem.components[BACKGROUND_TEXTURE]->height;
 
     _bgColorSystem.AddComponent(r_component::Create("ColorComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
     _bgColorSystem.components[BACKGROUND_TEXTURE]->SetColor({0x00,0x00,0x00,0x00});
@@ -57,14 +57,13 @@ void TestState::Init(RGameEngine* game)
     
     //create sprite for background texture
     _spriteSystem.AddComponent(r_component::Create("SpriteComponent", BACKGROUND_TEXTURE),
-                                 BACKGROUND_TEXTURE, 
-                                _textureSystem.components[BACKGROUND_TEXTURE], 
-                                _animationSystem.components[BACKGROUND_TEXTURE], 
-                                _dimensionsSystem.components[BACKGROUND_TEXTURE], 
-                                _fgColorSystem.components[BACKGROUND_TEXTURE], 
-                                _bgColorSystem.components[BACKGROUND_TEXTURE]);
+                                BACKGROUND_TEXTURE, 
+                                BACKGROUND_TEXTURE, 
+                                BACKGROUND_TEXTURE, 
+                                BACKGROUND_TEXTURE, 
+                                BACKGROUND_TEXTURE, 
+                                BACKGROUND_TEXTURE);
 
-    //create the render components
     _positionSystem.AddComponent(r_component::Create("XYZComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
     _positionSystem.components[BACKGROUND_TEXTURE]->x = 0;
     _positionSystem.components[BACKGROUND_TEXTURE]->y = 0;
@@ -73,8 +72,8 @@ void TestState::Init(RGameEngine* game)
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
-    _textureSystem.AddComponent(r_component::Create("RTexture", UNICODE_TEXTURE), UNICODE_TEXTURE);
-    _textureSystem.components[UNICODE_TEXTURE]->RenderUnicode(_windows[0]->renderer, &_unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols[0], _font);
+    _textureSystem.AddComponent(r_component::Create("TextureComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
+    _textureSystem.RenderUnicode(UNICODE_TEXTURE, _windows[0]->renderer, _font, &_unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols[0]);
     
     //create metadata for latin set
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
@@ -86,7 +85,7 @@ void TestState::Init(RGameEngine* game)
     
     _bgColorSystem.AddComponent(r_component::Create("ColorComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
     _bgColorSystem.components[UNICODE_TEXTURE]->SetColor({0x00,0x00,0x00,0xFF});
-    
+    /*
     //create sprites
     vector<SDL_Rect> uniframes;
     int i = 0, r = 0;
@@ -169,13 +168,13 @@ void TestState::Init(RGameEngine* game)
    
   //  _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTTEXTURE_1), TESTTEXTURE_1, _positionSystem, _spriteSystem, true);
    
-    
+    */
     
     //create "player" entity
     TESTPLAYER = CreateEntity();
     
-    _textureSystem.AddComponent(r_component::Create("RTexture", TESTPLAYER), TESTPLAYER);
-    _textureSystem.components[TESTPLAYER]->LoadFromFile("data/gfx/curses_square_16x16.png", _windows[0]->renderer, 0xFF, 0x00, 0xFF);
+    _textureSystem.AddComponent(r_component::Create("TextureComponent", TESTPLAYER), TESTPLAYER);
+    _textureSystem.LoadFromFile(TESTPLAYER, "data/gfx/curses_square_16x16.png", _windows[0]->renderer, {0xFF,0x00,0xFF,0xFF});
     
     _positionSystem.AddComponent(r_component::Create("XYZComponent", TESTPLAYER), TESTPLAYER);
     _positionSystem.components[TESTPLAYER]->x = _windows[0]->GetWidth()  / 2;
@@ -203,15 +202,11 @@ void TestState::Init(RGameEngine* game)
     //create sprite
     _spriteSystem.AddComponent(r_component::Create("SpriteComponent", TESTPLAYER), 
                                 TESTPLAYER, 
-                                _textureSystem.components[TESTPLAYER], 
-                                _animationSystem.components[TESTPLAYER], 
-                                _dimensionsSystem.components[TESTPLAYER], 
-                                _fgColorSystem.components[TESTPLAYER], 
-                                _bgColorSystem.components[TESTPLAYER]);
-    
-    //create renderer
-  //  _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTPLAYER), TESTPLAYER, _positionSystem,_spriteSystem, true);
-    
+                                TESTPLAYER, 
+                                TESTPLAYER, 
+                                TESTPLAYER, 
+                                TESTPLAYER, 
+                                TESTPLAYER);
     //setup timer
     TESTTIMER = CreateEntity();
     _timerSystem.AddComponent(r_component::Create("RTimer", TESTTIMER), TESTTIMER);
@@ -374,8 +369,8 @@ void TestState::Update(RGameEngine* game)
 
 void TestState::Draw(RGameEngine* game)
 {   
-    r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->GetTexture(), _animationSystem.components[TESTPLAYER]->GetCurrentFrame(), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
-    r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->GetTexture(), {0,0,640,480}, {0,0,640,480});
+    r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->texture, _animationSystem.components[TESTPLAYER]->GetCurrentFrame(), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
+    r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->texture, {0,0,640,480}, {0,0,640,480});
     
     r_renderer::Render(_windows[0]->renderer);
     
