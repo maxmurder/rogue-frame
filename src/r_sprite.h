@@ -3,8 +3,8 @@
 #include "r_entity/r_entity.h"
 #include "r_entity/r_component.h"
 #include "r_util_components.h"
-#include "RTexture.h"
 #include "r_animation.h"
+#include "r_texture.h"
 
 struct SpriteComponent : public Component
 {
@@ -26,13 +26,13 @@ COMPONENT_REGISTER(SpriteComponent, "SpriteComponent");
 
 struct SpriteSystem: public System<SpriteComponent>
 {
-    System<RTexture> *textureSystem;
+    TextureSystem *textureSystem;
     System<ColorComponent> *fgColorSystem;
     System<ColorComponent> *bgColorSystem;
     System<WHComponent> *dimensionSystem;
     System<AnimationComponent> *animationSystem;
     
-    void Init(System<RTexture> *textureSys, System<ColorComponent> *fgColorSys, System<ColorComponent> *bgColorSys, System<WHComponent> *dimensionSys, System<AnimationComponent> *animationSys);
+    void Init(TextureSystem *textureSys, System<ColorComponent> *fgColorSys, System<ColorComponent> *bgColorSys, System<WHComponent> *dimensionSys, System<AnimationComponent> *animationSys);
     
     void AddComponent(Component *component, 
                         EntityID ownerID, 

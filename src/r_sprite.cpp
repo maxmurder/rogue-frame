@@ -16,7 +16,7 @@ void SpriteComponent::Init( EntityID textureComponent, EntityID animationCompone
     center = {0,0};
 }
 
-void SpriteSystem::Init(System<RTexture> *tex, System<ColorComponent> *fg, System<ColorComponent> *bg, System<WHComponent> *dim, System<AnimationComponent> *anim)
+void SpriteSystem::Init(TextureSystem *tex, System<ColorComponent> *fg, System<ColorComponent> *bg, System<WHComponent> *dim, System<AnimationComponent> *anim)
 {
     textureSystem = tex;
     fgColorSystem = fg;

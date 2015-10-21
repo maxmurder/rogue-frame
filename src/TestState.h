@@ -60,7 +60,6 @@ class TestState: public RGameState {
         EntityID SPRITE_LATIN_TEXT;
     
         std::vector<RWindow*> _windows;
-        std::vector<RTexture*> _textures;
         
         TTF_Font* _font;
         
