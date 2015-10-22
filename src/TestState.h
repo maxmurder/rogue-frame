@@ -11,14 +11,15 @@
 #include "r_sprite.h"
 #include "RTimer.h"
 #include "r_texture.h"
+#include "r_ui_text.h"
 
 class TestState: public RGameState {
-
 
             //component systems
         SpriteSystem _spriteSystem;
         AnimationSystem _animationSystem;
         TextureSystem _textureSystem;
+        UITextSystem _uiTextSystem;
         System<RTimer> _timerSystem;
         System<ColorComponent> _fgColorSystem;
         System<ColorComponent> _bgColorSystem;

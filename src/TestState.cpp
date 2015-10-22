@@ -12,7 +12,7 @@ using namespace std;
 
 TestState TestState::_TestState;
 
-EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTSPRITE_1, TESTSPRITE_2, TESTSPRITE_3, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXTURE_2, TESTTEXT;
+EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXT, FPSCOUNTER;
 
 vector<EntityID> testchars;
 
@@ -127,14 +127,30 @@ void TestState::Init(RGameEngine* game)
     TESTTIMER = CreateEntity();
     _timerSystem.AddComponent(r_component::Create("RTimer", TESTTIMER), TESTTIMER);
     _timerSystem.components[TESTTIMER]->Start();
+
+    //make map of character frames for text system
+    map<wchar_t, SDL_Rect> charframes;
+    for(auto &c : _unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols)
+    {
+        charframes[c]={_unicodeSymbolSystem.components[UNICODE_LATIN_SET]->GetIndex(c) * _dimensionsSystem.components[UNICODE_TEXTURE]->w, 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w, _dimensionsSystem.components[UNICODE_TEXTURE]->h};
+    }
     
+    //fps counter
+    FPSCOUNTER = CreateEntity();
+    _uiTextSystem.AddComponent(FPSCOUNTER,
+                                _textureSystem.components[UNICODE_TEXTURE]->texture,
+                                charframes, 
+                                {_windows[0]->GetWidth(),0,_dimensionsSystem.components[UNICODE_TEXTURE]->w,_dimensionsSystem.components[UNICODE_TEXTURE]->h},
+                                L"",
+                                {0x80, 0x00, 0xFF, 0xFF},
+                                {0x00, 0x00, 0x00, 0xFF});
+                          
     TTF_CloseFont(_font);
     //start input
     SDL_StartTextInput();    
     currentKeyStates = SDL_GetKeyboardState(NULL);
     
-    
-    
+    //test text
     TESTTEXT = CreateEntity();
     _stringSystem.AddComponent(r_component::Create("StringComponent", TESTTEXT), TESTTEXT);
     _stringSystem.components[TESTTEXT]->text = L"Hello World";
@@ -144,6 +160,14 @@ void TestState::Init(RGameEngine* game)
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent",TESTTEXT), TESTTEXT);
     _dimensionsSystem.components[TESTTEXT]->w = 240;
     _dimensionsSystem.components[TESTTEXT]->h = 240;
+    
+    _uiTextSystem.AddComponent(TESTTEXT,
+                                _textureSystem.components[UNICODE_TEXTURE]->texture,
+                                charframes, 
+                                {_positionSystem.components[TESTTEXT]->x,_positionSystem.components[TESTTEXT]->y, _dimensionsSystem.components[TESTTEXT]->w, _dimensionsSystem.components[TESTTEXT]->h},
+                                _stringSystem.components[TESTTEXT]->text,
+                                {0x80, 0x00, 0xFF, 0xFF},
+                                {0x00, 0x00, 0x00, 0xFF});
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -163,6 +187,7 @@ void TestState::Cleanup(RGameEngine* game)
     _dimensionsSystem.Cleanup();
     _unicodeSymbolSystem.Cleanup(); 
     _stringSystem.Cleanup(); 
+    _uiTextSystem.Cleanup();
     
     SDL_StopTextInput(); 
 }
@@ -190,10 +215,7 @@ void TestState::HandleEvents(RGameEngine* game)
         
         //get keyboard text input
         _input = r_SDL::TextInputHandler(_event, _input);
-        
-        
-        
-        
+
         //handle window events
         for (auto &win : _windows)
         {
@@ -256,6 +278,11 @@ void TestState::Update(RGameEngine* game)
     _ms =  thisT - lastT;
     lastT = thisT;
     _fps = _count / (thisT / 1000.f);
+    wstringstream msg;
+    msg.precision(2);
+    msg << L"FPS: " << fixed << _fps;
+    _uiTextSystem.SetText(FPSCOUNTER, msg.str());
+    _uiTextSystem.SetDisplayRect(FPSCOUNTER, {_windows[0]->GetWidth() - (_dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length()), 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length(), _dimensionsSystem.components[UNICODE_TEXTURE]->h});
     
     //apply vleocity
     for(auto &c : _velocitySystem.components)
@@ -286,6 +313,7 @@ void TestState::Update(RGameEngine* game)
 
 void TestState::Draw(RGameEngine* game)
 {   
+    _uiTextSystem.Render();
     r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->texture, _animationSystem.GetCurrentFrame(TESTPLAYER), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
     r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->texture, {0,0,640,480}, {0,0,640,480});
     

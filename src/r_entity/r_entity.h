@@ -40,6 +40,18 @@ template <typename C> struct System {
             components[ownerID] = dynamic_cast<C *>(component);
         }
         
+        C* GetComponent(EntityID id)
+        {
+            for (auto &c : components)
+            {
+                if(c.first == id)
+                {
+                    return c.second;
+                }
+            }
+            return NULL;
+        }
+        
         virtual void Cleanup()
         {
             for (auto &c : components)
