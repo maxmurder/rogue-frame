@@ -85,90 +85,6 @@ void TestState::Init(RGameEngine* game)
     
     _bgColorSystem.AddComponent(r_component::Create("ColorComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
     _bgColorSystem.components[UNICODE_TEXTURE]->SetColor({0x00,0x00,0x00,0xFF});
-    /*
-    //create sprites
-    vector<SDL_Rect> uniframes;
-    int i = 0, r = 0;
-    for (auto &s : _unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols)
-    {   
-        uniframes.push_back({_unicodeSymbolSystem.components[UNICODE_LATIN_SET]->GetIndex(s) * _dimensionsSystem.components[UNICODE_TEXTURE]->w, 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
-        //create test character renderers
-        testchars.push_back(CreateEntity());
-        
-        _dimensionsSystem.AddComponent(r_component::Create("WHComponent", testchars.back()), testchars.back());
-        _dimensionsSystem.components[testchars.back()]->w = 16;
-        _dimensionsSystem.components[testchars.back()]->h = 16;
-        
-        _animationSystem.AddComponent(r_component::Create("AnimationComponent",testchars.back() ), testchars.back());
-        
-        _spriteSystem.AddComponent(r_component::Create("SpriteComponent", testchars.back()), 
-                                    testchars.back(),
-                                    _textureSystem.components[UNICODE_TEXTURE],
-                                    _animationSystem.components[testchars.back()], 
-                                    _dimensionsSystem.components[testchars.back()], 
-                                    _fgColorSystem.components[UNICODE_TEXTURE], 
-                                    _bgColorSystem.components[UNICODE_TEXTURE]);
-        _spriteSystem.components[testchars.back()]->renderOffsetX = _dimensionsSystem.components[UNICODE_TEXTURE]->w / 2;
-        
-        _positionSystem.AddComponent(r_component::Create("XYZComponent", testchars.back()), testchars.back());
-        _positionSystem.components[testchars.back()]->x = 0 + (i % 16) * _dimensionsSystem.components[testchars.back()]->w;
-        _positionSystem.components[testchars.back()]->y = 0 + r * _dimensionsSystem.components[testchars.back()]->h;
-        
-//renderSystem.AddComponent(r_component::Create("RenderComponent", testchars.back()), testchars.back(), _positionSystem, _spriteSystem, true);
-    
-        i++;       
-        if(i % 16 == 0)
-        {
-            r++;
-        }
-    }
-    i = 0;
-    for (auto &s : testchars)
-    {
-        _animationSystem.components[s]->AddAnimation("SYMBOLS",uniframes);
-        _animationSystem.components[s]->SetAnimation("SYMBOLS");
-        _animationSystem.components[s]->SetFrame(i);
-        i++;
-    }
-    
-    //create custom unicode test sprite
-    TESTTEXTURE_1 = CreateEntity();
-    _unicodeSymbolSystem.AddComponent(r_component::Create("UnicodeSymbolComponent", TESTTEXTURE_1), TESTTEXTURE_1);
-    _unicodeSymbolSystem.components[TESTTEXTURE_1]->symbols = {{0x263A, 0x263B}};
-    _textureSystem.AddComponent(r_component::Create("RTexture", TESTTEXTURE_1), TESTTEXTURE_1);
-    _textureSystem.components[TESTTEXTURE_1]->RenderUnicode(_windows[0]->renderer, &_unicodeSymbolSystem.components[TESTTEXTURE_1]->symbols[0], _font);
-
-    _dimensionsSystem.AddComponent(r_component::Create("WHComponent", TESTTEXTURE_1), TESTTEXTURE_1);
-    _dimensionsSystem.components[TESTTEXTURE_1]->w = pnt/2;
-    _dimensionsSystem.components[TESTTEXTURE_1]->h = pnt;
-    
-    _fgColorSystem.AddComponent(r_component::Create("ColorComponent", TESTTEXTURE_1), TESTTEXTURE_1);
-    _fgColorSystem.components[TESTTEXTURE_1]->SetColor({0x80,0x00,0xFF,0xFF}); 
-
-    _bgColorSystem.AddComponent(r_component::Create("ColorComponent", TESTTEXTURE_1), TESTTEXTURE_1);
-    _bgColorSystem.components[TESTTEXTURE_1]->SetColor({0x00,0x00,0x00,0xFF});
-    
-    _animationSystem.AddComponent(r_component::Create("AnimationComponent",TESTTEXTURE_1 ), TESTTEXTURE_1);
-    _animationSystem.components[TESTTEXTURE_1]->AddAnimation("TEST", {{ _dimensionsSystem.components[TESTTEXTURE_1]->w * _unicodeSymbolSystem.components[TESTTEXTURE_1]->GetIndex(0x263A), 0, _dimensionsSystem.components[TESTTEXTURE_1]->w, _dimensionsSystem.components[TESTTEXTURE_1]->h },
-                                                                   { _dimensionsSystem.components[TESTTEXTURE_1]->w * _unicodeSymbolSystem.components[TESTTEXTURE_1]->GetIndex(0x263B), 0, _dimensionsSystem.components[TESTTEXTURE_1]->w, _dimensionsSystem.components[TESTTEXTURE_1]->h }} );
-    _animationSystem.components[TESTTEXTURE_1]->SetAnimation("TEST");
-    _animationSystem.components[TESTTEXTURE_1]->animationSpeed = 30;
-    
-    _spriteSystem.AddComponent(r_component::Create("SpriteComponent", TESTTEXTURE_1), 
-                                TESTTEXTURE_1, 
-                                _textureSystem.components[TESTTEXTURE_1], 
-                                _animationSystem.components[TESTTEXTURE_1], 
-                                _dimensionsSystem.components[TESTTEXTURE_1], 
-                                _fgColorSystem.components[TESTTEXTURE_1], 
-                                _bgColorSystem.components[TESTTEXTURE_1]);
-
-    _positionSystem.AddComponent(r_component::Create("XYZComponent", TESTTEXTURE_1), TESTTEXTURE_1);
-    _positionSystem.components[TESTTEXTURE_1]->x = _windows[0]->GetWidth() - _dimensionsSystem.components[TESTTEXTURE_1]->w;
-    _positionSystem.components[TESTTEXTURE_1]->y = _windows[0]->GetHeight() - _dimensionsSystem.components[TESTTEXTURE_1]->h;
-   
-  //  _renderSystem.AddComponent(r_component::Create("RenderComponent", TESTTEXTURE_1), TESTTEXTURE_1, _positionSystem, _spriteSystem, true);
-   
-    */
     
     //create "player" entity
     TESTPLAYER = CreateEntity();
@@ -245,7 +161,8 @@ void TestState::Cleanup(RGameEngine* game)
     _positionSystem.Cleanup();
     _velocitySystem.Cleanup();
     _dimensionsSystem.Cleanup();
-    _unicodeSymbolSystem.Cleanup();   
+    _unicodeSymbolSystem.Cleanup(); 
+    _stringSystem.Cleanup(); 
     
     SDL_StopTextInput(); 
 }
