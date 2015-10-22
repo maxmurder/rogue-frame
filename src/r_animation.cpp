@@ -3,40 +3,51 @@
 using namespace std;
 
 
-void AnimationComponent::AddAnimation(std::string name, std::vector<SDL_Rect> frames)
+void AnimationSystem::AddAnimation(EntityID id, std::string name, std::vector<SDL_Rect> frames)
 {
-    animations.insert( pair<string, vector<SDL_Rect>>(name, frames) );
-}
-
-void AnimationComponent::SetAnimation(std::string animation)
-{
-    if (animations.find(animation) == animations.end() )
+    if(GetEntity(id) != NULL)
     {
-        cout << "Animation: " << animation << " not found in list." << endl;
-    }else
-    {
-        currentAnimation = animation;
+       components[id]->animations.insert(pair<string, vector<SDL_Rect>>(name, frames) );
     }
 }
 
-void AnimationComponent::SetFrame(uint32_t frame)
+void AnimationSystem::SetAnimation(EntityID id, std::string animation)
 {
-    currentFrame = frame;
-}
-
-SDL_Rect AnimationComponent::GetCurrentFrame()
-{
-    SDL_Rect f;
-    if(!animations.empty())
+     if(GetEntity(id) != NULL)
     {
-        if (animations.find(currentAnimation) == animations.end() )
+        if (components[id]->animations.find(animation) == components[id]->animations.end() )
         {
-            cout << "Animation: " << currentAnimation << " not found in list." << endl;
+            cout << "Animation: " << animation << " not found in list." << endl;
         }else
         {
-            if(currentFrame < animations[currentAnimation].size())
+            components[id]->currentAnimation = animation;
+        }
+    }
+}
+
+void AnimationSystem::SetFrame(EntityID id, uint32_t frame)
+{
+    if(GetEntity(id) != NULL)
+    {
+        components[id]->currentFrame = frame;
+    }
+}
+
+SDL_Rect AnimationSystem::GetCurrentFrame(EntityID id)
+{
+    SDL_Rect f;
+    if(GetEntity(id) != NULL)
+    {
+        if(!components[id]->animations.empty())
+        {
+            if (components[id]->animations.find(components[id]->currentAnimation) == components[id]->animations.end() )
             {
-                f = animations[currentAnimation][currentFrame];
+            }else
+            {
+                if(components[id]->currentFrame < components[id]->animations[components[id]->currentAnimation].size())
+                {
+                    f = components[id]->animations[components[id]->currentAnimation][components[id]->currentFrame];
+                }
             }
         }
     }

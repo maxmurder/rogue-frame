@@ -52,8 +52,8 @@ void TestState::Init(RGameEngine* game)
     _fgColorSystem.components[BACKGROUND_TEXTURE]->SetColor({0xFF,0xFF,0xFF,0xFF});   
     
     _animationSystem.AddComponent(r_component::Create("AnimationComponent",BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _animationSystem.components[BACKGROUND_TEXTURE]->AddAnimation("TEST",{{0,0,_dimensionsSystem.components[BACKGROUND_TEXTURE]->w ,_dimensionsSystem.components[BACKGROUND_TEXTURE]->h }});
-    _animationSystem.components[BACKGROUND_TEXTURE]->SetAnimation("TEST");
+    _animationSystem.AddAnimation(BACKGROUND_TEXTURE, "TEST",{{0,0,_dimensionsSystem.components[BACKGROUND_TEXTURE]->w ,_dimensionsSystem.components[BACKGROUND_TEXTURE]->h }});
+    _animationSystem.SetAnimation(BACKGROUND_TEXTURE,"TEST");
     
     //create sprite for background texture
     _spriteSystem.AddComponent(r_component::Create("SpriteComponent", BACKGROUND_TEXTURE),
@@ -195,8 +195,8 @@ void TestState::Init(RGameEngine* game)
     _fgColorSystem.components[TESTPLAYER]->SetColor({0x80,0x00,0xFF,0xFF});
     
     _animationSystem.AddComponent(r_component::Create("AnimationComponent",TESTPLAYER ), TESTPLAYER);
-    _animationSystem.components[TESTPLAYER]->AddAnimation("TEST1",{{16,0,16,16},{32,0,16,16}});
-    _animationSystem.components[TESTPLAYER]->SetAnimation("TEST1");
+    _animationSystem.AddAnimation(TESTPLAYER, "TEST1",{{16,0,16,16},{32,0,16,16}});
+    _animationSystem.SetAnimation(TESTPLAYER, "TEST1");
     _animationSystem.components[TESTPLAYER]->animationSpeed = 30;
     
     //create sprite
@@ -369,7 +369,7 @@ void TestState::Update(RGameEngine* game)
 
 void TestState::Draw(RGameEngine* game)
 {   
-    r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->texture, _animationSystem.components[TESTPLAYER]->GetCurrentFrame(), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
+    r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->texture, _animationSystem.GetCurrentFrame(TESTPLAYER), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
     r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->texture, {0,0,640,480}, {0,0,640,480});
     
     r_renderer::Render(_windows[0]->renderer);

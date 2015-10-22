@@ -13,11 +13,6 @@ struct AnimationComponent : public Component
     uint32_t animationSpeed, currentFrame, frameCount;
     std::string currentAnimation;
     
-    void SetFrame(uint32_t frame);
-    void AddAnimation(std::string name, std::vector<SDL_Rect> frames);
-    void SetAnimation(std::string animation);
-    SDL_Rect GetCurrentFrame();
-    
     AnimationComponent() : animations() { 
     animationSpeed = 0;
     currentFrame = 0;
@@ -31,5 +26,9 @@ COMPONENT_REGISTER(AnimationComponent, "AnimationComponent");
 struct AnimationSystem : public System<AnimationComponent>
 {
     void Update();
+    void SetFrame(EntityID id, uint32_t frame);
+    void AddAnimation(EntityID id, std::string name, std::vector<SDL_Rect> frames);
+    void SetAnimation(EntityID id, std::string animation);
+    SDL_Rect GetCurrentFrame(EntityID id);
 };
 #endif
