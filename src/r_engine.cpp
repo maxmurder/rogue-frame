@@ -1,6 +1,7 @@
 #include <iostream>
 #include "r_engine.h"
 #include "r_gamestate.h"
+#include "r_time.h"
 
 using namespace std;
 
@@ -61,6 +62,9 @@ void RGameEngine::HandleEvents()
 
 void RGameEngine::Update() 
 {
+    //update global time
+    r_time::Update();
+    
     if( !states.empty() )
     {
         states.back()->Update(this);

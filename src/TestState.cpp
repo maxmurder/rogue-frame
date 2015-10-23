@@ -7,6 +7,7 @@
 #include "r_SDL.h"
 #include "r_utils.h"
 #include "r_renderer.h"
+#include "r_time.h"
 
 using namespace std;
 
@@ -272,15 +273,17 @@ void TestState::Update(RGameEngine* game)
     //update sprite animations
     _animationSystem.Update();
     
+    static unsigned last = 0; 
     //calculate fps
-    int thisT = _timerSystem.components[TESTTIMER]->GetTicks();
-    static int lastT;
-    _ms =  thisT - lastT;
-    lastT = thisT;
-    _fps = _count / (thisT / 1000.f);
+    if(_count > 100)
+    {
+        _count = 0;
+        last = r_time::GetCurrentTicks();
+    }
+    _fps = _count / ((r_time::GetCurrentTicks() - last) / 1000.f);
     wstringstream msg;
     msg.precision(2);
-    msg << L"FPS: " << fixed << _fps;
+    msg << L"FPS: " << fixed << _fps << L" MS: " << r_time::GetLastTicks();
     _uiTextSystem.SetText(FPSCOUNTER, msg.str());
     _uiTextSystem.SetDisplayRect(FPSCOUNTER, {_windows[0]->GetWidth() - (_dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length()), 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length(), _dimensionsSystem.components[UNICODE_TEXTURE]->h});
     
