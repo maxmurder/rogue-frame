@@ -37,21 +37,28 @@ void UITextSystem::Render()
             int i = 0, r = 0;
             for(auto &c : e.second->text)
             {
-                r_renderer::AddToQueue(e.second->texture, 
-                                        e.second->symbols[c], 
-                                        {
-                                            e.second->displayRect.x + (i % (e.second->displayRect.w / e.second->symbols[c].w) * e.second->symbols[c].w), 
-                                            e.second->displayRect.y + ( r * e.second->symbols[c].h),
-                                            e.second->symbols[c].w,
-                                            e.second->symbols[c].h
-                                        },
-                                        e.second->foregroundColor,
-                                        e.second->backgroundColor);
-                i++;       
-                if(i % (e.second->displayRect.w / e.second->symbols[c].w) == 0)
+                if((c == 0x000A) || (c == 0x000D))
                 {
                     r++;
-                }                                       
+                    i = 0;
+                }else
+                {
+                    r_renderer::AddToQueue(e.second->texture, 
+                                            e.second->symbols[c], 
+                                            {
+                                                e.second->displayRect.x + (i % (e.second->displayRect.w / e.second->symbols[c].w) * e.second->symbols[c].w), 
+                                                e.second->displayRect.y + ( r * e.second->symbols[c].h),
+                                                e.second->symbols[c].w,
+                                                e.second->symbols[c].h
+                                            },
+                                            e.second->foregroundColor,
+                                            e.second->backgroundColor);
+                    i++;       
+                    if(i % (e.second->displayRect.w / e.second->symbols[c].w) == 0)
+                    {
+                        r++;
+                    }
+                }
             }
         }
     }

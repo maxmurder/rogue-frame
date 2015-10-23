@@ -49,6 +49,7 @@ class TestState: public RGameState {
     private:
         static TestState _TestState;
         SDL_Renderer* _renderer;
+        SDL_Event _event;
         const Uint8* currentKeyStates;
         
         std::vector<Component *> _components; //big list of all components, used to cleanup at end of program (probobly better to handle this in a smarter way irl);

@@ -47,9 +47,6 @@ r_sprite.o : $(SRC)r_sprite.cpp $(SRC)r_sprite.h
 r_ui_text.o : $(SRC)r_ui_text.cpp $(SRC)r_ui_text.h 
 	$(CC) $(CFLAGS) $(SRC)r_ui_text.cpp 
 
-RTimer.o : $(SRC)RTimer.cpp $(SRC)RTimer.h
-	$(CC) $(CFLAGS) $(SRC)RTimer.cpp
-
 RWindow.o : $(SRC)RWindow.cpp $(SRC)RWindow.h
 	$(CC) $(CFLAGS) $(SRC)RWindow.cpp
 
