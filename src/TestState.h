@@ -9,7 +9,6 @@
 #include "r_entity/r_entity.h"
 #include "r_util_components.h"
 #include "r_sprite.h"
-#include "RTimer.h"
 #include "r_texture.h"
 #include "r_ui_text.h"
 
@@ -20,7 +19,6 @@ class TestState: public RGameState {
         AnimationSystem _animationSystem;
         TextureSystem _textureSystem;
         UITextSystem _uiTextSystem;
-        System<RTimer> _timerSystem;
         System<ColorComponent> _fgColorSystem;
         System<ColorComponent> _bgColorSystem;
         System<XYZComponent> _positionSystem;
@@ -51,7 +49,6 @@ class TestState: public RGameState {
     private:
         static TestState _TestState;
         SDL_Renderer* _renderer;
-        SDL_Event _event;
         const Uint8* currentKeyStates;
         
         std::vector<Component *> _components; //big list of all components, used to cleanup at end of program (probobly better to handle this in a smarter way irl);

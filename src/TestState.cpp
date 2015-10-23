@@ -13,7 +13,7 @@ using namespace std;
 
 TestState TestState::_TestState;
 
-EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTPLAYER, TESTTIMER, TESTTEXTURE_1, TESTTEXT, FPSCOUNTER;
+EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, FPSCOUNTER;
 
 vector<EntityID> testchars;
 
@@ -124,11 +124,7 @@ void TestState::Init(RGameEngine* game)
                                 TESTPLAYER, 
                                 TESTPLAYER, 
                                 TESTPLAYER);
-    //setup timer
-    TESTTIMER = CreateEntity();
-    _timerSystem.AddComponent(r_component::Create("RTimer", TESTTIMER), TESTTIMER);
-    _timerSystem.components[TESTTIMER]->Start();
-
+                                
     //make map of character frames for text system
     map<wchar_t, SDL_Rect> charframes;
     for(auto &c : _unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols)
@@ -180,7 +176,6 @@ void TestState::Cleanup(RGameEngine* game)
     _spriteSystem.Cleanup();
     _textureSystem.Cleanup();
     _animationSystem.Cleanup();
-    _timerSystem.Cleanup();
     _fgColorSystem.Cleanup();
     _bgColorSystem.Cleanup();
     _positionSystem.Cleanup();

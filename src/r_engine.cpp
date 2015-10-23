@@ -53,7 +53,7 @@ void RGameEngine::Cleanup()
 }
 
 void RGameEngine::HandleEvents() 
-{
+{           
     if( !states.empty() )
     {
         states.back()->HandleEvents(this);

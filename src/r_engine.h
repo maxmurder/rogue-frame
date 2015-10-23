@@ -31,6 +31,7 @@ class RGameEngine
     std::vector<RGameState*> states; //game state stack
     bool _fullscreen;
     bool _running;
+    SDL_Event _event;
 };
 
 #endif
