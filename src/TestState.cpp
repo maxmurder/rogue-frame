@@ -146,7 +146,7 @@ void TestState::Init(RGameEngine* game)
     //start input
     SDL_StartTextInput();    
     currentKeyStates = SDL_GetKeyboardState(NULL);
-    
+   /* 
     //test text
     TESTTEXT = CreateEntity();
     _stringSystem.AddComponent(r_component::Create("StringComponent", TESTTEXT), TESTTEXT);
@@ -165,6 +165,7 @@ void TestState::Init(RGameEngine* game)
                                 _stringSystem.components[TESTTEXT]->text,
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
+*/
 }
 
 void TestState::Cleanup(RGameEngine* game)
@@ -280,7 +281,8 @@ void TestState::Update(RGameEngine* game)
     msg.precision(2);
     msg << L"FPS: " << fixed << _fps << L" MS: " << r_time::GetLastTicks();
     _uiTextSystem.SetText(FPSCOUNTER, msg.str());
-    _uiTextSystem.SetDisplayRect(FPSCOUNTER, {_windows[0]->GetWidth() - (_dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length()), 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length(), _dimensionsSystem.components[UNICODE_TEXTURE]->h});
+    int wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
+    _uiTextSystem.SetDisplayRect(FPSCOUNTER, { _windows[0]->GetWidth() - wid, 0, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
     
     //apply vleocity
     for(auto &c : _velocitySystem.components)
