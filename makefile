@@ -3,9 +3,9 @@ DEBUG = -g
 VER = -std=c++1y
 LFLAGS = -Wall $(DEBUG)
 CFLAGS = -Wall -c $(VER) $(DEBUG)
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -llua5.2
 SRC = src/
-OBJS = main.o r_engine.o r_entity.o r_component.o r_SDL.o r_utils.o r_time.o r_util_components.o r_animation.o r_texture.o r_renderer.o r_sprite.o r_ui_text.o RTimer.o RWindow.o TestState.o
+OBJS = main.o r_engine.o r_entity.o r_component.o r_SDL.o r_lua.o r_utils.o r_time.o r_util_components.o r_animation.o r_texture.o r_renderer.o r_sprite.o r_ui_text.o RWindow.o TestState.o
 EXE = rogue-frame
 
 $(EXE) : $(OBJS)
@@ -16,6 +16,9 @@ r_engine.o : $(SRC)r_engine.cpp $(SRC)r_engine.h
 
 r_SDL.o : $(SRC)r_SDL.cpp $(SRC)r_SDL.h 
 	$(CC) $(CFLAGS) $(SRC)r_SDL.cpp 
+
+r_lua.o : $(SRC)r_lua.cpp $(SRC)r_lua.h 
+	$(CC) $(CFLAGS) $(SRC)r_lua.cpp 
 
 r_utils.o : $(SRC)r_utils.cpp $(SRC)r_utils.h 
 	$(CC) $(CFLAGS) $(SRC)r_utils.cpp 

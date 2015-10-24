@@ -8,6 +8,7 @@
 #include "r_utils.h"
 #include "r_renderer.h"
 #include "r_time.h"
+#include "r_lua.h"
 
 using namespace std;
 
@@ -146,14 +147,19 @@ void TestState::Init(RGameEngine* game)
     //start input
     SDL_StartTextInput();    
     currentKeyStates = SDL_GetKeyboardState(NULL);
-   /* 
+    
+    LuaScript script("data/lua/test.lua");
+    string s = script.get<string>("test.string");
+    wstring ws;
+    ws.assign(s.begin(), s.end());
+    
     //test text
     TESTTEXT = CreateEntity();
     _stringSystem.AddComponent(r_component::Create("StringComponent", TESTTEXT), TESTTEXT);
-    _stringSystem.components[TESTTEXT]->text = L"Hello World";
+    _stringSystem.components[TESTTEXT]->text = ws;
     _positionSystem.AddComponent(r_component::Create("XYZComponent",TESTTEXT), TESTTEXT);
-    _positionSystem.components[TESTTEXT]->x = 240;
-    _positionSystem.components[TESTTEXT]->y = 240;
+    _positionSystem.components[TESTTEXT]->x = script.get<float>("test.x");
+    _positionSystem.components[TESTTEXT]->y = script.get<float>("test.y");
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent",TESTTEXT), TESTTEXT);
     _dimensionsSystem.components[TESTTEXT]->w = 240;
     _dimensionsSystem.components[TESTTEXT]->h = 240;
@@ -165,7 +171,6 @@ void TestState::Init(RGameEngine* game)
                                 _stringSystem.components[TESTTEXT]->text,
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
-*/
 }
 
 void TestState::Cleanup(RGameEngine* game)
