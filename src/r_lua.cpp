@@ -1,35 +1,87 @@
 #include "r_lua.h"
 #include "iostream"
 
-LuaScript::LuaScript(const std::string &filename)
+void LuaScript::ClearStack()
 {
-    L = luaL_newstate();
-    if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0))
+    int n = lua_gettop(L);
+    lua_pop(L, n);
+}
+
+std::vector<int> LuaScript::GetIntVector(const std::string &name)
+{
+    std::vector<int> v;
+    lua_getglobal(L, name.c_str());
+    
+    if(lua_isnil(L, -1))
     {
-        std::cout << "Error: Script did not load (" << filename << ")" << std::endl;
-        L = 0;
+        return std::vector<int>();
     }
+    
+    lua_pushnil(L);
+    while( lua_next( L, -2))
+    {
+        v.push_back((int)lua_tonumber(L, -1));
+        lua_pop(L, 1);
+    }
+    ClearStack();
+    return v;
 }
 
-LuaScript::~LuaScript()
+std::vector<float> LuaScript::GetFloatVector(const std::string &name)
 {
-    if(L) lua_close(L);
+    std::vector<float> v;
+    lua_getglobal(L, name.c_str());
+    
+    if(lua_isnil(L, -1))
+    {
+        return std::vector<float>();
+    }
+    
+    lua_pushnil(L);
+    while( lua_next( L, -2))
+    {
+        v.push_back((float)lua_tonumber(L, -1));
+        lua_pop(L, 1);
+    }
+    ClearStack();
+    return v;
 }
 
-void LuaScript::PrintError(const std::string &variableName, const std::string &error)
+std::vector<std::string> LuaScript::GetStringVector(const std::string &name)
 {
-    std::cout << "Error: Script did not get:'" << variableName << "' :: " << error << std::endl;
+    std::vector<std::string> v;
+    lua_getglobal(L, name.c_str());
+    
+    if(lua_isnil(L, -1))
+    {
+        return std::vector<std::string>();
+    }
+    
+    lua_pushnil(L);
+    while( lua_next( L, -2))
+    {
+        if(lua_isstring(L, -1))
+        {
+            v.push_back(lua_tostring(L, -1));
+        }else
+        {
+            PrintError(name , "Is not a string vector");
+        }
+            lua_pop(L, 1);
+    }
+    ClearStack();
+    return v;
 }
 
-bool LuaScript::lua_gettostack(const std::string &variableName)
+bool LuaScript::GetToStack(const std::string &variableName)
 {
-    level = 0;
+    _level = 0;
     std::string var = "";
     for(auto &c : variableName)
     {
         if(c == '.')
         {
-            if (level == 0)
+            if (_level == 0)
             {
                 lua_getglobal(L, var.c_str());
             }else{
@@ -43,14 +95,14 @@ bool LuaScript::lua_gettostack(const std::string &variableName)
             }else
             {
                 var = "";
-                level++;
+                _level++;
             }
         }else
         {
             var += c;
         }
     }
-    if (level == 0) {
+    if (_level == 0) {
         lua_getglobal(L, var.c_str());
     }else
     {
@@ -63,3 +115,25 @@ bool LuaScript::lua_gettostack(const std::string &variableName)
     }
     return true;
 }
+
+void LuaScript::PrintError(const std::string &variableName, const std::string &error)
+{
+    std::cout << "Error: Script did not get:'" << variableName << "' :: " << error << std::endl;
+}
+
+LuaScript::LuaScript(const std::string &filename)
+{
+    L = luaL_newstate();
+    if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0))
+    {
+        std::cout << "Error: Script did not load (" << filename << ")" << std::endl;
+       L = 0;
+    }
+}
+
+LuaScript::~LuaScript()
+{
+    if(L) lua_close(L);
+}
+
+

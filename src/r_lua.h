@@ -13,66 +13,72 @@ extern "C" {
 
 class LuaScript {
     public:
-    LuaScript(const std::string &filename);
+    LuaScript(const std::string &_filename);
     ~LuaScript();
     void PrintError(const std::string &variableName, const std::string &error);
     
+    void ClearStack();
+    
     template<typename T>
-    T get(const std::string &variableName)
+    T Get(const std::string &variableName)
     {
         if (!L) 
         {
             PrintError(variableName, "Script not loaded.");
-            return lua_getdefault<T>();
+            return Lua_GetDefault<T>();
         }
         
         T result;
-        if(lua_gettostack(variableName))
+        if(GetToStack(variableName))
         {
-            result = lua_get<T>(variableName);
+            result = Lua_Get<T>(variableName);
         }else 
         {
-            result = lua_getdefault<T>();
+            result = Lua_GetDefault<T>();
         }
         
-        lua_pop(L, level + 1);
+        lua_pop(L, _level + 1);
         return result;
     }
-   
-    bool lua_gettostack(const std::string &variableName);
+ 
+    std::vector<int> GetIntVector(const std::string &name);
+    std::vector<float> GetFloatVector(const std::string &name);
+    std::vector<std::string> GetStringVector(const std::string &name);
+    
+    bool GetToStack(const std::string &variableName);
    
     template<typename T>
-    T lua_get(const std::string &variableName)
+    T Lua_Get(const std::string &variableName)
     {
         return 0;
     }
     
     template<typename T>
-    T lua_getdefault()
+    T Lua_GetDefault()
     {
         return 0;
     }
     
     private:
     lua_State* L;
-    std::string filename;
-    int level; 
+    std::string _filename;
+    int _level; 
 };
 
 template<>
-inline std::string LuaScript::lua_getdefault<std::string>()
+inline std::string LuaScript::Lua_GetDefault<std::string>()
 {
     return "null";
 }
 
 template<>
-inline bool LuaScript::lua_get<bool>(const std::string &variableName)
+inline bool LuaScript::Lua_Get<bool>(const std::string &variableName)
 {
     return (bool)lua_toboolean(L, -1);
 }
 
 template<>
-inline float LuaScript::lua_get<float>(const std::string &variableName)
+inline float LuaScript::Lua_Get<float>(const std::string &variableName)
 {
     if(!lua_isnumber(L, -1))
     {
@@ -82,7 +88,7 @@ inline float LuaScript::lua_get<float>(const std::string &variableName)
 }
 
 template<>
-inline std::string LuaScript::lua_get<std::string>(const std::string &variableName)
+inline std::string LuaScript::Lua_Get<std::string>(const std::string &variableName)
 {
     std::string s = "null";
     if( lua_isstring(L, -1))

@@ -29,10 +29,16 @@ void TestState::Init(RGameEngine* game)
     r_SDL::WriteFile( "data/raw/latin_basic", lstring.c_str() );
     
     //file read test
-    char* data = r_SDL::ReadFile("data/raw/latin_basic");
-    UNICODE_LATIN_SET = CreateEntity();
-    _unicodeSymbolSystem.AddComponent(r_component::Create("UnicodeSymbolComponent", UNICODE_LATIN_SET), UNICODE_LATIN_SET);
-    _unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols = r_utils::HexStringToUnicode(data, ",");
+    LuaScript ansi("data/lua/ansi437.lua");
+    vector<int> ansiVec(ansi.GetIntVector("chars"));
+
+    ANSI_437 = CreateEntity();
+    _unicodeSymbolSystem.AddComponent(r_component::Create("UnicodeSymbolComponent", ANSI_437), ANSI_437);
+    for (auto &s: ansiVec)
+    {
+        _unicodeSymbolSystem.components[ANSI_437]->symbols.push_back((uint16_t)s);
+    }
+    
     
     //setup font
     int pnt = 16;
@@ -70,12 +76,11 @@ void TestState::Init(RGameEngine* game)
     _positionSystem.components[BACKGROUND_TEXTURE]->x = 0;
     _positionSystem.components[BACKGROUND_TEXTURE]->y = 0;
     
-  //  _renderSystem.AddComponent(r_component::Create("RenderComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE, _positionSystem, _spriteSystem, true);
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
-    _textureSystem.RenderUnicode(UNICODE_TEXTURE, _windows[0]->renderer, _font, &_unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols[0]);
+    _textureSystem.RenderUnicode(UNICODE_TEXTURE, _windows[0]->renderer, _font, &_unicodeSymbolSystem.components[ANSI_437]->symbols[0]);
     
     //create metadata for latin set
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
@@ -128,9 +133,9 @@ void TestState::Init(RGameEngine* game)
                                 
     //make map of character frames for text system
     map<wchar_t, SDL_Rect> charframes;
-    for(auto &c : _unicodeSymbolSystem.components[UNICODE_LATIN_SET]->symbols)
+    for(auto &c : _unicodeSymbolSystem.components[ANSI_437]->symbols)
     {
-        charframes[c]={_unicodeSymbolSystem.components[UNICODE_LATIN_SET]->GetIndex(c) * _dimensionsSystem.components[UNICODE_TEXTURE]->w, 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w, _dimensionsSystem.components[UNICODE_TEXTURE]->h};
+        charframes[c]={_unicodeSymbolSystem.components[ANSI_437]->GetIndex(c) * _dimensionsSystem.components[UNICODE_TEXTURE]->w, 0, _dimensionsSystem.components[UNICODE_TEXTURE]->w, _dimensionsSystem.components[UNICODE_TEXTURE]->h};
     }
     
     //fps counter
@@ -148,8 +153,8 @@ void TestState::Init(RGameEngine* game)
     SDL_StartTextInput();    
     currentKeyStates = SDL_GetKeyboardState(NULL);
     
-    LuaScript script("data/lua/test.lua");
-    string s = script.get<string>("test.string");
+    LuaScript testScript("data/lua/test.lua");
+    string s = testScript.Get<string>("test.string");
     wstring ws;
     ws.assign(s.begin(), s.end());
     
@@ -158,8 +163,8 @@ void TestState::Init(RGameEngine* game)
     _stringSystem.AddComponent(r_component::Create("StringComponent", TESTTEXT), TESTTEXT);
     _stringSystem.components[TESTTEXT]->text = ws;
     _positionSystem.AddComponent(r_component::Create("XYZComponent",TESTTEXT), TESTTEXT);
-    _positionSystem.components[TESTTEXT]->x = script.get<float>("test.x");
-    _positionSystem.components[TESTTEXT]->y = script.get<float>("test.y");
+    _positionSystem.components[TESTTEXT]->x = testScript.Get<float>("test.position.x");
+    _positionSystem.components[TESTTEXT]->y = testScript.Get<float>("test.position.y");
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent",TESTTEXT), TESTTEXT);
     _dimensionsSystem.components[TESTTEXT]->w = 240;
     _dimensionsSystem.components[TESTTEXT]->h = 240;

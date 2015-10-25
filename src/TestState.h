@@ -54,7 +54,7 @@ class TestState: public RGameState {
         
         std::vector<Component *> _components; //big list of all components, used to cleanup at end of program (probobly better to handle this in a smarter way irl);
         
-        EntityID UNICODE_LATIN_SET;
+        EntityID ANSI_437;
         EntityID SPRITE_LATIN_UNI;
         EntityID SPRITE_LATIN_TEXT;
     
