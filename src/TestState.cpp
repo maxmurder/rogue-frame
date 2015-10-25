@@ -14,7 +14,7 @@ using namespace std;
 
 TestState TestState::_TestState;
 
-EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, FPSCOUNTER;
+EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, TESTTEXT2, FPSCOUNTER;
 
 vector<EntityID> testchars;
 
@@ -176,6 +176,12 @@ void TestState::Init(RGameEngine* game)
                                 _stringSystem.components[TESTTEXT]->text,
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
+                                
+    TESTTEXT2 = CreateEntity();
+    wstring ansistr;
+    ansistr.assign(_unicodeSymbolSystem.components[ANSI_437]->symbols.begin(), _unicodeSymbolSystem.components[ANSI_437]->symbols.end());
+    
+    _uiTextSystem.AddComponent(TESTTEXT2, _textureSystem.components[UNICODE_TEXTURE]->texture, charframes, {0, 0, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
 }
 
 void TestState::Cleanup(RGameEngine* game)
