@@ -47,33 +47,13 @@ void TestState::Init(RGameEngine* game)
     BACKGROUND_TEXTURE = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
     _textureSystem.LoadFromFile(BACKGROUND_TEXTURE, "data/gfx/checker.png", _windows[0]->renderer);
-    //create metadata
-    _dimensionsSystem.AddComponent(r_component::Create("WHComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _dimensionsSystem.components[BACKGROUND_TEXTURE]->w = _textureSystem.components[BACKGROUND_TEXTURE]->width;
-    _dimensionsSystem.components[BACKGROUND_TEXTURE]->h = _textureSystem.components[BACKGROUND_TEXTURE]->height;
 
-    _bgColorSystem.AddComponent(r_component::Create("ColorComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _bgColorSystem.components[BACKGROUND_TEXTURE]->SetColor({0x00,0x00,0x00,0x00});
-    
-    _fgColorSystem.AddComponent(r_component::Create("ColorComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _fgColorSystem.components[BACKGROUND_TEXTURE]->SetColor({0xFF,0xFF,0xFF,0xFF});   
-    
     _animationSystem.AddComponent(r_component::Create("AnimationComponent",BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _animationSystem.AddAnimation(BACKGROUND_TEXTURE, "TEST",{{0,0,_dimensionsSystem.components[BACKGROUND_TEXTURE]->w ,_dimensionsSystem.components[BACKGROUND_TEXTURE]->h }});
+    _animationSystem.AddAnimation(BACKGROUND_TEXTURE, "TEST",{{0,0,_textureSystem.components[BACKGROUND_TEXTURE]->width, _textureSystem.components[BACKGROUND_TEXTURE]->height }});
     _animationSystem.SetAnimation(BACKGROUND_TEXTURE,"TEST");
     
     //create sprite for background texture
-    _spriteSystem.AddComponent(r_component::Create("SpriteComponent", BACKGROUND_TEXTURE),
-                                BACKGROUND_TEXTURE, 
-                                BACKGROUND_TEXTURE, 
-                                BACKGROUND_TEXTURE, 
-                                BACKGROUND_TEXTURE, 
-                                BACKGROUND_TEXTURE, 
-                                BACKGROUND_TEXTURE);
-
-    _positionSystem.AddComponent(r_component::Create("XYZComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _positionSystem.components[BACKGROUND_TEXTURE]->x = 0;
-    _positionSystem.components[BACKGROUND_TEXTURE]->y = 0;   
+    _spriteSystem.AddComponent( BACKGROUND_TEXTURE, _textureSystem.components[BACKGROUND_TEXTURE], _animationSystem.components[BACKGROUND_TEXTURE], {0,0,_textureSystem.components[BACKGROUND_TEXTURE]->width, _textureSystem.components[BACKGROUND_TEXTURE]->height });
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
@@ -137,25 +117,18 @@ void TestState::Init(RGameEngine* game)
     _dimensionsSystem.components[TESTPLAYER]->w = 16;
     _dimensionsSystem.components[TESTPLAYER]->h = 16;
     
-    _bgColorSystem.AddComponent(r_component::Create("ColorComponent", TESTPLAYER), TESTPLAYER);
-    _bgColorSystem.components[TESTPLAYER]->SetColor({0xBA,0xDA,0x55,0xFF});
-    
-    _fgColorSystem.AddComponent(r_component::Create("ColorComponent", TESTPLAYER), TESTPLAYER);
-    _fgColorSystem.components[TESTPLAYER]->SetColor({0x80,0x00,0xFF,0xFF});
-    
     _animationSystem.AddComponent(r_component::Create("AnimationComponent",TESTPLAYER ), TESTPLAYER);
     _animationSystem.AddAnimation(TESTPLAYER, "TEST1",{tileFrames[0x263A],tileFrames[0x263B]});
     _animationSystem.SetAnimation(TESTPLAYER, "TEST1");
     _animationSystem.components[TESTPLAYER]->animationSpeed = 30;
     
     //create sprite
-    _spriteSystem.AddComponent(r_component::Create("SpriteComponent", TESTPLAYER), 
-                                TESTPLAYER, 
-                                TESTTILES, 
-                                TESTPLAYER, 
-                                TESTPLAYER, 
-                                TESTPLAYER, 
-                                TESTPLAYER);
+    _spriteSystem.AddComponent( TESTPLAYER, 
+                                _textureSystem.components[TESTTILES],
+                                _animationSystem.components[TESTPLAYER],
+                                {_positionSystem.components[TESTPLAYER]->x, _positionSystem.components[TESTPLAYER]->y, _dimensionsSystem.components[TESTPLAYER]->w, _dimensionsSystem.components[TESTPLAYER]->h},
+                                {0x80,0x00,0xFF,0xFF},
+                                {0xBA,0xDA,0x55,0xFF});
                                 
     //make map of character frames for text system
     map<wchar_t, SDL_Rect> charframes;
@@ -204,9 +177,9 @@ void TestState::Init(RGameEngine* game)
     wstring ansistr;
     ansistr.assign(_unicodeSymbolSystem.components[ANSI_437]->symbols.begin(), _unicodeSymbolSystem.components[ANSI_437]->symbols.end());
     
-    _uiTextSystem.AddComponent(TESTTEXT2, _textureSystem.components[UNICODE_TEXTURE]->texture, charframes, {0, 0, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});        
+    _uiTextSystem.AddComponent(TESTTEXT2, _textureSystem.components[UNICODE_TEXTURE]->texture, charframes, {0, 0, 128, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});        
 
-    _uiTextSystem.AddComponent( TESTTILES, _textureSystem.components[TESTTILES]->texture, tileFrames, {0, 128, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
+    _uiTextSystem.AddComponent( TESTTILES, _textureSystem.components[TESTTILES]->texture, tileFrames, {144, 0, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
 
     //finishing up
     TTF_CloseFont(_font);

@@ -2,12 +2,12 @@
 
 using namespace std;
 
-void SpriteComponent::Init( EntityID textureComponent, EntityID animationComponent, EntityID dimensionsComponent, EntityID foregroundColor, EntityID backgroundColor )
+void SpriteComponent::Init( TextureComponent *textureComponent,  AnimationComponent *animationComponent, SDL_Rect dimensions, SDL_Color foregroundColor, SDL_Color backgroundColor)
 {
     texture = textureComponent;
     fgColor = foregroundColor;
     bgColor = backgroundColor;
-    dimensions = dimensionsComponent;
+    dimensions = dimensions;
     animations = animationComponent;
     renderOffsetX = 0;
     renderOffsetY = 0;
@@ -16,20 +16,9 @@ void SpriteComponent::Init( EntityID textureComponent, EntityID animationCompone
     center = {0,0};
 }
 
-void SpriteSystem::Init(TextureSystem *tex, System<ColorComponent> *fg, System<ColorComponent> *bg, System<WHComponent> *dim, System<AnimationComponent> *anim)
+void SpriteSystem::AddComponent(EntityID ownerID, TextureComponent *textureComponent, AnimationComponent *animationComponent, SDL_Rect dimensions, SDL_Color fgColor, SDL_Color bgColor)
 {
-    textureSystem = tex;
-    fgColorSystem = fg;
-    bgColorSystem = bg;
-    dimensionSystem = dim;
-    animationSystem = anim;
-    
-    init = true;
-}
-
-void SpriteSystem::AddComponent(Component *component, EntityID ownerID, EntityID textureID, EntityID animationID, EntityID dimensionsID, EntityID fgColorID, EntityID bgColorID)
-{
-    System::AddComponent(component, ownerID);
-    components[ownerID]->Init(textureID, animationID, dimensionsID, fgColorID, bgColorID);
+    System::AddComponent( r_component::Create("SpriteComponent", ownerID) , ownerID);
+    components[ownerID]->Init(textureComponent, animationComponent, dimensions, fgColor, bgColor);
 }
 

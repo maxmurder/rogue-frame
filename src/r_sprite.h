@@ -1,5 +1,6 @@
 #ifndef R_SPRITE_H
 #define R_SPRITE_H
+#include <SDL2/SDL.h>
 #include "r_entity/r_entity.h"
 #include "r_entity/r_component.h"
 #include "r_util_components.h"
@@ -8,41 +9,30 @@
 
 struct SpriteComponent : public Component
 {
-    EntityID texture;
-    EntityID fgColor;
-    EntityID bgColor;
-    EntityID dimensions;
-    EntityID animations;
+    TextureComponent *texture;
+    AnimationComponent *animations;
+    SDL_Color fgColor;
+    SDL_Color bgColor;
+    SDL_Rect dimensions;
     
     int renderOffsetX, renderOffsetY;
     float angle;
     SDL_RendererFlip flip;
     SDL_Point center;
 
-    void Init( EntityID textureComponent,  EntityID animationComponent, EntityID dimensionsComponent, EntityID foregroundColorComponent, EntityID backgroundColorComponent);
+    void Init( TextureComponent *textureComponent,  AnimationComponent *animationComponent, SDL_Rect dimensions, SDL_Color foregroundColor, SDL_Color backgroundColor);
 };
 
 COMPONENT_REGISTER(SpriteComponent, "SpriteComponent");
 
 struct SpriteSystem: public System<SpriteComponent>
 {
-    TextureSystem *textureSystem;
-    System<ColorComponent> *fgColorSystem;
-    System<ColorComponent> *bgColorSystem;
-    System<WHComponent> *dimensionSystem;
-    System<AnimationComponent> *animationSystem;
-    
-    void Init(TextureSystem *textureSys, System<ColorComponent> *fgColorSys, System<ColorComponent> *bgColorSys, System<WHComponent> *dimensionSys, System<AnimationComponent> *animationSys);
-    
-    void AddComponent(Component *component, 
-                        EntityID ownerID, 
-                        EntityID textureID,
-                        EntityID animationID,
-                        EntityID dimensionsID, 
-                        EntityID foregroundColorID, 
-                        EntityID backgroundColorID);
-    private:
-        bool init;
+    void AddComponent(EntityID ownerID, 
+                        TextureComponent *textureComponent,
+                        AnimationComponent *animationComponent,
+                        SDL_Rect dimensions,
+                        SDL_Color fgColor = {0xFF,0xFF,0xFF,0xFF},
+                        SDL_Color bgColor = {0x00,0x00,0x00,0x00});
 };
 
 #endif
