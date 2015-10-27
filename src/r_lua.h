@@ -40,10 +40,26 @@ class LuaScript {
         lua_pop(L, _level + 1);
         return result;
     }
- 
-    std::vector<int> GetIntVector(const std::string &name);
-    std::vector<float> GetFloatVector(const std::string &name);
-    std::vector<std::string> GetStringVector(const std::string &name);
+       
+    template<typename T> 
+    std::vector<T> GetVector(const std::string& name)
+    {
+        std::vector<T> vec;
+        if(!GetToStack(name.c_str()))
+        {
+            PrintError(name, "Not Found");
+            ClearStack();
+            return std::vector<T>();
+        }
+        lua_pushnil(L);
+        while(lua_next(L, -2))
+        {
+            vec.push_back((T)lua_tonumber(L, -1));
+            lua_pop(L, 1);
+        }
+        ClearStack();
+        return vec;
+    }
     
     bool GetToStack(const std::string &variableName);
    
@@ -101,4 +117,23 @@ inline std::string LuaScript::Lua_Get<std::string>(const std::string &variableNa
     return s;
 }
 
+template<> 
+inline std::vector<std::string> LuaScript::GetVector(const std::string& name)
+{
+    std::vector<std::string> vec;
+    if(!GetToStack(name.c_str()))
+    {
+        PrintError(name, "Not Found");
+        ClearStack();
+        return std::vector<std::string>();
+    }
+    lua_pushnil(L);
+    while(lua_next(L, -2))
+    {
+        vec.push_back(std::string(lua_tostring(L, -1)));
+        lua_pop(L, 1);
+    }
+    ClearStack();
+    return vec;
+}
 #endif

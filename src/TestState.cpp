@@ -30,7 +30,7 @@ void TestState::Init(RGameEngine* game)
     
     //file read test
     LuaScript ansi("data/lua/ansi437.lua");
-    vector<int> ansiVec(ansi.GetIntVector("chars"));
+    vector<int> ansiVec(ansi.GetVector<int>("chars"));
 
     ANSI_437 = CreateEntity();
     _unicodeSymbolSystem.AddComponent(r_component::Create("UnicodeSymbolComponent", ANSI_437), ANSI_437);
@@ -96,16 +96,17 @@ void TestState::Init(RGameEngine* game)
     int sheetw = tileScript.Get<float>("sheet.w");
     int cellw = tileScript.Get<float>("cell.w");
     int cellh = tileScript.Get<float>("cell.h");
+    vector<int> tileVector(tileScript.GetVector<int>("chars"));
     
     //create a frame map for the tileset
     map<wchar_t, SDL_Rect> tileFrames;
-    int i, r;
-    for(auto &c : tileScript.GetIntVector("chars"))
+    int i = 0, r = 0;
+    for(auto &c : tileVector)
     {
         int x = i % ( sheetw / cellw ) * cellw;
         int y = r * cellh;
         tileFrames[c]={x, y, cellw, cellh};
-        
+
         i++;       
         if(i % (sheetw / cellw) == 0)
         {
@@ -211,7 +212,6 @@ void TestState::Init(RGameEngine* game)
     TTF_CloseFont(_font);
     SDL_StartTextInput();    
     currentKeyStates = SDL_GetKeyboardState(NULL);
-
 }
 
 void TestState::Cleanup(RGameEngine* game)
