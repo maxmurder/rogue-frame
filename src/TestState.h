@@ -16,7 +16,6 @@ class TestState: public RGameState {
 
             //component systems
         SpriteSystem _spriteSystem;
-        AnimationSystem _animationSystem;
         TextureSystem _textureSystem;
         UITextSystem _uiTextSystem;
         System<ColorComponent> _fgColorSystem;

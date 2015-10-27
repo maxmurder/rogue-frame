@@ -24,6 +24,8 @@ void r_renderer::AddToQueue(SDL_Texture *texture, SDL_Rect sourceRect, SDL_Rect 
 
 void r_renderer::Render(SDL_Renderer *renderer)
 {
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_RenderClear( renderer );
     while(!renderQueue.empty())
     {    
         SDL_Rect frame = renderQueue.back().destRect;

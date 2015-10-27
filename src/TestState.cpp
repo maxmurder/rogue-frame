@@ -47,13 +47,9 @@ void TestState::Init(RGameEngine* game)
     BACKGROUND_TEXTURE = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
     _textureSystem.LoadFromFile(BACKGROUND_TEXTURE, "data/gfx/checker.png", _windows[0]->renderer);
-
-    _animationSystem.AddComponent(r_component::Create("AnimationComponent",BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _animationSystem.AddAnimation(BACKGROUND_TEXTURE, "TEST",{{0,0,_textureSystem.components[BACKGROUND_TEXTURE]->width, _textureSystem.components[BACKGROUND_TEXTURE]->height }});
-    _animationSystem.SetAnimation(BACKGROUND_TEXTURE,"TEST");
     
     //create sprite for background texture
-    _spriteSystem.AddComponent( BACKGROUND_TEXTURE, _textureSystem.components[BACKGROUND_TEXTURE], _animationSystem.components[BACKGROUND_TEXTURE], {0,0,_textureSystem.components[BACKGROUND_TEXTURE]->width, _textureSystem.components[BACKGROUND_TEXTURE]->height });
+    _spriteSystem.AddComponent( BACKGROUND_TEXTURE, _textureSystem.components[BACKGROUND_TEXTURE]->texture, {0,0,_textureSystem.components[BACKGROUND_TEXTURE]->width, _textureSystem.components[BACKGROUND_TEXTURE]->height });
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
@@ -64,12 +60,6 @@ void TestState::Init(RGameEngine* game)
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
     _dimensionsSystem.components[UNICODE_TEXTURE]->w = pnt/2;
     _dimensionsSystem.components[UNICODE_TEXTURE]->h = pnt;
-    
-    _fgColorSystem.AddComponent(r_component::Create("ColorComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
-    _fgColorSystem.components[UNICODE_TEXTURE]->SetColor({0x80,0x00,0xFF,0xFF}); 
-    
-    _bgColorSystem.AddComponent(r_component::Create("ColorComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
-    _bgColorSystem.components[UNICODE_TEXTURE]->SetColor({0x00,0x00,0x00,0xFF});
     
     //get tileset metadata from lua file               
     LuaScript tileScript("data/lua/testTiles.lua");
@@ -117,19 +107,17 @@ void TestState::Init(RGameEngine* game)
     _dimensionsSystem.components[TESTPLAYER]->w = 16;
     _dimensionsSystem.components[TESTPLAYER]->h = 16;
     
-    _animationSystem.AddComponent(r_component::Create("AnimationComponent",TESTPLAYER ), TESTPLAYER);
-    _animationSystem.AddAnimation(TESTPLAYER, "TEST1",{tileFrames[0x263A],tileFrames[0x263B]});
-    _animationSystem.SetAnimation(TESTPLAYER, "TEST1");
-    _animationSystem.components[TESTPLAYER]->animationSpeed = 30;
-    
     //create sprite
     _spriteSystem.AddComponent( TESTPLAYER, 
-                                _textureSystem.components[TESTTILES],
-                                _animationSystem.components[TESTPLAYER],
+                                _textureSystem.components[TESTTILES]->texture,
                                 {_positionSystem.components[TESTPLAYER]->x, _positionSystem.components[TESTPLAYER]->y, _dimensionsSystem.components[TESTPLAYER]->w, _dimensionsSystem.components[TESTPLAYER]->h},
                                 {0x80,0x00,0xFF,0xFF},
                                 {0xBA,0xDA,0x55,0xFF});
-                                
+    
+    _spriteSystem.AddAnimation(TESTPLAYER, "TEST1",{tileFrames[0x263A],tileFrames[0x263B]});
+    _spriteSystem.SetAnimation(TESTPLAYER, "TEST1");
+    _spriteSystem.components[TESTPLAYER]->animationSpeed = 30;
+    
     //make map of character frames for text system
     map<wchar_t, SDL_Rect> charframes;
     for(auto &c : _unicodeSymbolSystem.components[ANSI_437]->symbols)
@@ -195,7 +183,6 @@ void TestState::Cleanup(RGameEngine* game)
     }
     _spriteSystem.Cleanup();
     _textureSystem.Cleanup();
-    _animationSystem.Cleanup();
     _fgColorSystem.Cleanup();
     _bgColorSystem.Cleanup();
     _positionSystem.Cleanup();
@@ -286,7 +273,7 @@ void TestState::Update(RGameEngine* game)
 {
     
     //update sprite animations
-    _animationSystem.Update();
+    _spriteSystem.Update();
     
     static unsigned last = 0; 
     //calculate fps
@@ -328,14 +315,16 @@ void TestState::Update(RGameEngine* game)
     {
         _velocitySystem.components[TESTPLAYER]->y = abs(_velocitySystem.components[TESTPLAYER]->y);
     }
+    
+    //update sprite position
+    _spriteSystem.components[TESTPLAYER]->dimensions.x = _positionSystem.components[TESTPLAYER]->x;
+    _spriteSystem.components[TESTPLAYER]->dimensions.y = _positionSystem.components[TESTPLAYER]->y;
 }
 
 void TestState::Draw(RGameEngine* game)
 {   
-    _uiTextSystem.Render();
-    r_renderer::AddToQueue(_textureSystem.components[TESTPLAYER]->texture, _animationSystem.GetCurrentFrame(TESTPLAYER), {_positionSystem.components[TESTPLAYER]->x,_positionSystem.components[TESTPLAYER]->y,_dimensionsSystem.components[TESTPLAYER]->w,_dimensionsSystem.components[TESTPLAYER]->h}, {0x80,0x00,0xFF,0xFF});
-    r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->texture, {0,0,640,480}, {0,0,640,480});
-    
+    _spriteSystem.Render();
+    _uiTextSystem.Render();   
     r_renderer::Render(_windows[0]->renderer);
     
     _count++;
