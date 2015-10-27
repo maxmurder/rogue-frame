@@ -14,7 +14,7 @@ using namespace std;
 
 TestState TestState::_TestState;
 
-EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, TESTTEXT2, FPSCOUNTER;
+EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTTILES, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, TESTTEXT2, TESTTEXT3, FPSCOUNTER;
 
 vector<EntityID> testchars;
 
@@ -38,7 +38,6 @@ void TestState::Init(RGameEngine* game)
     {
         _unicodeSymbolSystem.components[ANSI_437]->symbols.push_back((uint16_t)s);
     }
-    
     
     //setup font
     int pnt = 16;
@@ -74,8 +73,7 @@ void TestState::Init(RGameEngine* game)
 
     _positionSystem.AddComponent(r_component::Create("XYZComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
     _positionSystem.components[BACKGROUND_TEXTURE]->x = 0;
-    _positionSystem.components[BACKGROUND_TEXTURE]->y = 0;
-    
+    _positionSystem.components[BACKGROUND_TEXTURE]->y = 0;   
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
@@ -93,6 +91,33 @@ void TestState::Init(RGameEngine* game)
     _bgColorSystem.AddComponent(r_component::Create("ColorComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
     _bgColorSystem.components[UNICODE_TEXTURE]->SetColor({0x00,0x00,0x00,0xFF});
     
+    //get tileset metadata from lua file               
+    LuaScript tileScript("data/lua/testTiles.lua");
+    int sheetw = tileScript.Get<float>("sheet.w");
+    int cellw = tileScript.Get<float>("cell.w");
+    int cellh = tileScript.Get<float>("cell.h");
+    
+    //create a frame map for the tileset
+    map<wchar_t, SDL_Rect> tileFrames;
+    int i, r;
+    for(auto &c : tileScript.GetIntVector("chars"))
+    {
+        int x = i % ( sheetw / cellw ) * cellw;
+        int y = r * cellh;
+        tileFrames[c]={x, y, cellw, cellh};
+        
+        i++;       
+        if(i % (sheetw / cellw) == 0)
+        {
+            r++;
+        }
+    }  
+    
+    //create the tileset
+    TESTTILES = CreateEntity();
+    _textureSystem.AddComponent(r_component::Create("TextureComponent", TESTTILES), TESTTILES);
+    _textureSystem.LoadFromFile(TESTTILES, tileScript.Get<string>("file"), _windows[0]->renderer, {0xFF, 0x00, 0xFF, 0xFF});
+       
     //create "player" entity
     TESTPLAYER = CreateEntity();
     
@@ -118,14 +143,14 @@ void TestState::Init(RGameEngine* game)
     _fgColorSystem.components[TESTPLAYER]->SetColor({0x80,0x00,0xFF,0xFF});
     
     _animationSystem.AddComponent(r_component::Create("AnimationComponent",TESTPLAYER ), TESTPLAYER);
-    _animationSystem.AddAnimation(TESTPLAYER, "TEST1",{{16,0,16,16},{32,0,16,16}});
+    _animationSystem.AddAnimation(TESTPLAYER, "TEST1",{tileFrames[0x263A],tileFrames[0x263B]});
     _animationSystem.SetAnimation(TESTPLAYER, "TEST1");
     _animationSystem.components[TESTPLAYER]->animationSpeed = 30;
     
     //create sprite
     _spriteSystem.AddComponent(r_component::Create("SpriteComponent", TESTPLAYER), 
                                 TESTPLAYER, 
-                                TESTPLAYER, 
+                                TESTTILES, 
                                 TESTPLAYER, 
                                 TESTPLAYER, 
                                 TESTPLAYER, 
@@ -147,11 +172,7 @@ void TestState::Init(RGameEngine* game)
                                 L"",
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
-                          
-    TTF_CloseFont(_font);
-    //start input
-    SDL_StartTextInput();    
-    currentKeyStates = SDL_GetKeyboardState(NULL);
+                        
     
     LuaScript testScript("data/lua/test.lua");
     string s = testScript.Get<string>("test.string");
@@ -170,18 +191,27 @@ void TestState::Init(RGameEngine* game)
     _dimensionsSystem.components[TESTTEXT]->h = 240;
     
     _uiTextSystem.AddComponent(TESTTEXT,
-                                _textureSystem.components[UNICODE_TEXTURE]->texture,
-                                charframes, 
+                                _textureSystem.components[TESTTILES]->texture,
+                                tileFrames, 
                                 {_positionSystem.components[TESTTEXT]->x,_positionSystem.components[TESTTEXT]->y, _dimensionsSystem.components[TESTTEXT]->w, _dimensionsSystem.components[TESTTEXT]->h},
                                 _stringSystem.components[TESTTEXT]->text,
                                 {0x80, 0x00, 0xFF, 0xFF},
-                                {0x00, 0x00, 0x00, 0xFF});
-                                
+                                {0x00, 0x00, 0x00, 0xFF});               
+    
+    //add test text elements
     TESTTEXT2 = CreateEntity();
     wstring ansistr;
     ansistr.assign(_unicodeSymbolSystem.components[ANSI_437]->symbols.begin(), _unicodeSymbolSystem.components[ANSI_437]->symbols.end());
     
-    _uiTextSystem.AddComponent(TESTTEXT2, _textureSystem.components[UNICODE_TEXTURE]->texture, charframes, {0, 0, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
+    _uiTextSystem.AddComponent(TESTTEXT2, _textureSystem.components[UNICODE_TEXTURE]->texture, charframes, {0, 0, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});        
+
+    _uiTextSystem.AddComponent( TESTTILES, _textureSystem.components[TESTTILES]->texture, tileFrames, {0, 128, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
+
+    //finishing up
+    TTF_CloseFont(_font);
+    SDL_StartTextInput();    
+    currentKeyStates = SDL_GetKeyboardState(NULL);
+
 }
 
 void TestState::Cleanup(RGameEngine* game)
