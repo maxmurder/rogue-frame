@@ -5,7 +5,7 @@ namespace r_time
 {
     void Update();
     unsigned GetCurrentTicks();
-    unsigned GetLastTicks();
+    unsigned GetElapsedTicks();
 }
 
 #endif

@@ -17,7 +17,7 @@ unsigned r_time::GetCurrentTicks()
     return currentTicks;
 }
 
-unsigned r_time::GetLastTicks()
+unsigned r_time::GetElapsedTicks()
 {
     return ticksLastFrame;
 }

@@ -281,7 +281,7 @@ int TestState::Update(RGameEngine* game)
     _fps = _count / ((r_time::GetCurrentTicks() - last) / 1000.f);
     wstringstream msg;
     msg.precision(2);
-    msg << L"FPS: " << fixed << _fps << L" MS: " << r_time::GetLastTicks();
+    msg << L"FPS: " << fixed << _fps << L" MS: " << r_time::GetElapsedTicks();
     _uiTextSystem.SetText(FPSCOUNTER, msg.str());
     int wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
     _uiTextSystem.SetDisplayRect(FPSCOUNTER, { _windows[0]->GetWidth() - wid, 0, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});

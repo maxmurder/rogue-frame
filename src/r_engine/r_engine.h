@@ -11,6 +11,8 @@ class RGameState;
 class RGameEngine
 {
     public:
+    unsigned UPDATE_MS = 1;
+    
     int Init(const char* title, int width=640, int height=480, int bbp=0, bool fullscreen=false); //initilizes the game, starts SDL etc.
     int Start(); //starts the main gameloop. engine must be initilized first. also good to set a state before starting.
     void Cleanup(); //cleans up and closes the game

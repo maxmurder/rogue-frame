@@ -41,11 +41,20 @@ int RGameEngine::Start()
     static bool started = false;
     if(!started)
     {
+        unsigned lag = 0;
         started = true;
         while (_running)
         {
+            //update global time
+            r_time::Update();
+            lag += r_time::GetElapsedTicks();
+            
             if (HandleEvents() != 0) return 1;
-            if (Update() != 0) return 1;
+            while (lag >= UPDATE_MS)
+            {
+                if (Update() != 0) return 1;
+                lag -= UPDATE_MS;
+            }
             if (Draw() != 0) return 1;
         } 
         Cleanup();
@@ -81,10 +90,7 @@ int RGameEngine::HandleEvents()
 };
 
 int RGameEngine::Update() 
-{
-    //update global time
-    r_time::Update();
-    
+{   
     if( !states.empty() )
     {
         return states.back()->Update(this);
