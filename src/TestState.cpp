@@ -7,12 +7,10 @@
 #include "r_SDL.h"
 #include "r_utils.h"
 #include "r_renderer.h"
-#include "r_time.h"
+#include "r_engine/r_time.h"
 #include "r_lua.h"
 
 using namespace std;
-
-TestState TestState::_TestState;
 
 EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTTILES, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, TESTTEXT2, TESTTEXT3, FPSCOUNTER;
 
@@ -47,9 +45,6 @@ void TestState::Init(RGameEngine* game)
     BACKGROUND_TEXTURE = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
     _textureSystem.LoadFromFile(BACKGROUND_TEXTURE, "data/gfx/checker.png", _windows[0]->renderer);
-    
-    //create sprite for background texture
-    _spriteSystem.AddComponent( BACKGROUND_TEXTURE, _textureSystem.components[BACKGROUND_TEXTURE]->texture, {0,0,_textureSystem.components[BACKGROUND_TEXTURE]->width, _textureSystem.components[BACKGROUND_TEXTURE]->height });
     
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
@@ -197,7 +192,7 @@ void TestState::Cleanup(RGameEngine* game)
 
 void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
-void TestState::HandleEvents(RGameEngine* game)
+int TestState::HandleEvents(RGameEngine* game)
 {
     //handle important key events
     while( SDL_PollEvent( &_event ) )
@@ -267,9 +262,10 @@ void TestState::HandleEvents(RGameEngine* game)
     {
         _velocitySystem.components[TESTPLAYER]->x += 1;
     }
+    return 0;
 }
 
-void TestState::Update(RGameEngine* game)
+int TestState::Update(RGameEngine* game)
 {
     
     //update sprite animations
@@ -319,13 +315,18 @@ void TestState::Update(RGameEngine* game)
     //update sprite position
     _spriteSystem.components[TESTPLAYER]->dimensions.x = _positionSystem.components[TESTPLAYER]->x;
     _spriteSystem.components[TESTPLAYER]->dimensions.y = _positionSystem.components[TESTPLAYER]->y;
+    
+    return 0;
 }
 
-void TestState::Draw(RGameEngine* game)
+int TestState::Draw(RGameEngine* game)
 {   
-    _spriteSystem.Render();
     _uiTextSystem.Render();   
+    _spriteSystem.Render();
+    r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->texture,{0,0,640,480},{0,0,640,480});
+
     r_renderer::Render(_windows[0]->renderer);
     
     _count++;
+    return 0;
 } 

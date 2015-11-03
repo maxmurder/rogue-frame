@@ -11,8 +11,11 @@ EXE = rogue-frame
 $(EXE) : $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o $(EXE) $(LDFLAGS)
 
-r_engine.o : $(SRC)r_engine.cpp $(SRC)r_engine.h
-	$(CC) $(CFLAGS) $(SRC)r_engine.cpp
+r_engine.o : $(SRC)r_engine/r_engine.cpp $(SRC)r_engine/r_engine.h
+	$(CC) $(CFLAGS) $(SRC)r_engine/r_engine.cpp
+
+r_time.o : $(SRC)r_engine/r_time.cpp $(SRC)r_engine/r_time.h 
+	$(CC) $(CFLAGS) $(SRC)r_engine/r_time.cpp 
 
 r_SDL.o : $(SRC)r_SDL.cpp $(SRC)r_SDL.h 
 	$(CC) $(CFLAGS) $(SRC)r_SDL.cpp 
@@ -22,9 +25,6 @@ r_lua.o : $(SRC)r_lua.cpp $(SRC)r_lua.h
 
 r_utils.o : $(SRC)r_utils.cpp $(SRC)r_utils.h 
 	$(CC) $(CFLAGS) $(SRC)r_utils.cpp 
-
-r_time.o : $(SRC)r_time.cpp $(SRC)r_time.h 
-	$(CC) $(CFLAGS) $(SRC)r_time.cpp 
 
 r_entity.o : $(SRC)r_entity/r_entity.cpp $(SRC)r_entity/r_entity.h 
 	$(CC) $(CFLAGS) $(SRC)r_entity/r_entity.cpp 
@@ -56,7 +56,7 @@ RWindow.o : $(SRC)RWindow.cpp $(SRC)RWindow.h
 TestState.o : $(SRC)TestState.cpp $(SRC)TestState.h
 	$(CC) $(CFLAGS) $(SRC)TestState.cpp
 
-main.o : $(SRC)main.cpp $(SRC)r_engine.h
+main.o : $(SRC)main.cpp
 	$(CC) $(CFLAGS) $(SRC)main.cpp
 
 clean:

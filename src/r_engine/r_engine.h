@@ -6,19 +6,18 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "RWindow.h"
-
 class RGameState;
 
 class RGameEngine
 {
     public:
-    bool Init(const char* title, int width=640, int height=480, int bbp=0, bool fullscreen=false);
-    void Cleanup();
+    int Init(const char* title, int width=640, int height=480, int bbp=0, bool fullscreen=false); //initilizes the game, starts SDL etc.
+    int Start(); //starts the main gameloop. engine must be initilized first. also good to set a state before starting.
+    void Cleanup(); //cleans up and closes the game
     
-    void HandleEvents();
-    void Update();
-    void Draw();
+    int HandleEvents();
+    int Update();
+    int Draw();
     
     bool Running() {return _running;}
     void Quit() {_running = false;}
@@ -30,7 +29,7 @@ class RGameEngine
     private:
     std::vector<RGameState*> states; //game state stack
     bool _fullscreen;
-    bool _running;
+    bool _running; 
     SDL_Event _event;
 };
 

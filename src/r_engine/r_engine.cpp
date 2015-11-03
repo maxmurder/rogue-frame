@@ -5,25 +5,25 @@
 
 using namespace std;
 
-bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
+int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
 {
     int imgFlag = IMG_INIT_PNG;   
     //initialize SDL
     if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
     {
         cout << "SDL initilization failure" << " :: " << SDL_GetError() << endl;
-        return false;
+        return 1;
     }
     if ( !(IMG_Init( imgFlag) & imgFlag ) )
     {
         cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << endl;
-        return false;
+        return 1;
     }
     
     if ( TTF_Init() == -1 )
     {
         cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << endl;
-        return false;
+        return 1;
     }
 
     if ( fullscreen ) {
@@ -33,7 +33,26 @@ bool RGameEngine::Init(const char* title, int width, int height, int bpp, bool f
     _fullscreen = fullscreen;
     _running = true;
     cout << "RGameEngine Init\n";
-    return true;
+    return 0;
+}
+
+int RGameEngine::Start()
+{
+    static bool started = false;
+    if(!started)
+    {
+        started = true;
+        while (_running)
+        {
+            if (HandleEvents() != 0) return 1;
+            if (Update() != 0) return 1;
+            if (Draw() != 0) return 1;
+        } 
+        Cleanup();
+        return 0;
+    }
+    cout << "Somebody tried to start a running game.\n";
+    return 1;
 }
 
 void RGameEngine::Cleanup() 
@@ -52,31 +71,34 @@ void RGameEngine::Cleanup()
     cout << "RGameEngine Cleanup" << endl;
 }
 
-void RGameEngine::HandleEvents() 
+int RGameEngine::HandleEvents() 
 {           
     if( !states.empty() )
     {
-        states.back()->HandleEvents(this);
+       return states.back()->HandleEvents(this);
     }
+    return 0;
 };
 
-void RGameEngine::Update() 
+int RGameEngine::Update() 
 {
     //update global time
     r_time::Update();
     
     if( !states.empty() )
     {
-        states.back()->Update(this);
+        return states.back()->Update(this);
     }
+    return 0;
 };
 
-void RGameEngine::Draw() 
+int RGameEngine::Draw() 
 {
     if( !states.empty() )
     {
-        states.back()->Draw(this);
+       return states.back()->Draw(this);
     }
+    return 0;
 };
 
 void RGameEngine::ChangeState(RGameState* state)

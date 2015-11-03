@@ -12,9 +12,9 @@ class RGameState //base class for game states
     virtual void Pause(RGameEngine* game) = 0;
     virtual void Resume(RGameEngine* game) = 0;
     
-    virtual void HandleEvents(RGameEngine* game) = 0;
-    virtual void Update(RGameEngine* game) = 0;
-    virtual void Draw(RGameEngine* game) = 0;
+    virtual int HandleEvents(RGameEngine* game) = 0;
+    virtual int Update(RGameEngine* game) = 0;
+    virtual int Draw(RGameEngine* game) = 0;
     
     void ChangeState(RGameEngine* game, RGameState* state)
     {

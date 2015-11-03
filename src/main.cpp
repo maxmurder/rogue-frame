@@ -1,23 +1,16 @@
 #include <iostream>
-#include "r_engine.h"
+#include "r_engine/r_engine.h"
 #include "TestState.h"
 
 int main( int argc, char* args[] ) 
 {
     RGameEngine game;
 
-    if (game.Init("Test") == false)
+    if (game.Init("Test") != 0)
     {
         return 1;
     }
-    game.ChangeState( TestState::Instance() );
+    game.ChangeState( new TestState() );
     
-    while (game.Running() )
-    {
-        game.HandleEvents();
-        game.Update();
-        game.Draw();
-    } 
-    game.Cleanup();
-    return 0;
+    return game.Start();
 }

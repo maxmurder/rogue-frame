@@ -11,6 +11,7 @@ void SpriteComponent::Init( SDL_Texture  *tex, SDL_Rect dims, SDL_Color foregrou
     dimensions = dims;
     visible = true;
     animations.insert(pair<string, vector<SDL_Rect>>("DEFAULT", {{0,0,dimensions.w,dimensions.h}}) );
+    currentAnimation = "DEFAULT";
 }
 
 void SpriteSystem::AddComponent(EntityID ownerID, SDL_Texture  *texture, SDL_Rect dimensions, SDL_Color fgColor, SDL_Color bgColor)

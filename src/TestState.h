@@ -5,12 +5,13 @@
 #include <SDL2/SDL_ttf.h>
 #include <array>
 #include "r_SDL.h"
-#include "r_gamestate.h"
+#include "r_engine/r_gamestate.h"
 #include "r_entity/r_entity.h"
 #include "r_util_components.h"
 #include "r_sprite.h"
 #include "r_texture.h"
 #include "r_ui_text.h"
+#include "RWindow.h"
 
 class TestState: public RGameState {
 
@@ -33,20 +34,13 @@ class TestState: public RGameState {
         void Pause(RGameEngine* game);
         void Resume(RGameEngine* game);
         
-        void HandleEvents(RGameEngine* game);
-        void Update(RGameEngine* game);
-        void Draw(RGameEngine* game);
+        int HandleEvents(RGameEngine* game);
+        int Update(RGameEngine* game);
+        int Draw(RGameEngine* game);
         
-        static TestState* Instance()
-        {
-            return &_TestState;
-        }
-    
-    protected:
         TestState() { }
     
     private:
-        static TestState _TestState;
         SDL_Renderer* _renderer;
         SDL_Event _event;
         const Uint8* currentKeyStates;
