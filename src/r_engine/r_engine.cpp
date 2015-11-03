@@ -40,14 +40,13 @@ int RGameEngine::Start()
     static bool started = false;
     if(!started)
     {
-        _time.Update();
         unsigned lag = 0;
         started = true;
         while (_running)
         {
             //update global time
             _time.Update();
-            lag += _time.GetElapsedTicks();
+            lag += _time.ElapsedTime();
 
             if (HandleEvents() != 0) return 1;
             while (lag >= UPDATE_MS)

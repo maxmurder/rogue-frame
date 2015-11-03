@@ -71,22 +71,22 @@ SDL_Rect SpriteSystem::GetCurrentFrame(EntityID id)
     return f;
 }
 
-void SpriteSystem::Update()
+void SpriteSystem::Update(double deltaTime)
 {
     for (auto &s : components)
     {
         if(s.second->animationSpeed > 0)
         {
-            if(s.second->frameCount > s.second->animationSpeed)
+            if(s.second->frameTime > s.second->animationSpeed)
             {   
-                s.second->frameCount = 0;
+                s.second->frameTime = 0;
                 s.second->currentFrame++;
                 if (s.second->currentFrame >= s.second->animations[s.second->currentAnimation].size())
                 {
                     s.second->currentFrame = 0;
                 }
             }
-            s.second->frameCount++;
+        s.second->frameTime += deltaTime;
         }
     }
 }

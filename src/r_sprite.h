@@ -16,7 +16,8 @@ struct SpriteComponent : public Component
     
     std::map<std::string, std::vector<SDL_Rect>> animations;
     
-    uint32_t animationSpeed, currentFrame, frameCount;
+    uint32_t currentFrame;
+    double frameTime, animationSpeed;
     std::string currentAnimation;
     
     bool visible;
@@ -30,7 +31,7 @@ struct SpriteComponent : public Component
     SpriteComponent() : animations() { 
     animationSpeed = 0;
     currentFrame = 0;
-    frameCount = 0;
+    frameTime = 0;
     currentAnimation = "NULL";
     renderOffsetX = 0;
     renderOffsetY = 0;
@@ -55,7 +56,7 @@ struct SpriteSystem: public System<SpriteComponent>
     void SetAnimation(EntityID id, std::string animation);
     SDL_Rect GetCurrentFrame(EntityID id);
     
-    void Update();
+    void Update(double deltaTime);
     void Render();
 };
 

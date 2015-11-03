@@ -3,17 +3,23 @@
 
 void RTime::Update()
 {
-    unsigned actual = SDL_GetTicks();
-    ticksLastFrame = actual - currentTicks;
+    startTicks = currentTicks;
+    double actual = SDL_GetTicks();
+    elapsedTicks = actual - currentTicks;
     currentTicks = actual;
 }
 
-unsigned RTime::GetCurrentTicks()
+unsigned RTime::CurrentTime()
 {
     return currentTicks;
 }
 
-unsigned RTime::GetElapsedTicks()
+unsigned RTime::ElapsedTime()
 {
-    return ticksLastFrame;
+    return elapsedTicks;
+}
+
+double RTime::Delta()
+{
+    return (currentTicks - startTicks) * 0.001;
 }

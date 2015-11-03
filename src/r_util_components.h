@@ -7,7 +7,7 @@
 
 //simple position component
 struct XYZComponent : public Component {
-        int x, y, z;
+        double x, y, z;
 };
 
 COMPONENT_REGISTER(XYZComponent, "XYZComponent");
