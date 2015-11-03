@@ -267,24 +267,28 @@ int TestState::HandleEvents(RGameEngine* game)
 
 int TestState::Update(RGameEngine* game)
 {
-    
+    //update local time
+    _time.Update();
     //update sprite animations
     _spriteSystem.Update();
     
-    static unsigned last = 0; 
-    //calculate fps
-    if(_count > 100)
+    //calculate FPS
+    static int count = 0;
+    float fps =  count / (_time.GetCurrentTicks() / 1000.f);
+    if( fps > 9000)
     {
-        _count = 0;
-        last = r_time::GetCurrentTicks();
+        fps = 0;
     }
-    _fps = _count / ((r_time::GetCurrentTicks() - last) / 1000.f);
+    count++;
+    
     wstringstream msg;
     msg.precision(2);
-    msg << L"FPS: " << fixed << _fps << L" MS: " << r_time::GetElapsedTicks();
+    msg << L"FPS: " << fixed << fps << L" MS: " << _time.GetElapsedTicks();
+
     _uiTextSystem.SetText(FPSCOUNTER, msg.str());
     int wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
     _uiTextSystem.SetDisplayRect(FPSCOUNTER, { _windows[0]->GetWidth() - wid, 0, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
+    
     
     //apply vleocity
     for(auto &c : _velocitySystem.components)
@@ -327,6 +331,5 @@ int TestState::Draw(RGameEngine* game)
 
     r_renderer::Render(_windows[0]->renderer);
     
-    _count++;
     return 0;
 } 

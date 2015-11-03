@@ -1,12 +1,16 @@
 #ifndef R_TIME_H
 #define R_TIME_H
 
-namespace r_time
+class RTime
 {
-    void Update();
-    unsigned GetCurrentTicks();
-    unsigned GetElapsedTicks();
-}
+    public:
+        void Update();
+        unsigned GetCurrentTicks();
+        unsigned GetElapsedTicks();
+    private:
+        unsigned currentTicks = 0;
+        unsigned ticksLastFrame = 0;
+};
 
 #endif
 

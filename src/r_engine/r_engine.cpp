@@ -1,7 +1,6 @@
 #include <iostream>
 #include "r_engine.h"
 #include "r_gamestate.h"
-#include "r_time.h"
 
 using namespace std;
 
@@ -41,14 +40,15 @@ int RGameEngine::Start()
     static bool started = false;
     if(!started)
     {
+        _time.Update();
         unsigned lag = 0;
         started = true;
         while (_running)
         {
             //update global time
-            r_time::Update();
-            lag += r_time::GetElapsedTicks();
-            
+            _time.Update();
+            lag += _time.GetElapsedTicks();
+
             if (HandleEvents() != 0) return 1;
             while (lag >= UPDATE_MS)
             {
