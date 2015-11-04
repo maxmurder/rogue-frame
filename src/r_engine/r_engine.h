@@ -34,7 +34,6 @@ class RGameEngine
     double GlobalDelta() {return _time.Delta();}
     double FixedUpdateDelta() { return UPDATE_MS * 0.001; }
     
-    
     private:
     std::vector<RGameState*> states; //game state stack
     RTime _time;

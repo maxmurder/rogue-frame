@@ -83,7 +83,8 @@ void TestState::Init(RGameEngine* game)
     TESTTILES = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", TESTTILES), TESTTILES);
     _textureSystem.LoadFromFile(TESTTILES, tileScript.Get<string>("file"), _windows[0]->renderer, {0xFF, 0x00, 0xFF, 0xFF});
-       
+     
+     
     //create "player" entity
     TESTPLAYER = CreateEntity();
     
@@ -99,18 +100,32 @@ void TestState::Init(RGameEngine* game)
     _velocitySystem.components[TESTPLAYER]->y = 0;
     //create metadata
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent", TESTPLAYER), TESTPLAYER);
-    _dimensionsSystem.components[TESTPLAYER]->w = 16;
+    _dimensionsSystem.components[TESTPLAYER]->w = 8;
     _dimensionsSystem.components[TESTPLAYER]->h = 16;
     
     //create sprite
     _spriteSystem.AddComponent( TESTPLAYER, 
-                                _textureSystem.components[TESTTILES]->texture,
+                                _textureSystem.components[UNICODE_TEXTURE]->texture,
                                 {_positionSystem.components[TESTPLAYER]->x, _positionSystem.components[TESTPLAYER]->y, _dimensionsSystem.components[TESTPLAYER]->w, _dimensionsSystem.components[TESTPLAYER]->h},
                                 {0x80,0x00,0xFF,0xFF},
                                 {0xBA,0xDA,0x55,0xFF});
     
-    _spriteSystem.AddAnimation(TESTPLAYER, "TEST1",{tileFrames[0x263A],tileFrames[0x263B]});
-    _spriteSystem.SetAnimation(TESTPLAYER, "TEST1");
+    //load lua script
+    LuaScript testScript("data/lua/test.lua");
+    vector<SDL_Rect> testAnim;
+   
+    //setup test animation
+   /* for (auto c :  testScript.GetVector<int>("animation"))
+    {
+        testAnim.push_back(tileFrames[c]);
+    }*/
+    for (auto c :  testScript.GetVector<int>("animation"))
+    {
+        testAnim.push_back({_unicodeSymbolSystem.components[ANSI_437]->GetIndex(c) * (pnt/2), 0, pnt/2, pnt });
+    }
+
+    _spriteSystem.AddAnimation(TESTPLAYER, "TEST",testAnim);
+    _spriteSystem.SetAnimation(TESTPLAYER, "TEST");
     _spriteSystem.components[TESTPLAYER]->animationSpeed = 500;
     
     //make map of character frames for text system
@@ -140,7 +155,7 @@ void TestState::Init(RGameEngine* game)
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
     
-    LuaScript testScript("data/lua/test.lua");
+
     string s = testScript.Get<string>("test.string");
     wstring ws;
     ws.assign(s.begin(), s.end());
