@@ -9,6 +9,7 @@
 #include "r_renderer.h"
 #include "r_engine/r_time.h"
 #include "r_lua.h"
+#include "r_entity/r_message.h"
 
 using namespace std;
 
@@ -297,6 +298,10 @@ int TestState::Update(RGameEngine* game)
     
     //update sprite animations
     _spriteSystem.Update(game->UPDATE_MS);
+    Message m;
+    m.id = TESTPLAYER;
+    m.message = "TEST";
+    _spriteSystem.Receive(m);
 
     //apply vleocity
     for(auto &c : _velocitySystem.components)

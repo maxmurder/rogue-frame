@@ -2,6 +2,7 @@
 #define R_ENTITY_H
 #include <stdint.h>
 #include <map>
+#include "r_message.h"
 
 /*
     r_entity contains functionality for handeling entities.
@@ -51,6 +52,8 @@ template <typename C> struct System {
             }
             return NULL;
         }
+        
+        virtual void Receive(Message message){};
         
         virtual void Cleanup()
         {
