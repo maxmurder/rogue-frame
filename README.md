@@ -26,12 +26,18 @@ change over time.
 ##Compiling:
 ###Linux:
 Install Dependencies:
+
 `sudo apt-get install libsdl2 libsdl2_ttf libsdl2_image liblua5.2`
+
 Run scons:
+
 `scons`
 
 ###Mac:
-####Install Dependencies:
+Install Dependencies:
+
 `brew install sdl2 sdl2_ttf sdl2_image lua`
-####Run Scons:
+
+Run Scons:
+
 `scons --mac`
