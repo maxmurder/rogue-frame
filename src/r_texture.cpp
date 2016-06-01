@@ -24,7 +24,7 @@ void TextureSystem::LoadFromFile( EntityID ownerID, std::string path, SDL_Render
         }
         if(components[ownerID]->texture != NULL)
         {
-            SDL_QueryTexture( components[ownerID]->texture, NULL, NULL, &components[ownerID]->width, &components[ownerID]->height ); 
+            SDL_QueryTexture( components[ownerID]->texture, NULL, NULL, &components[ownerID]->width, &components[ownerID]->height );
         }else
         {
             std::cout << "Texture could not load :: " << SDL_GetError() << std::endl;
@@ -46,7 +46,7 @@ void TextureSystem::RenderUnicode( EntityID ownerID, SDL_Renderer* renderer, TTF
             std::cout << "Symbol could not be rendered :: " << SDL_GetError() << std::endl;
         } else
         {
-            SDL_QueryTexture( components[ownerID]->texture, NULL, NULL, &components[ownerID]->width, &components[ownerID]->height ); 
+            SDL_QueryTexture( components[ownerID]->texture, NULL, NULL, &components[ownerID]->width, &components[ownerID]->height );
         }
     }
 }
@@ -55,20 +55,20 @@ void TextureSystem::Cleanup()
 {
     for (auto &tex : components)
     {
-        if (tex.second->texture != NULL) 
+        if (tex.second->texture != NULL)
         {
             SDL_DestroyTexture (tex.second->texture);
         }
         r_component::Destroy(tex.second);
-        components.erase(tex.first);
     }
+    components.clear();
 }
 
 void TextureSystem::FreeTexture(EntityID ownerID)
 {
     if(GetEntity(ownerID) != NULL)
     {
-        if (components[ownerID]->texture != NULL) 
+        if (components[ownerID]->texture != NULL)
         {
             SDL_DestroyTexture (components[ownerID]->texture);
             components[ownerID]->texture = NULL;
@@ -77,4 +77,3 @@ void TextureSystem::FreeTexture(EntityID ownerID)
         }
     }
 }
-
