@@ -21,6 +21,5 @@ Desired Feautres:
 		- Component based entity framework.
 		- Dwarf Fortress style material system.
 
-
-		Dependency:
-		SDL2, SDL2_ttf, SDL2_image, Lua
+Dependencies:
+	SDL2, SDL2_ttf, SDL2_image, Lua
