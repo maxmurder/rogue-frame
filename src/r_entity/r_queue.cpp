@@ -7,6 +7,8 @@
 #include <mutex>
 #include <utility>
 
+namespace r_frame {
+
 class Queue::Impl
 {
 public:
@@ -107,4 +109,6 @@ std::unique_ptr<Message> Queue::request(Message&& message)
 void Queue::respondTo(MessageUID requestUid, Message&& responseMsg)
 {
   _impl->respondTo(requestUid, std::move(responseMsg));
+}
+
 }

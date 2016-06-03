@@ -10,10 +10,12 @@
 #include "r_engine/r_time.h"
 #include "r_lua.h"
 #include "r_entity/r_message.h"
+#include "r_entity/r_queue.h"
 
 using namespace std;
 
 EntityID BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTTILES, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, TESTTEXT2, TESTTEXT3, FPSCOUNTER, FPSCOUNTERGLOBAL;
+int TEST_MESSAGE = 1;
 
 vector<EntityID> testchars;
 
@@ -188,6 +190,14 @@ void TestState::Init(RGameEngine* game)
     _uiTextSystem.AddComponent(TESTTEXT2, _textureSystem.components[UNICODE_TEXTURE]->texture, charframes, {0, 0, 128, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
 
     _uiTextSystem.AddComponent( TESTTILES, _textureSystem.components[TESTTILES]->texture, tileFrames, {144, 0, 256, 256}, ansistr, {0x80, 0x00, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF});
+
+
+    //test message
+    r_frame::Queue queue;
+    queue.put(r_frame::DataMessage<std::string>(1, "test"));
+    auto msg = queue.get();
+    auto& dmsg = dynamic_cast<r_frame::DataMessage<std::string>&>(*msg);
+    cout << dmsg.getMessageId() << ":" << dmsg.getPayload() << endl;
 
     //finishing up
     TTF_CloseFont(_font);

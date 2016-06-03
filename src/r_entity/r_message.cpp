@@ -1,6 +1,8 @@
 #include "r_message.h"
 #include <atomic>
 
+namespace r_frame {
+
 MessageUID generateUniqueID()
 {
   static std::atomic<MessageUID> i(0);
@@ -24,4 +26,6 @@ int Message::getMessageId() const
 MessageUID Message::getUniqueId() const
 {
   return _uniqueId;
+}
+
 }

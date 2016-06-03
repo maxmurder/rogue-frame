@@ -2,6 +2,8 @@
 #define R_QUEUE_H
 #include "r_message.h"
 
+namespace r_frame {
+
 const int MSG_TIMEOUT = -1;
 
 class Queue
@@ -47,5 +49,7 @@ class Queue
       class Impl;
       std::unique_ptr<Impl> _impl;
 };
+
+}
 
 #endif

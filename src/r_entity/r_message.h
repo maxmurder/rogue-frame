@@ -4,6 +4,8 @@
 
 //Polymorphic message class based on https://khuttun.github.io/2015/06/01/polymorphic-message-queue-in-c++11.html
 
+namespace r_frame {
+
 /** Type for message unique identifiers */
 using MessageUID = unsigned long long;
 
@@ -97,4 +99,6 @@ class DataMessage : public Message
   private:
     std::unique_ptr<PayloadType> _payload;
 };
+
+}
 #endif
