@@ -4,11 +4,11 @@
 #include <vector>
 #include <stdlib.h>
 #include "TestState.h"
-#include "r_SDL.h"
-#include "r_utils.h"
-#include "r_renderer.h"
+#include "r_utils/r_SDL.h"
+#include "r_utils/r_utils.h"
+#include "r_utils/r_renderer.h"
 #include "r_engine/r_time.h"
-#include "r_lua.h"
+#include "r_utils/r_lua.h"
 #include "r_entity/r_message.h"
 #include "r_entity/r_queue.h"
 
