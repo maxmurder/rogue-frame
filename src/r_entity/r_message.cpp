@@ -8,7 +8,7 @@ MessageUID generateUniqueID()
 }
 
 Message::Message(int messageId)
-  : messageId_(messageId), uniqueId_(generateUniqueID())
+  : _messageId(messageId), _uniqueId(generateUniqueID())
 {}
 
 std::unique_ptr<Message> Message::move()
@@ -18,10 +18,10 @@ std::unique_ptr<Message> Message::move()
 
 int Message::getMessageId() const
 {
-  return messageId_;
+  return _messageId;
 }
 
 MessageUID Message::getUniqueId() const
 {
-  return uniqueId_;
+  return _uniqueId;
 }

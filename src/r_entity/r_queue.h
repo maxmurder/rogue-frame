@@ -2,13 +2,13 @@
 #define R_QUEUE_H
 #include "r_message.h"
 
-cosnt int MSG_TIMEOUT = -1;
+const int MSG_TIMEOUT = -1;
 
 class Queue
 {
   public:
     Queue();
-    !Queue();
+    ~Queue();
 
     /**
     * Add message to queue.
@@ -25,7 +25,7 @@ class Queue
     * @param timeout Time in ms to wait until timeout happens.
     *                0 = wait indefinitely.
     */
-    unique_ptr<Message> get(int timeout = 0);
+    std::unique_ptr<Message> get(int timeoutMs = 0);
 
     /**
     * Make a request.
@@ -33,7 +33,7 @@ class Queue
     *
     *@peram msg Request Message. Is put into the queue to be retrieved with get().
     */
-    unique_ptr<Message> request(Message&& msg);
+    std::unique_ptr<Message> request(Message&& msg);
 
     /**
     *Respond to request
@@ -41,11 +41,11 @@ class Queue
     *@param reqUid Message UID of request.
     *@param responseMsg Response message. The requester will recieve it as return of request().
     */
-    void respondTo(MessageUID reqUid, Msg&& responseMsg);
+    void respondTo(MessageUID reqUid, Message&& responseMsg);
 
     private:
       class Impl;
-      std::unique_ptr<Impl> impl_;
+      std::unique_ptr<Impl> _impl;
 };
 
 #endif

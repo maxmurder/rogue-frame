@@ -48,8 +48,8 @@ class Message
       Message& operator = (Message&&) = default;
 
     private:
-      int messageId_;
-      MessageUID uniqueId_;
+      int _messageId;
+      MessageUID _uniqueId;
 };
 
 /**
@@ -67,7 +67,7 @@ class DataMessage : public Message
       */
     template <typename ... Args>
     DataMessage(int messageId, Args&& ... args) : Message(messageId),
-      payload_(new PayloadType(std::forward<Args>(args)...)){}
+      _payload(new PayloadType(std::forward<Args>(args)...)){}
 
       //disable copy
       DataMessage(const DataMessage&) = delete;
@@ -86,7 +86,7 @@ class DataMessage : public Message
         */
       const PayloadType& getPayload() const
       {
-        return *payload_;
+        return *_payload;
       }
 
   protected:
@@ -95,6 +95,6 @@ class DataMessage : public Message
     DataMessage& operator = (DataMessage&&) = default;
 
   private:
-    std::unique_ptr<PayloadType> payload_;
+    std::unique_ptr<PayloadType> _payload;
 };
 #endif
