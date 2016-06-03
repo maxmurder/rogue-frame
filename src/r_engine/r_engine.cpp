@@ -2,36 +2,34 @@
 #include "r_engine.h"
 #include "r_gamestate.h"
 
-using namespace std;
-
-int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen) 
+int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen)
 {
-    int imgFlag = IMG_INIT_PNG;   
+    int imgFlag = IMG_INIT_PNG;
     //initialize SDL
-    if (SDL_Init( SDL_INIT_EVERYTHING ) == -1) 
+    if (SDL_Init( SDL_INIT_EVERYTHING ) == -1)
     {
-        cout << "SDL initilization failure" << " :: " << SDL_GetError() << endl;
+        std::cout << "SDL initilization failure" << " :: " << SDL_GetError() << std::endl;
         return 1;
     }
     if ( !(IMG_Init( imgFlag) & imgFlag ) )
     {
-        cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << endl;
+        std::cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << std::endl;
         return 1;
     }
-    
+
     if ( TTF_Init() == -1 )
     {
-        cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << endl;
+        std::cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << std::endl;
         return 1;
     }
 
     if ( fullscreen ) {
         //todo: add fullscreen
     }
-    
+
     _fullscreen = fullscreen;
     _running = true;
-    cout << "RGameEngine Init\n";
+    std::cout << "RGameEngine Init\n";
     return 0;
 }
 
@@ -55,32 +53,32 @@ int RGameEngine::Start()
                 lag -= UPDATE_MS;
             }
             if (Draw() != 0) return 1;
-        } 
+        }
         Cleanup();
         return 0;
     }
-    cout << "Somebody tried to start a running game.\n";
+    std::cout << "Somebody tried to start a running game.\n";
     return 1;
 }
 
-void RGameEngine::Cleanup() 
+void RGameEngine::Cleanup()
 {
     for (auto s : states )
     {
         s->Cleanup(this);
     }
     states.clear();
-    
+
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
-    
-    
-    cout << "RGameEngine Cleanup" << endl;
+
+
+    std::cout << "RGameEngine Cleanup" << std::endl;
 }
 
-int RGameEngine::HandleEvents() 
-{           
+int RGameEngine::HandleEvents()
+{
     if( !states.empty() )
     {
        return states.back()->HandleEvents(this);
@@ -88,8 +86,8 @@ int RGameEngine::HandleEvents()
     return 0;
 };
 
-int RGameEngine::Update() 
-{   
+int RGameEngine::Update()
+{
     if( !states.empty() )
     {
         return states.back()->Update(this);
@@ -97,7 +95,7 @@ int RGameEngine::Update()
     return 0;
 };
 
-int RGameEngine::Draw() 
+int RGameEngine::Draw()
 {
     if( !states.empty() )
     {
@@ -115,18 +113,18 @@ void RGameEngine::ChangeState(RGameState* state)
         states.pop_back();
     }
 
-    //add and initilize new state    
+    //add and initilize new state
     states.push_back(state);
     states.back()->Init(this);
 }
 
 void RGameEngine::PushState(RGameState* state)
 {
-    if ( !states.empty() ) 
+    if ( !states.empty() )
     {
         states.back()->Pause(this);
     }
-    
+
     states.push_back(state);
     states.back()->Init(this);
 }
@@ -137,9 +135,8 @@ void RGameEngine::PopState()
         states.back()->Cleanup(this);
         states.pop_back();
     }
-    
+
     if ( !states.empty() ) {
         states.back()->Resume(this);
     }
 }
-
