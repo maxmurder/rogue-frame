@@ -10,6 +10,6 @@ base ='#/src'
 
 libs = sdl_libs + other_libs
 libpaths = ['/usr/lib', sdl_prefix + '/lib']
-cppflags = ['-D_REENTRANT']
+cppflags = ['-D_REENTRANT','-stdlib=libc++']
 sourcepaths = [base, sdl_prefix + '/include']
-linkflags = []
+linkflags = ['-stdlib=libc++']

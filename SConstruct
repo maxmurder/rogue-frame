@@ -17,7 +17,7 @@ if GetOption('win64'):
     env['CXX'] = 'x86_64-w64-mingw32-g++'
     vardir = 'build/win'
 elif GetOption('mac'):
-    env['CXX'] = 'g++'
+    env['CXX'] = 'clang++'
     vardir = 'build/mac'
 else:
     env['CXX']='g++'
