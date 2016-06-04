@@ -22,7 +22,7 @@ COMPONENT_REGISTER(WindowComponent, "WindowComponent");
 
 struct WindowSystem : public System<WindowComponent>
 {
-  void AddComponent(EntityID ownerID, std::string title = "DEFAULT", int height = 640, int width = 480); //adds and itilizes a new window component
+  void AddComponent(EntityID ownerID, std::string title = "DEFAULT", int width = 640, int height = 480); //adds and itilizes a new window component
   void HandleEvent(SDL_Event &event);  //handles SDL_WINDOWEVENTs
   void Focus(EntityID ownerID); //focuses and raises window to front.
   void Render(EntityID ownerID); // renders the window.

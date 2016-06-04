@@ -2,42 +2,38 @@
 #include <sstream>
 #include "r_window.h"
 
-void WindowSystem::AddComponent(EntityID ownerID, std::string title, int height, int width)
+void WindowSystem::AddComponent(EntityID ownerID, std::string title, int width, int height)
 {
   System::AddComponent(r_component::Create("WindowComponent", ownerID), ownerID);
-  InitWindow(ownerID, title, height, width);
+  InitWindow(ownerID, title, width, height);
 }
 
-void WindowSystem::InitWindow(EntityID ownerID, std::string title, int height, int width)
+void WindowSystem::InitWindow(EntityID ownerID, std::string title, int width, int height)
 {
-  if(GetEntity(ownerID) != NULL)
-  {
     components[ownerID]->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if( components[ownerID]->window != NULL)
     {
-      components[ownerID]->name = title;
-      components[ownerID]->mouseFocus = true;
-      components[ownerID]->keyboardFocus = true;
-      components[ownerID]->width = width;
-      components[ownerID]->height = height;
-      components[ownerID]->renderer = SDL_CreateRenderer(components[ownerID]->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-      if(components[ownerID]->renderer == NULL)
-      {
-        std::cout << "Unable to create renderer :: " << SDL_GetError() << std::endl;
-        SDL_DestroyWindow(components[ownerID]->window);
-        components[ownerID]->window = NULL;
-      }else
-      {
-                  std::cout << "#" << std::endl;
-        SDL_SetRenderDrawColor(components[ownerID]->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        components[ownerID]->windowID = SDL_GetWindowID(components[ownerID]->window);
-        components[ownerID]->shown = true;
+        components[ownerID]->name = title;
+        components[ownerID]->mouseFocus = true;
+        components[ownerID]->keyboardFocus = true;
+        components[ownerID]->width = width;
+        components[ownerID]->height = height;
+        components[ownerID]->renderer = SDL_CreateRenderer(components[ownerID]->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        if(components[ownerID]->renderer == NULL)
+        {
+            std::cout << "Unable to create renderer :: " << SDL_GetError() << std::endl;
+            SDL_DestroyWindow(components[ownerID]->window);
+            components[ownerID]->window = NULL;
+        }else
+        {
+            SDL_SetRenderDrawColor(components[ownerID]->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            components[ownerID]->windowID = SDL_GetWindowID(components[ownerID]->window);
+            components[ownerID]->shown = true;
       }
     }else
     {
-      std::cout << "Unable to create window :: " << SDL_GetError() << std::endl;
+        std::cout << "Unable to create window :: " << SDL_GetError() << std::endl;
     }
-  }
 }
 
 void WindowSystem::HandleEvent( SDL_Event& event )
