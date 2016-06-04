@@ -107,7 +107,7 @@ void WindowSystem::HandleEvent( SDL_Event& event )
         if (updateCaption)
         {
             std::stringstream caption;
-            caption << c.second->name << " - ID: " << " MouseFocus: " << ( ( c.second->mouseFocus ) ? "On" : "Off" ) << " KeyboardFocus: " <<  ( ( c.second->keyboardFocus ) ? "On" : "Off" );
+            caption << c.second->name << " - ID: " << c.second->windowID << " MouseFocus: " << ( ( c.second->mouseFocus ) ? "On" : "Off" ) << " KeyboardFocus: " <<  ( ( c.second->keyboardFocus ) ? "On" : "Off" );
             SDL_SetWindowTitle( c.second->window, caption.str().c_str() );
         }
 

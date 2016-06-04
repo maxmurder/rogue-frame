@@ -13,7 +13,6 @@
 #include "r_system/r_texture.h"
 #include "r_system/r_ui_text.h"
 #include "r_system/r_window.h"
-#include "RWindow.h"
 
 class TestState: public RGameState {
 
@@ -53,8 +52,6 @@ class TestState: public RGameState {
         EntityID ANSI_437;
         EntityID SPRITE_LATIN_UNI;
         EntityID SPRITE_LATIN_TEXT;
-
-        std::vector<RWindow*> _windows;
 
         TTF_Font* _font;
 

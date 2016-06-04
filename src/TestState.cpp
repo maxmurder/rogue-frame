@@ -207,10 +207,7 @@ void TestState::Init(RGameEngine* game)
 
 void TestState::Cleanup(RGameEngine* game)
 {
-    for (auto &win : _windows)
-    {
-        delete win;
-    }
+    _windowSystem.Cleanup();
     _spriteSystem.Cleanup();
     _textureSystem.Cleanup();
     _fgColorSystem.Cleanup();
@@ -249,11 +246,8 @@ int TestState::HandleEvents(RGameEngine* game)
         //get keyboard text input
         _input = r_SDL::TextInputHandler(_event, _input);
 
-        //handle window events
-        for (auto &win : _windows)
-        {
-            win->HandleEvent(_event);
-        }
+        //handle window events.
+        _windowSystem.HandleEvent(_event);
     }
 
     if ( currentKeyStates[SDL_SCANCODE_ESCAPE] )
