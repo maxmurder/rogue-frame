@@ -4,16 +4,16 @@
 #include <map>
 #include "r_entity/r_entity.h"
 #include "r_entity/r_component.h"
-#include "r_util_components.h"
+#include "r_utils/r_util_components.h"
 
 struct AnimationComponent : public Component
 {
     std::map<std::string, std::vector<SDL_Rect>> animations;
-    
+
     uint32_t animationSpeed, currentFrame, frameCount;
     std::string currentAnimation;
-    
-    AnimationComponent() : animations() { 
+
+    AnimationComponent() : animations() {
     animationSpeed = 0;
     currentFrame = 0;
     frameCount = 0;

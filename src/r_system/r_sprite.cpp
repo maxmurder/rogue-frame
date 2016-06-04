@@ -1,5 +1,5 @@
 #include "r_sprite.h"
-#include "r_renderer.h"
+#include "r_utils/r_renderer.h"
 
 void SpriteComponent::Init( SDL_Texture  *tex, SDL_Rect dims, SDL_Color foregroundColor, SDL_Color backgroundColor)
 {

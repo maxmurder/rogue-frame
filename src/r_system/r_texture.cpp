@@ -1,6 +1,6 @@
 #include "r_texture.h"
 #include "r_entity/r_entity.h"
-#include "r_SDL.h"
+#include "r_utils/r_SDL.h"
 #include <iostream>
 
 TextureComponent::TextureComponent() : Component()

@@ -2,16 +2,6 @@
 #define RWINDOW_H
 
 #include <SDL2/SDL.h>
-#include "r_entity/r_entity.h"
-#include "r_entity/r_component.h"
-
-struct WindowComponent : public Component
-{
-  std::string name;
-  uint32_t windowID;
-  int height, width;
-  bool mouseFocus, keyboadFocus, fullscreen, minimized, shown;
-};
 
 class RWindow
 {

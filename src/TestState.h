@@ -9,14 +9,16 @@
 #include "r_entity/r_entity.h"
 #include "r_engine/r_time.h"
 #include "r_utils/r_util_components.h"
-#include "r_utils/r_sprite.h"
-#include "r_utils/r_texture.h"
-#include "r_utils/r_ui_text.h"
+#include "r_system/r_sprite.h"
+#include "r_system/r_texture.h"
+#include "r_system/r_ui_text.h"
+#include "r_system/r_window.h"
 #include "RWindow.h"
 
 class TestState: public RGameState {
 
         //component systems
+        WindowSystem _windowSystem;
         SpriteSystem _spriteSystem;
         TextureSystem _textureSystem;
         UITextSystem _uiTextSystem;
