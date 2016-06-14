@@ -3,6 +3,8 @@ Import('env')
 
 if GetOption('win64'):
     from scons import win_build as c
+elif GetOption('mac'):
+    from scons import mac_build as c
 else:
     from scons import linux_build as c
  
