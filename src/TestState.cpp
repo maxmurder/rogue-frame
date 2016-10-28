@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <stdlib.h>
+#include <assert.h>
 #include "TestState.h"
 #include "r_utils/r_SDL.h"
 #include "r_utils/r_utils.h"
@@ -198,9 +199,15 @@ void TestState::Init(RGameEngine* game)
     //test rng
     _time.Update();
     r_rng::init(_time.CurrentTime());
+    r_rng::R_RNG* rng_eng = r_rng::engine();
+    assert(rng_eng != NULL);
     cout << "seed: " << r_rng::seed() << endl;
-    cout << "rng_dist: " << r_rng::rng_dist() << endl;
-    cout << "rng_dist_range: " << r_rng::rng_dist_range(0, 100) << endl;
+    uniform_int_distribution<uint32_t> custom_dist(0, 10);
+    cout << "custom: " << custom_dist(*rng_eng) << endl;
+
+    cout << "rng: " << r_rng::rng() << endl;
+    cout << "rng_range: " << r_rng::rng_range(0, 100) << endl;
+    cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
     cout << "bern:";
     for(int i = 0; i < 10; i++)
     {
@@ -244,25 +251,9 @@ void TestState::Init(RGameEngine* game)
         cout << float(i)/ex.size() << "-" << float(i+1)/ex.size() << ": ";
         cout << string(ex[i]/10, '*') << endl;
     }
-    cout << resetiosflags; cout.precision(p);
-    cout << "rng: " << r_rng::rng(0, 100) << endl;
-    cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
-    cout << "one_in:";
-    for(int i = 0; i < 10; i++)
-    {
-      cout << " " << r_rng::one_in(2);
-    }
-    cout << endl;
-
-    cout << "x_in_y:";
-    for(int i = 0; i < 10; i++)
-    {
-        cout << " " << r_rng::x_in_y(5, 10);
-    }
-    cout << endl;
-    
     cout << "dice: " << r_rng::dice(1, 6) << endl;
-    
+    resetiosflags; cout.precision(p);
+
     //finishing up
     TTF_CloseFont(_font);
     SDL_StartTextInput();

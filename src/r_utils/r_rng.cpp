@@ -2,9 +2,8 @@
 #include "r_rng.h"
 
 namespace r_rng {
-    typedef std::mt19937 R_RNG;
     uint32_t _seed;  
-    R_RNG inst;
+    r_rng::R_RNG inst;
     std::uniform_int_distribution<uint32_t> uint_dist;
 }
 
@@ -13,6 +12,11 @@ void r_rng::init(uint32_t seed)
     r_rng::_seed = seed;
     srand(_seed);
     r_rng::inst.seed(r_rng::_seed);
+}
+
+r_rng::R_RNG* r_rng::engine()
+{
+    return &r_rng::inst;
 }
 
 uint32_t r_rng::seed()
@@ -26,12 +30,12 @@ bool r_rng::bern(double prob)
     return dist_bern(r_rng::inst);
 }
 
-uint32_t r_rng::rng_dist()
+uint32_t r_rng::rng()
 {
     return r_rng::uint_dist(r_rng::inst);
 }
 
-uint32_t r_rng::rng_dist_range(uint32_t val1, uint32_t val2)
+uint32_t r_rng::rng_range(uint32_t val1, uint32_t val2)
 {
     uint32_t min = ( val1 < val2 ) ? val1 : val2;
     uint32_t max = ( val1 < val2 ) ? val2 : val1;
@@ -43,6 +47,14 @@ int r_rng::binomial(int range, double prob)
 {
     std::binomial_distribution<int> dist_binomial(range, prob);
     return dist_binomial(inst);
+}
+
+double r_rng::rng_float(double val1, double val2)
+{
+    double min = ( val1 < val2 ) ? val1 : val2;
+    double max = ( val1 < val2 ) ? val2 : val1;
+    std::uniform_real_distribution<double> dist_real(min, max);
+    return dist_real(inst);
 }
 
 double r_rng::normal(double mean, double stddeviation)
@@ -57,36 +69,12 @@ double r_rng::exponential(double lambda)
     return exp_dist(r_rng::inst);
 }
 
-long r_rng::rng(long val1, long val2) {
-  
-    long min = ( val1 < val2 ) ? val1 : val2;
-    long max = ( val1 < val2 ) ? val2 : val1;
-    return min + long( ( max - min + 1 ) * double(rand() / double( RAND_MAX + 1.0 ) ) );
-}
-
-double r_rng::rng_float(double val1, double val2)
-{
-    double min = ( val1 < val2 ) ? val1 : val2;
-    double max = ( val1 < val2 ) ? val2 : val1;
-    return min + ( max - min ) * double ( rand() ) / double ( RAND_MAX + 1.0);
-}
-
-bool r_rng::one_in( int chance )
-{
-    return ( chance <= 1 || r_rng::rng_float( 0, chance ) < 1);
-}
-
-bool r_rng::x_in_y ( double x, double y)
-{
-    return ( (double)rand() / RAND_MAX ) <= ( (double)x / y);
-}
-
 int r_rng::dice (int number, int sides)
 {
     int ret = 0;
     for( int i = 0; i < number; i++)
     {
-        ret += rng( 1, sides);
+        ret += r_rng::rng_range( 1, sides);
     }
     return ret;
 }

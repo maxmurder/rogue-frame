@@ -35,6 +35,7 @@
 *.dblite
 *.kdev4*
 *.swp
+*.vscode
 
 build/*
 bin/*
