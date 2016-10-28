@@ -4,9 +4,7 @@
 
 namespace r_time
 {
-    typedef std::chrono::high_resolution_clock _clock;
-
-    unsigned r_time::system_time()
+    unsigned system_time()
     {
         auto now = std::chrono::system_clock::now();
         auto ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
