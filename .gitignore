@@ -29,3 +29,10 @@
 
 # TempFiles
 *~
+
+#other
+*.pyc
+*.dblite
+
+build/*
+bin/*

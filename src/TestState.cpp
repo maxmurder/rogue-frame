@@ -11,6 +11,7 @@
 #include "r_utils/r_lua.h"
 #include "r_entity/r_message.h"
 #include "r_entity/r_queue.h"
+#include "r_utils/r_rng.h"
 
 using namespace std;
 
@@ -117,10 +118,6 @@ void TestState::Init(RGameEngine* game)
     vector<SDL_Rect> testAnim;
 
     //setup test animation
-   /* for (auto c :  testScript.GetVector<int>("animation"))
-    {
-        testAnim.push_back(tileFrames[c]);
-    }*/
     for (auto c :  testScript.GetVector<int>("animation"))
     {
         testAnim.push_back({_unicodeSymbolSystem.components[ANSI_437]->GetIndex(c) * (pnt/2), 0, pnt/2, pnt });
@@ -197,6 +194,25 @@ void TestState::Init(RGameEngine* game)
     auto msg = queue.get();
     auto& dmsg = dynamic_cast<r_frame::DataMessage<std::string>&>(*msg);
     cout << dmsg.getMessageId() << ":" << dmsg.getPayload() << endl;
+
+    //test rng
+   // cout << "rng: " << r_rng::rng(0, 100) << endl;
+    /*cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
+    cout << "one_in:";
+    for(int i = 0; i < 10; i++)
+    {
+      cout << " " << r_rng::one_in(10);
+    }
+    cout << endl;
+
+    cout << "x_in_y:";
+    for(int i = 0; i < 10; i++)
+    {
+        cout << " " << r_rng::x_in_y(5, 10);
+    }
+    cout << endl;
+
+    cout << "dice: " << r_rng::dice(2, 6);*/
 
     //finishing up
     TTF_CloseFont(_font);
