@@ -198,17 +198,53 @@ void TestState::Init(RGameEngine* game)
     //test rng
     _time.Update();
     r_rng::init(_time.CurrentTime());
-    cout << _time.CurrentTime() << endl;
+    cout << "seed: " << r_rng::seed() << endl;
     cout << "rng_dist: " << r_rng::rng_dist() << endl;
     cout << "rng_dist_range: " << r_rng::rng_dist_range(0, 100) << endl;
-    cout << "normal: " << r_rng::normal(0.0, 1.0) << endl;
     cout << "bern:";
     for(int i = 0; i < 10; i++)
     {
         cout << " " << r_rng::bern(0.5);
     }
     cout << endl;
-    
+    cout << "binomial: " << r_rng::binomial(10, 0.5) << endl;
+    array<int, 10> bi = {};
+    for(int i = 0; i < 1000; i++)
+    {
+        ++bi[r_rng::binomial(bi.size(), 0.5)];
+    }
+    for(int i = 0; i < bi.size(); i++ )
+    {
+        cout << i << ": " << string( bi[i]/10, '*' ) << endl;
+    }
+    cout << "normal: " << r_rng::normal(0.0, 1.0) << endl;
+    array<int, 10> no = {};
+    for (int i = 0; i < 1000; i++)
+    {
+        double num = r_rng::normal(5.0, 1.0);
+        if (( num >= 0.0 ) && ( num <= 10.0))
+            ++no[int(num)];
+    }
+    for(int i = 0; i < no.size(); i++)
+    {
+        cout << i << "-" << (i+1) << ": ";
+        cout << std::string(no[i]/10, '*') << endl;
+    }
+    cout << "exponential: " << r_rng::exponential(3.5) << endl;
+    int p = cout.precision();
+    cout << fixed; cout.precision(1);
+    array<int, 10> ex = {};
+    for(int i =  0; i < 1000; i++)
+    {
+        double num = r_rng::exponential(3.5);
+        if (num < 1.0) ++ex[int(ex.size()*num)];
+    }
+    for(int i = 0; i < ex.size(); i++)
+    {
+        cout << float(i)/ex.size() << "-" << float(i+1)/ex.size() << ": ";
+        cout << string(ex[i]/10, '*') << endl;
+    }
+    cout << resetiosflags; cout.precision(p);
     cout << "rng: " << r_rng::rng(0, 100) << endl;
     cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
     cout << "one_in:";
