@@ -224,6 +224,28 @@ void TestState::Init(RGameEngine* game)
     {
         cout << i << ": " << string( bi[i]/10, '*' ) << endl;
     }
+    cout << "geometric: " << r_rng::geometric(0.3) << endl;
+    array<int, 10> ge = {};
+    for (int i = 0; i < 1000; i++)
+    {
+        int num = r_rng::geometric(0.3);
+        if (num < ge.size()) ++ge[num];
+    }
+    for (int i = 0; i < ge.size(); i++)
+    {
+        cout << i << ": " << string(ge[i]/10, '*') << endl;
+    }
+    cout << "poisson: " << r_rng::poisson(5.0) << endl;
+    array<int, 10> po = {};
+    for(int i = 0; i < 1000; i++)
+    {
+        int num = r_rng::poisson(5.0);
+        if ( num < po.size() ) ++po[num]; 
+    }
+    for(int i = 0; i < po.size(); i++)
+    {
+        cout << i << ": " << string(po[i]/10, '*') << endl;
+    }
     cout << "normal: " << r_rng::normal(0.0, 1.0) << endl;
     array<int, 10> no = {};
     for (int i = 0; i < 1000; i++)

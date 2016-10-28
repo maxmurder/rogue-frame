@@ -49,6 +49,18 @@ int r_rng::binomial(int range, double prob)
     return dist_binomial(inst);
 }
 
+int r_rng::geometric(double prob)
+{
+    std::geometric_distribution<int> dist_geometric(prob);
+    return dist_geometric(r_rng::inst);
+}
+
+int r_rng::poisson(double mean)
+{
+    std::poisson_distribution<int> dist_poisson(mean);
+    return dist_poisson(r_rng::inst);
+}
+
 double r_rng::rng_float(double val1, double val2)
 {
     double min = ( val1 < val2 ) ? val1 : val2;

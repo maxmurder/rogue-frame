@@ -15,10 +15,11 @@ namespace r_rng
     uint32_t rng(); // Uniform int distribution.
     uint32_t rng_range(uint32_t val1, uint32_t val2); //Uniform int distribution in range.
     int binomial(int range, double probability); //binomeal distribution.
+    int geometric(double probability); // Geometric distribution.
+    int poisson(double mean); // Poisson distribution.
     double rng_float(double val1, double val2 ); // Uniform float distribution between val1 and val2
     double normal(double mean, double stddeviation); //normal distribution.
     double exponential(double lambda); // exponential distribution.
-    
 
     int dice (int number, int sides); // returns the total for a number of dice   
 }
