@@ -5,11 +5,14 @@
 
 namespace r_rng 
 {
-    void init(uint32_t seed);
-    uint16_t rng_dist();
-    uint16_t rng_dist_range(uint32_t val1, uint32_t val2);
-    double rng_dist_normal(double mean, double stddeviation);
+    void init(uint32_t seed); //initilize rng
     
+    bool bern(double prob); //Merseen Twister based Bernoulli distribution.
+    uint32_t rng_dist(); // Merseen Twister based int distribution.
+    uint32_t rng_dist_range(uint32_t val1, uint32_t val2); // Merseen Twister based distribution in range.
+    double normal(double mean, double stddeviation); //Merseen Twister based normal distribution.
+  
+    //rand.c based
     long rng(long val1, long val2 ); // returns random value between val1 and val2
     double rng_float(double val1, double val2 ); // returns random float value between val1 and val2
     bool one_in(int chance); // has one in chance of returning true

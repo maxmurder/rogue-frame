@@ -196,7 +196,19 @@ void TestState::Init(RGameEngine* game)
     cout << dmsg.getMessageId() << ":" << dmsg.getPayload() << endl;
 
     //test rng
-    r_rng::init(544646413);
+    _time.Update();
+    r_rng::init(_time.CurrentTime());
+    cout << _time.CurrentTime() << endl;
+    cout << "rng_dist: " << r_rng::rng_dist() << endl;
+    cout << "rng_dist_range: " << r_rng::rng_dist_range(0, 100) << endl;
+    cout << "normal: " << r_rng::normal(0.0, 1.0) << endl;
+    cout << "bern:";
+    for(int i = 0; i < 10; i++)
+    {
+        cout << " " << r_rng::bern(0.5);
+    }
+    cout << endl;
+    
     cout << "rng: " << r_rng::rng(0, 100) << endl;
     cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
     cout << "one_in:";
@@ -212,11 +224,8 @@ void TestState::Init(RGameEngine* game)
         cout << " " << r_rng::x_in_y(5, 10);
     }
     cout << endl;
-
+    
     cout << "dice: " << r_rng::dice(1, 6) << endl;
-    cout << "rng_dist: " << r_rng::rng_dist() << endl;
-    cout << "rng_dist_range: " << r_rng::rng_dist_range(0, 100) << endl;
-    cout << "rng_dist_normal: " << r_rng::rng_dist_normal(0.0, 1.0) << endl;
     
     //finishing up
     TTF_CloseFont(_font);
