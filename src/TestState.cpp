@@ -196,12 +196,13 @@ void TestState::Init(RGameEngine* game)
     cout << dmsg.getMessageId() << ":" << dmsg.getPayload() << endl;
 
     //test rng
-   // cout << "rng: " << r_rng::rng(0, 100) << endl;
-    /*cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
+    r_rng::init(544646413);
+    cout << "rng: " << r_rng::rng(0, 100) << endl;
+    cout << "rng_float: " << r_rng::rng_float(0.0, 100.0) << endl;
     cout << "one_in:";
     for(int i = 0; i < 10; i++)
     {
-      cout << " " << r_rng::one_in(10);
+      cout << " " << r_rng::one_in(2);
     }
     cout << endl;
 
@@ -212,8 +213,11 @@ void TestState::Init(RGameEngine* game)
     }
     cout << endl;
 
-    cout << "dice: " << r_rng::dice(2, 6);*/
-
+    cout << "dice: " << r_rng::dice(1, 6) << endl;
+    cout << "rng_dist: " << r_rng::rng_dist() << endl;
+    cout << "rng_dist_range: " << r_rng::rng_dist_range(0, 100) << endl;
+    cout << "rng_dist_normal: " << r_rng::rng_dist_normal(0.0, 1.0) << endl;
+    
     //finishing up
     TTF_CloseFont(_font);
     SDL_StartTextInput();

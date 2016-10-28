@@ -33,6 +33,8 @@
 #other
 *.pyc
 *.dblite
+*.kdev4*
+*.swp
 
 build/*
 bin/*
