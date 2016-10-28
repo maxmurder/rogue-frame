@@ -275,6 +275,10 @@ void TestState::Init(RGameEngine* game)
     cout << "dice: " << r_rng::dice(1, 6) << endl;
     resetiosflags; cout.precision(p);
 
+    //randomize player velocity
+    _velocitySystem.components[TESTPLAYER]->x = r_rng::rng_float(0.0, 1000.0) * _time.Delta();
+    _velocitySystem.components[TESTPLAYER]->y = r_rng::rng_float(0.0, 1000.0) * _time.Delta();
+
     //finishing up
     TTF_CloseFont(_font);
     SDL_StartTextInput();
