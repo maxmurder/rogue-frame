@@ -47,7 +47,7 @@ class TestState: public RGameState {
         SDL_Event _event;
         const Uint8* currentKeyStates;
 
-        RTime _time;
+        r_time::RTime _time;
 
         EntityID ANSI_437;
         EntityID SPRITE_LATIN_UNI;

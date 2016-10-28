@@ -36,7 +36,7 @@ class RGameEngine
     
     private:
     std::vector<RGameState*> states; //game state stack
-    RTime _time;
+    r_time::RTime _time;
     bool _fullscreen;
     bool _running;
     SDL_Event _event;

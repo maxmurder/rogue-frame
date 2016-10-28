@@ -197,8 +197,7 @@ void TestState::Init(RGameEngine* game)
     cout << dmsg.getMessageId() << ":" << dmsg.getPayload() << endl;
 
     //test rng
-    _time.Update();
-    r_rng::init(_time.CurrentTime());
+    r_rng::init(r_time::system_time());
     r_rng::R_RNG* rng_eng = r_rng::engine();
     assert(rng_eng != NULL);
     cout << "seed: " << r_rng::seed() << endl;
