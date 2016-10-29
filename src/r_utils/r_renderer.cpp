@@ -1,6 +1,7 @@
 #include "r_renderer.h"
 #include <vector>
 #include <iostream>
+
 std::vector<RenderObject> renderQueue;
 
 RenderObject::RenderObject(SDL_Texture *tex, SDL_Rect sRect, SDL_Rect dRect, SDL_Color fg, SDL_Color bg, SDL_Point off, float ang, SDL_Point cen,SDL_RendererFlip fli)

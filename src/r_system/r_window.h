@@ -1,6 +1,7 @@
 #ifndef R_WINDOW_H
 #define R_WINDOW_H
-
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <SDL2/SDL.h>
 
 #include "r_entity/r_entity.h"
@@ -15,6 +16,7 @@ struct WindowComponent : public Component
 
   SDL_Window* window;
   SDL_Renderer* renderer;
+  SDL_GLContext context;
 
   WindowComponent();
 };

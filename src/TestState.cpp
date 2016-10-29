@@ -15,6 +15,10 @@
 #include "r_entity/r_queue.h"
 #include "r_utils/r_rng.h"
 
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+
 using namespace std;
 
 EntityID MAIN_WINDOW, BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTTILES, TESTPLAYER, TESTTEXTURE_1, TESTTEXT, TESTTEXT2, TESTTEXT3, FPSCOUNTER, FPSCOUNTERGLOBAL;
@@ -56,8 +60,8 @@ void TestState::Init(RGameEngine* game)
         _unicodeSymbolSystem.components[ANSI_437]->symbols.push_back((uint16_t)s);
     }
 
-    //setup font
     int pnt = 16;
+    //setup font
     _font = r_SDL::LoadFont("data/font/unifont-8.0.01.ttf", pnt);
 
     //load background texture and everything needed to render
