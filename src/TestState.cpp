@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <sstream>
 #include <vector>
+#include <array>
 #include <stdlib.h>
 #include <assert.h>
 #include "TestState.h"
@@ -20,12 +21,26 @@ EntityID MAIN_WINDOW, BACKGROUND_TEXTURE, UNICODE_TEXTURE, TESTTILES, TESTPLAYER
 int TEST_MESSAGE = 1;
 
 vector<EntityID> testchars;
+vector<ISystem *> systemlist;
 
 void TestState::Init(RGameEngine* game)
 {
+    //add Systems to the list
+    systemlist.push_back(&_windowSystem);
+    systemlist.push_back(&_spriteSystem);
+    systemlist.push_back(&_textureSystem);
+    systemlist.push_back(&_uiTextSystem);
+    systemlist.push_back(&_fgColorSystem);
+    systemlist.push_back(&_bgColorSystem);
+    systemlist.push_back(&_positionSystem);
+    systemlist.push_back(&_velocitySystem);
+    systemlist.push_back(&_dimensionsSystem);
+    systemlist.push_back(&_unicodeSymbolSystem);
+    systemlist.push_back(&_stringSystem);
+
     //initilize window
     _windowSystem.AddComponent(MAIN_WINDOW);
-
+    
     // file writing test
     string lstring = r_utils::UnicodeToHexString (UNICODE_LATIN_BASIC, ",") ;
     r_SDL::WriteFile( "data/raw/latin_basic", lstring.c_str() );
@@ -288,18 +303,11 @@ void TestState::Init(RGameEngine* game)
 
 void TestState::Cleanup(RGameEngine* game)
 {
-    _windowSystem.Cleanup();
-    _spriteSystem.Cleanup();
-    _textureSystem.Cleanup();
-    _fgColorSystem.Cleanup();
-    _bgColorSystem.Cleanup();
-    _positionSystem.Cleanup();
-    _velocitySystem.Cleanup();
-    _dimensionsSystem.Cleanup();
-    _unicodeSymbolSystem.Cleanup();
-    _stringSystem.Cleanup();
-    _uiTextSystem.Cleanup();
-
+    for( auto c : systemlist)
+    {
+        c->Cleanup();
+    }
+    systemlist.clear();
     SDL_StopTextInput();
 }
 

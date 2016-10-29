@@ -31,8 +31,14 @@ Entity* GetEntity(EntityID id); //returns pointer to the entity or NULL if Entit
 int NumEntities(); //retrns number of entities in the pool.
 int NumFree(); //returns number of free entities in the pool.
 
+struct ISystem
+{
+    public:
+        virtual void Cleanup() = 0;
+};
+
 //class for tracking system components
-template <typename C> struct System {
+template <typename C> struct System : public ISystem{
         std::map<EntityID, C *> components;
 
         virtual void AddComponent(Component *component, EntityID ownerID)

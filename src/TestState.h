@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <array>
 #include "r_utils/r_SDL.h"
 #include "r_engine/r_gamestate.h"
 #include "r_entity/r_entity.h"
