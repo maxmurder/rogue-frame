@@ -16,20 +16,34 @@ namespace r_framework
       virtual void Resume(RGameEngine* game) = 0;
       virtual void HandleEvents(RGameEngine* game) = 0;
       virtual void Update(RGameEngine* game) = 0;
+<<<<<<< HEAD
       virtual void Draw() = 0;
       
       virtual void Cleanup()
+=======
+      virtual void Draw(RGameEngine* game) = 0;
+      
+      virtual void Cleanup(RGameEngine* game)
+>>>>>>> c117f90... added framework for handling windows and input
       {
 	for(auto s : systems)
 	{
 	  s->Cleanup();
 	}
 	systems.clear();
+<<<<<<< HEAD
       };
     protected:
       RFramework(){};
       std::vector<ISystem*> systems;
       ~RFramework(){ Cleanup(); };
+=======
+      }
+    
+    protected:
+      RFramework(){};
+      std::vector<ISystem*> systems;
+>>>>>>> c117f90... added framework for handling windows and input
   };
 }
 #endif

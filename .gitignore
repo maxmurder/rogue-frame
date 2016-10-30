@@ -36,6 +36,6 @@
 *.kdev4*
 *.swp
 *.vscode
-
+*.kate-swp
 build/*
 bin/*
