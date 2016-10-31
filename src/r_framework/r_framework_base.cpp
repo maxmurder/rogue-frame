@@ -105,10 +105,7 @@ namespace r_framework {
   
   void r_framework_base::Cleanup()
   {
-    for(auto c : _sys_window.components)
-    {
-	_sys_window.FreeWindow(WINDOW);
-    }
+  	_sys_window.FreeWindow(WINDOW);
     SDL_StopTextInput();
     r_framework::RFramework::Cleanup();
   }

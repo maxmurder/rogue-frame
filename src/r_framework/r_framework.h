@@ -16,54 +16,20 @@ namespace r_framework
       virtual void Resume(RGameEngine* game) = 0;
       virtual void HandleEvents(RGameEngine* game) = 0;
       virtual void Update(RGameEngine* game) = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
       virtual void Draw() = 0;
-      
+
       virtual void Cleanup()
-=======
-      virtual void Draw(RGameEngine* game) = 0;
-=======
-      virtual void Draw() = 0;
->>>>>>> 349eb67... got text input working
-      
-<<<<<<< HEAD
-<<<<<<< HEAD
-      virtual void Cleanup(RGameEngine* game)
->>>>>>> c117f90... added framework for handling windows and input
-=======
-      void Cleanup()
->>>>>>> ba695ba... added mouse handling to the window framework
-=======
-      virtual void Cleanup()
->>>>>>> 3d49bb7... sdl now frees resorces
       {
-	for(auto s : systems)
-	{
-	  s->Cleanup();
-	}
-	systems.clear();
-<<<<<<< HEAD
-<<<<<<< HEAD
+            for(auto s : systems)
+            {
+            s->Cleanup();
+            }
+            systems.clear();
       };
     protected:
       RFramework(){};
       std::vector<ISystem*> systems;
       ~RFramework(){ Cleanup(); };
-=======
-      }
-    
-    protected:
-      RFramework(){};
-      std::vector<ISystem*> systems;
->>>>>>> c117f90... added framework for handling windows and input
-=======
-      };
-    protected:
-      RFramework(){};
-      std::vector<ISystem*> systems;
-      ~RFramework(){ Cleanup(); };
->>>>>>> ba695ba... added mouse handling to the window framework
   };
 }
 #endif
