@@ -1,12 +1,6 @@
 #ifndef R_WINDOW_H
 #define R_WINDOW_H
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
+
 #include <SDL2/SDL.h>
 
 #include "r_entity/r_entity.h"
@@ -21,7 +15,6 @@ struct WindowComponent : public Component
 
   SDL_Window* window;
   SDL_Renderer* renderer;
-  SDL_GLContext context;
 
   WindowComponent();
 };
@@ -42,7 +35,7 @@ struct WindowSystem : public System<WindowComponent>
   bool HasKeyboardFocus(EntityID ownerID); //returns true if window has keyboard focus
   bool IsMinimized(EntityID ownerID); //returns true if window is minimized
   bool IsShown(EntityID ownerID);  //returns true if window is shown
-  
+
   private:
     void InitWindow(EntityID ownerID, std::string title, int height, int width);
 };

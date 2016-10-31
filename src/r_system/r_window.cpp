@@ -10,12 +10,9 @@ void WindowSystem::AddComponent(EntityID ownerID, std::string title, int width, 
 
 void WindowSystem::InitWindow(EntityID ownerID, std::string title, int width, int height)
 {
-    
-    components[ownerID]->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    components[ownerID]->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if( components[ownerID]->window != NULL)
     {
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         components[ownerID]->name = title;
         components[ownerID]->mouseFocus = true;
         components[ownerID]->keyboardFocus = true;
@@ -32,13 +29,7 @@ void WindowSystem::InitWindow(EntityID ownerID, std::string title, int width, in
             SDL_SetRenderDrawColor(components[ownerID]->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
             components[ownerID]->windowID = SDL_GetWindowID(components[ownerID]->window);
             components[ownerID]->shown = true;
-	}
-	components[ownerID]->context = SDL_GL_CreateContext(components[ownerID]->window);
-	if( components[ownerID]->context == NULL )
-	{
-	    std::cout  << "Unable to create context :: " << SDL_GetError() << std::endl;
-	}
-	
+      }
     }else
     {
         std::cout << "Unable to create window :: " << SDL_GetError() << std::endl;
@@ -153,10 +144,8 @@ void WindowSystem::Render(EntityID ownerID)
         {
             SDL_SetRenderDrawColor( components[ownerID]->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
             SDL_RenderClear( components[ownerID]->renderer );
+
             SDL_RenderPresent( components[ownerID]->renderer );
-            //glClearColor(0xFF, 0xFF, 0xFF, 0xFF);
-            //glClear(GL_COLOR_BUFFER_BIT);
-            SDL_GL_SwapWindow(components[ownerID]->window);
         }
     }
 }
@@ -217,10 +206,6 @@ void WindowSystem::FreeWindow(EntityID ownerID)
         {
             SDL_DestroyWindow(components[ownerID]->window);
         }
-        if(components[ownerID]->context != NULL)
-	{
-	    SDL_GL_DeleteContext(components[ownerID]->context); 
-	}
         components[ownerID]->mouseFocus = false;
         components[ownerID]->keyboardFocus = false;
         components[ownerID]->height = 0;
@@ -241,5 +226,3 @@ WindowComponent::WindowComponent()
     height = 0;
     width = 0;
 }
-
-
