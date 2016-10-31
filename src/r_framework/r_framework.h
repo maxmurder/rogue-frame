@@ -24,11 +24,15 @@ namespace r_framework
       virtual void Draw(RGameEngine* game) = 0;
       
 <<<<<<< HEAD
+<<<<<<< HEAD
       virtual void Cleanup(RGameEngine* game)
 >>>>>>> c117f90... added framework for handling windows and input
 =======
       void Cleanup()
 >>>>>>> ba695ba... added mouse handling to the window framework
+=======
+      virtual void Cleanup()
+>>>>>>> 3d49bb7... sdl now frees resorces
       {
 	for(auto s : systems)
 	{

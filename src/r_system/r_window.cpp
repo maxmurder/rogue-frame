@@ -226,3 +226,5 @@ WindowComponent::WindowComponent()
     height = 0;
     width = 0;
 }
+
+

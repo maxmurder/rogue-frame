@@ -12,12 +12,12 @@
 #include "r_system/r_texture.h"
 #include "r_system/r_ui_text.h"
 #include "r_system/r_window.h"
-#include "r_framework/r_framework_window.h"
+#include "r_framework/r_framework_base.h"
 
 class TestState: public RGameState {
 
 	//frameworks
-	r_framework::r_framework_window _mainWindow;
+	r_framework::r_framework_base _mainWindow;
         //component systems
         SpriteSystem _spriteSystem;
         TextureSystem _textureSystem;
@@ -47,8 +47,6 @@ class TestState: public RGameState {
         SDL_Renderer* _renderer;
         SDL_Event _event;
         const Uint8* currentKeyStates;
-
-        r_time::RTime _time;
 
         EntityID ANSI_437;
         EntityID SPRITE_LATIN_UNI;
