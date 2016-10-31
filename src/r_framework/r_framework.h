@@ -23,14 +23,19 @@ namespace r_framework
 =======
       virtual void Draw(RGameEngine* game) = 0;
       
+<<<<<<< HEAD
       virtual void Cleanup(RGameEngine* game)
 >>>>>>> c117f90... added framework for handling windows and input
+=======
+      void Cleanup()
+>>>>>>> ba695ba... added mouse handling to the window framework
       {
 	for(auto s : systems)
 	{
 	  s->Cleanup();
 	}
 	systems.clear();
+<<<<<<< HEAD
 <<<<<<< HEAD
       };
     protected:
@@ -44,6 +49,13 @@ namespace r_framework
       RFramework(){};
       std::vector<ISystem*> systems;
 >>>>>>> c117f90... added framework for handling windows and input
+=======
+      };
+    protected:
+      RFramework(){};
+      std::vector<ISystem*> systems;
+      ~RFramework(){ Cleanup(); };
+>>>>>>> ba695ba... added mouse handling to the window framework
   };
 }
 #endif
