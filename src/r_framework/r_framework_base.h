@@ -1,7 +1,7 @@
 #ifndef R_FRAMEWORK_BASE
 #define R_FRAMEWORK_BASE
 
-#include<SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #include "r_framework.h"
 #include "r_engine/r_time.h"
 #include "r_system/r_window.h"
