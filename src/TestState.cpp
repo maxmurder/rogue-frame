@@ -428,7 +428,7 @@ int TestState::Draw(RGameEngine* game)
     wstring wsTemp(_baseFramework.Input()->begin(),_baseFramework.Input()->end());
     msg << wsTemp;
     _uiTextSystem.SetText(TESTINPUT, msg.str());
-    wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
+    wid = msg.str().length() < 25 ? _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length() : _dimensionsSystem.components[UNICODE_TEXTURE]->w * 25;
     _uiTextSystem.SetDisplayRect(TESTINPUT, {0 , ( _baseFramework.Dimensions().second / 2 ) + _dimensionsSystem.components[UNICODE_TEXTURE]->h, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
     
     //invoke render systems
