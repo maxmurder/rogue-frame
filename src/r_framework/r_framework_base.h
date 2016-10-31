@@ -12,6 +12,8 @@ namespace r_framework
   {
     int x, y, wheel_x, wheel_y;
     bool LB, MB, RB, X1, X2;
+    
+    R_MOUSESTATE();
   };
   
   class r_framework_base: public RFramework { 
@@ -23,6 +25,7 @@ namespace r_framework
     R_MOUSESTATE MouseState();
     std::pair<int,int> MousePosition();
     const Uint8* Keystates();
+    std::string* Input();
    
     r_time::RTime* Time();
     
@@ -31,7 +34,7 @@ namespace r_framework
     void Resume(RGameEngine* game){};
     void HandleEvents(RGameEngine* game);
     void Update(RGameEngine* game);
-    void Draw(RGameEngine* game);
+    void Draw();
     void Cleanup();
     r_framework_base();
       

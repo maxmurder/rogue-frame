@@ -19,6 +19,12 @@ namespace r_framework {
     return currentKeyStates;
   }
   
+  std::string* r_framework_base::Input()
+  {
+    return &_input;
+  }
+
+  
   SDL_Renderer* r_framework_base::Renderer()
   {
     return _sys_window.components[WINDOW]->renderer;
@@ -92,7 +98,7 @@ namespace r_framework {
     }
   }
   
-  void r_framework_base::Draw(RGameEngine* game)
+  void r_framework_base::Draw()
   {
     r_renderer::Render(_sys_window.components[WINDOW]->renderer);
   }
@@ -111,5 +117,18 @@ namespace r_framework {
   r_framework_base::r_framework_base()
   {
     systems.push_back(&_sys_window);
+  }
+  
+  R_MOUSESTATE::R_MOUSESTATE()
+  {
+    x = 0;
+    y = 0; 
+    wheel_x = 0;
+    wheel_y = 0;
+    LB = false;
+    MB = false;
+    RB = false;
+    X1 = false;
+    X2 = false;
   }
 }

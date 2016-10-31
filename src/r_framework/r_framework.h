@@ -16,7 +16,7 @@ namespace r_framework
       virtual void Resume(RGameEngine* game) = 0;
       virtual void HandleEvents(RGameEngine* game) = 0;
       virtual void Update(RGameEngine* game) = 0;
-      virtual void Draw(RGameEngine* game) = 0;
+      virtual void Draw() = 0;
       
       virtual void Cleanup()
       {
