@@ -18,18 +18,18 @@ namespace r_framework
       virtual void Update(RGameEngine* game) = 0;
       virtual void Draw(RGameEngine* game) = 0;
       
-      virtual void Cleanup(RGameEngine* game)
+      void Cleanup()
       {
 	for(auto s : systems)
 	{
 	  s->Cleanup();
 	}
 	systems.clear();
-      }
-    
+      };
     protected:
       RFramework(){};
       std::vector<ISystem*> systems;
+      ~RFramework(){ Cleanup(); };
   };
 }
 #endif

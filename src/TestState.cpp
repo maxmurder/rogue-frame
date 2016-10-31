@@ -30,7 +30,7 @@ vector<ISystem *> systemlist;
 void TestState::Init(RGameEngine* game)
 {
     //initilize frameworks
-    _mainFrame.Init(game);
+    _mainWindow.Init(game);
     //add Systems to the list
     systemlist.push_back(&_spriteSystem);
     systemlist.push_back(&_textureSystem);
@@ -65,12 +65,12 @@ void TestState::Init(RGameEngine* game)
     //load background texture and everything needed to render
     BACKGROUND_TEXTURE = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", BACKGROUND_TEXTURE), BACKGROUND_TEXTURE);
-    _textureSystem.LoadFromFile(BACKGROUND_TEXTURE, "data/gfx/checker.png", _mainFrame.Renderer());
+    _textureSystem.LoadFromFile(BACKGROUND_TEXTURE, "data/gfx/checker.png", _mainWindow.Renderer());
 
     //create rendered unicode sheet for basic latin set
     UNICODE_TEXTURE = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
-    _textureSystem.RenderUnicode(UNICODE_TEXTURE, _mainFrame.Renderer(), _font, &_unicodeSymbolSystem.components[ANSI_437]->symbols[0]);
+    _textureSystem.RenderUnicode(UNICODE_TEXTURE, _mainWindow.Renderer(), _font, &_unicodeSymbolSystem.components[ANSI_437]->symbols[0]);
 
     //create metadata for latin set
     _dimensionsSystem.AddComponent(r_component::Create("WHComponent", UNICODE_TEXTURE), UNICODE_TEXTURE);
@@ -103,18 +103,18 @@ void TestState::Init(RGameEngine* game)
     //create the tileset
     TESTTILES = CreateEntity();
     _textureSystem.AddComponent(r_component::Create("TextureComponent", TESTTILES), TESTTILES);
-    _textureSystem.LoadFromFile(TESTTILES, tileScript.Get<string>("file"), _mainFrame.Renderer(), {0xFF, 0x00, 0xFF, 0xFF});
+    _textureSystem.LoadFromFile(TESTTILES, tileScript.Get<string>("file"), _mainWindow.Renderer(), {0xFF, 0x00, 0xFF, 0xFF});
 
 
     //create "player" entity
     TESTPLAYER = CreateEntity();
 
     _textureSystem.AddComponent(r_component::Create("TextureComponent", TESTPLAYER), TESTPLAYER);
-    _textureSystem.LoadFromFile(TESTPLAYER, "data/gfx/curses_square_16x16.png", _mainFrame.Renderer(), {0xFF,0x00,0xFF,0xFF});
+    _textureSystem.LoadFromFile(TESTPLAYER, "data/gfx/curses_square_16x16.png", _mainWindow.Renderer(), {0xFF,0x00,0xFF,0xFF});
 
     _positionSystem.AddComponent(r_component::Create("XYZComponent", TESTPLAYER), TESTPLAYER);
-    _positionSystem.components[TESTPLAYER]->x = _mainFrame.Dimensions().first / 2;
-    _positionSystem.components[TESTPLAYER]->y = _mainFrame.Dimensions().second / 2;
+    _positionSystem.components[TESTPLAYER]->x = _mainWindow.Dimensions().first / 2;
+    _positionSystem.components[TESTPLAYER]->y = _mainWindow.Dimensions().second / 2;
 
     _velocitySystem.AddComponent(r_component::Create("XYZComponent", TESTPLAYER), TESTPLAYER);
     _velocitySystem.components[TESTPLAYER]->x = 0;
@@ -157,7 +157,7 @@ void TestState::Init(RGameEngine* game)
     _uiTextSystem.AddComponent(FPSCOUNTER,
                                 _textureSystem.components[UNICODE_TEXTURE]->texture,
                                 charframes,
-                                {_mainFrame.Dimensions().first,0,_dimensionsSystem.components[UNICODE_TEXTURE]->w,_dimensionsSystem.components[UNICODE_TEXTURE]->h},
+                                {_mainWindow.Dimensions().first,0,_dimensionsSystem.components[UNICODE_TEXTURE]->w,_dimensionsSystem.components[UNICODE_TEXTURE]->h},
                                 L"",
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
@@ -167,7 +167,7 @@ void TestState::Init(RGameEngine* game)
     _uiTextSystem.AddComponent(FPSCOUNTERGLOBAL,
                                 _textureSystem.components[UNICODE_TEXTURE]->texture,
                                 charframes,
-                                {_mainFrame.Dimensions().first,0,_dimensionsSystem.components[UNICODE_TEXTURE]->w,_dimensionsSystem.components[UNICODE_TEXTURE]->h},
+                                {_mainWindow.Dimensions().first,0,_dimensionsSystem.components[UNICODE_TEXTURE]->w,_dimensionsSystem.components[UNICODE_TEXTURE]->h},
                                 L"",
                                 {0x80, 0x00, 0xFF, 0xFF},
                                 {0x00, 0x00, 0x00, 0xFF});
@@ -293,8 +293,8 @@ void TestState::Init(RGameEngine* game)
     resetiosflags; cout.precision(p);
 
     //randomize player velocity
-    _velocitySystem.components[TESTPLAYER]->x = r_rng::rng_float(0.0, 1000.0) * _time.Delta();
-    _velocitySystem.components[TESTPLAYER]->y = r_rng::rng_float(0.0, 1000.0) * _time.Delta();
+    _velocitySystem.components[TESTPLAYER]->x = r_rng::normal(250.0, 10.0) * _time.Delta();
+    _velocitySystem.components[TESTPLAYER]->y = r_rng::normal(0.0,100.0) * _time.Delta();
 
     //finishing up
     TTF_CloseFont(_font);
@@ -304,6 +304,7 @@ void TestState::Init(RGameEngine* game)
 
 void TestState::Cleanup(RGameEngine* game)
 {
+    _mainWindow.Cleanup();
     for( auto c : systemlist)
     {
         c->Cleanup();
@@ -316,10 +317,10 @@ void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
 int TestState::HandleEvents(RGameEngine* game)
 {
-    _mainFrame.HandleEvents(game);
+    _mainWindow.HandleEvents(game);
     
     static bool sp_down;
-    if ( _mainFrame.Keystates()[SDL_SCANCODE_SPACE] )
+    if ( _mainWindow.Keystates()[SDL_SCANCODE_SPACE] )
     {
         if(!sp_down)
         {
@@ -336,20 +337,25 @@ int TestState::HandleEvents(RGameEngine* game)
     }else{
         sp_down = false;
     }
+    if ( _mainWindow.MouseState().LB )
+    {
+      _positionSystem.components[TESTPLAYER]->x = _mainWindow.MouseState().x;
+      _positionSystem.components[TESTPLAYER]->y = _mainWindow.MouseState().y;
+    }
     
-    if (  _mainFrame.Keystates()[SDL_SCANCODE_UP] )
+    if (  _mainWindow.Keystates()[SDL_SCANCODE_UP] )
     {
         _velocitySystem.components[TESTPLAYER]->y -= 1000 * game->GlobalDelta();
     }
-    if (  _mainFrame.Keystates()[SDL_SCANCODE_DOWN] )
+    if (  _mainWindow.Keystates()[SDL_SCANCODE_DOWN] )
     {
         _velocitySystem.components[TESTPLAYER]->y += 1000 * game->GlobalDelta();
     }
-    if (  _mainFrame.Keystates()[SDL_SCANCODE_LEFT] )
+    if (  _mainWindow.Keystates()[SDL_SCANCODE_LEFT] )
     {
         _velocitySystem.components[TESTPLAYER]->x -= 1000 * game->GlobalDelta();
     }
-    if (  _mainFrame.Keystates()[SDL_SCANCODE_RIGHT] )
+    if (  _mainWindow.Keystates()[SDL_SCANCODE_RIGHT] )
     {
         _velocitySystem.components[TESTPLAYER]->x += 1000 * game->GlobalDelta();
     }
@@ -375,14 +381,14 @@ int TestState::Update(RGameEngine* game)
     }
 
     //keep player in bounds
-    if( _positionSystem.components[TESTPLAYER]->x > _mainFrame.Dimensions().first - _dimensionsSystem.components[TESTPLAYER]->w)
+    if( _positionSystem.components[TESTPLAYER]->x > _mainWindow.Dimensions().first - _dimensionsSystem.components[TESTPLAYER]->w)
     {
         _velocitySystem.components[TESTPLAYER]->x = -1 * fabs(_velocitySystem.components[TESTPLAYER]->x);
     }else if ( _positionSystem.components[TESTPLAYER]->x < 0)
     {
         _velocitySystem.components[TESTPLAYER]->x = fabs(_velocitySystem.components[TESTPLAYER]->x);
     }
-    if( _positionSystem.components[TESTPLAYER]->y > _mainFrame.Dimensions().second - _dimensionsSystem.components[TESTPLAYER]->h)
+    if( _positionSystem.components[TESTPLAYER]->y > _mainWindow.Dimensions().second - _dimensionsSystem.components[TESTPLAYER]->h)
     {
         _velocitySystem.components[TESTPLAYER]->y = -1 * fabs(_velocitySystem.components[TESTPLAYER]->y);
     }else if ( _positionSystem.components[TESTPLAYER]->y < 0)
@@ -404,13 +410,13 @@ int TestState::Draw(RGameEngine* game)
     msg << L"TPS: " << fixed << 1/_time.Delta() << L" FTPS: " << 1/game->FixedUpdateDelta() << L" MS: " << _time.ElapsedTime();
     _uiTextSystem.SetText(FPSCOUNTER, msg.str());
     int wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
-    _uiTextSystem.SetDisplayRect(FPSCOUNTER, { _mainFrame.Dimensions().first - wid, 0, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
+    _uiTextSystem.SetDisplayRect(FPSCOUNTER, { _mainWindow.Dimensions().first - wid, 0, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
 
     msg.str(L"");
     msg << L"FPS: " << fixed << 1/game->GlobalDelta() << L" MS: " << fixed << game->GlobalMS();
     _uiTextSystem.SetText(FPSCOUNTERGLOBAL, msg.str());
     wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
-    _uiTextSystem.SetDisplayRect(FPSCOUNTERGLOBAL, { _mainFrame.Dimensions().first - wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
+    _uiTextSystem.SetDisplayRect(FPSCOUNTERGLOBAL, { _mainWindow.Dimensions().first - wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});
 
     //invoke render systems
     _uiTextSystem.Render();
@@ -419,7 +425,7 @@ int TestState::Draw(RGameEngine* game)
     //draw the background
     r_renderer::AddToQueue(_textureSystem.components[BACKGROUND_TEXTURE]->texture,{0,0,640,480},{0,0,640,480});
 
-    _mainFrame.Draw(game);
+    _mainWindow.Draw(game);
 
     return 0;
 }

@@ -12,14 +12,13 @@
 #include "r_system/r_texture.h"
 #include "r_system/r_ui_text.h"
 #include "r_system/r_window.h"
-#include "r_framework/r_framework_main.h"
+#include "r_framework/r_framework_window.h"
 
 class TestState: public RGameState {
 
 	//frameworks
-	r_framework::r_framework_main _mainFrame;
+	r_framework::r_framework_window _mainWindow;
         //component systems
-  //      WindowSystem _windowSystem;
         SpriteSystem _spriteSystem;
         TextureSystem _textureSystem;
         UITextSystem _uiTextSystem;
