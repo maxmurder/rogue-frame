@@ -17,11 +17,15 @@ namespace r_framework
       virtual void HandleEvents(RGameEngine* game) = 0;
       virtual void Update(RGameEngine* game) = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
       virtual void Draw() = 0;
       
       virtual void Cleanup()
 =======
       virtual void Draw(RGameEngine* game) = 0;
+=======
+      virtual void Draw() = 0;
+>>>>>>> 349eb67... got text input working
       
 <<<<<<< HEAD
 <<<<<<< HEAD
