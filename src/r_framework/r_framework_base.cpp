@@ -1,35 +1,40 @@
-#include "r_framework_window.h"
+#include "r_framework_base.h"
 #include "r_utils/r_renderer.h"
 
 namespace r_framework {
   
-  std::pair< int, int > r_framework_window::MousePosition()
+  std::pair< int, int > r_framework_base::MousePosition()
   {
     return std::make_pair(_mousestate.x,_mousestate.y);
   }
   
-  R_MOUSESTATE r_framework_window::MouseState()
+  R_MOUSESTATE r_framework_base::MouseState()
   {
     return _mousestate;
   }
 
 
-  const Uint8* r_framework_window::Keystates()
+  const Uint8* r_framework_base::Keystates()
   {
     return currentKeyStates;
   }
   
-  SDL_Renderer* r_framework_window::Renderer()
+  SDL_Renderer* r_framework_base::Renderer()
   {
     return _sys_window.components[WINDOW]->renderer;
   }
   
-  std::pair<int, int> r_framework_window::Dimensions()
+  std::pair<int, int> r_framework_base::Dimensions()
   {
     return std::make_pair(_sys_window.GetWidth(WINDOW), _sys_window.GetHeight(WINDOW) );
   }
+  
+  r_time::RTime* r_framework_base::Time()
+  {
+    return &_time;
+  }
 
-  void r_framework_window::Init(RGameEngine* game)
+  void r_framework_base::Init(RGameEngine* game)
   {
     WINDOW = CreateEntity();
     _sys_window.AddComponent(WINDOW);
@@ -37,7 +42,12 @@ namespace r_framework {
     SDL_StartTextInput();
   }
   
-  void r_framework_window::HandleEvents(RGameEngine* game)
+  void r_framework_base::Update(RGameEngine* game)
+  {
+    _time.Update();
+  }
+  
+  void r_framework_base::HandleEvents(RGameEngine* game)
   {
     while ( SDL_PollEvent( &_event ) )
     {
@@ -82,12 +92,23 @@ namespace r_framework {
     }
   }
   
-  void r_framework_window::Draw(RGameEngine* game)
+  void r_framework_base::Draw(RGameEngine* game)
   {
     r_renderer::Render(_sys_window.components[WINDOW]->renderer);
   }
+  
+  void r_framework_base::Cleanup()
+  {
+    for(auto c : _sys_window.components)
+    {
+	_sys_window.FreeWindow(WINDOW);
+    }
+    SDL_StopTextInput();
+    r_framework::RFramework::Cleanup();
+  }
 
-  r_framework_window::r_framework_window()
+
+  r_framework_base::r_framework_base()
   {
     systems.push_back(&_sys_window);
   }

@@ -1,5 +1,5 @@
-#ifndef R_FRAMEWORK_WINDOW
-#define R_FRAMEWORK_WINDOW
+#ifndef R_FRAMEWORK_BASE
+#define R_FRAMEWORK_BASE
 
 #include<SDL2/SDL.h>
 #include "r_framework.h"
@@ -14,23 +14,26 @@ namespace r_framework
     bool LB, MB, RB, X1, X2;
   };
   
-  class r_framework_window: public RFramework { 
+  class r_framework_base: public RFramework { 
     
   public:
     SDL_Renderer* Renderer();
     std::pair<int,int> Dimensions();
+    
     R_MOUSESTATE MouseState();
     std::pair<int,int> MousePosition();
     const Uint8* Keystates();
-
+   
+    r_time::RTime* Time();
     
     void Init(RGameEngine* game);
     void Pause(RGameEngine* game){};
     void Resume(RGameEngine* game){};
     void HandleEvents(RGameEngine* game);
-    void Update(RGameEngine* game){};
+    void Update(RGameEngine* game);
     void Draw(RGameEngine* game);
-    r_framework_window();
+    void Cleanup();
+    r_framework_base();
       
   private:
     WindowSystem _sys_window;

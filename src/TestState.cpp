@@ -9,7 +9,6 @@
 #include "r_utils/r_SDL.h"
 #include "r_utils/r_utils.h"
 #include "r_utils/r_renderer.h"
-#include "r_engine/r_time.h"
 #include "r_utils/r_lua.h"
 #include "r_entity/r_message.h"
 #include "r_entity/r_queue.h"
@@ -293,12 +292,11 @@ void TestState::Init(RGameEngine* game)
     resetiosflags; cout.precision(p);
 
     //randomize player velocity
-    _velocitySystem.components[TESTPLAYER]->x = r_rng::normal(250.0, 10.0) * _time.Delta();
-    _velocitySystem.components[TESTPLAYER]->y = r_rng::normal(0.0,100.0) * _time.Delta();
+    _velocitySystem.components[TESTPLAYER]->x = r_rng::normal(250.0, 10.0) * _mainWindow.Time()->Delta();
+    _velocitySystem.components[TESTPLAYER]->y = r_rng::normal(0.0,100.0) * _mainWindow.Time()->Delta();
 
     //finishing up
     TTF_CloseFont(_font);
-    SDL_StartTextInput();
     game->UPDATE_MS = testScript.Get<float>("framerate");
 }
 
@@ -310,7 +308,6 @@ void TestState::Cleanup(RGameEngine* game)
         c->Cleanup();
     }
     systemlist.clear();
-    SDL_StopTextInput();
 }
 
 void TestState::Pause(RGameEngine* game){}
@@ -365,7 +362,7 @@ int TestState::HandleEvents(RGameEngine* game)
 int TestState::Update(RGameEngine* game)
 {
     //update local time
-    _time.Update();
+    _mainWindow.Time()->Update();
 
     //update sprite animations
     _spriteSystem.Update(game->UPDATE_MS);
@@ -407,7 +404,7 @@ int TestState::Draw(RGameEngine* game)
 {
     wstringstream msg;
     msg.precision(2);
-    msg << L"TPS: " << fixed << 1/_time.Delta() << L" FTPS: " << 1/game->FixedUpdateDelta() << L" MS: " << _time.ElapsedTime();
+    msg << L"TPS: " << fixed << 1/_mainWindow.Time()->Delta() << L" FTPS: " << 1/game->FixedUpdateDelta() << L" MS: " << _mainWindow.Time()->ElapsedTime();
     _uiTextSystem.SetText(FPSCOUNTER, msg.str());
     int wid = _dimensionsSystem.components[UNICODE_TEXTURE]->w * msg.str().length();
     _uiTextSystem.SetDisplayRect(FPSCOUNTER, { _mainWindow.Dimensions().first - wid, 0, wid, _dimensionsSystem.components[UNICODE_TEXTURE]->h});

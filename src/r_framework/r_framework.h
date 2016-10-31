@@ -18,7 +18,7 @@ namespace r_framework
       virtual void Update(RGameEngine* game) = 0;
       virtual void Draw(RGameEngine* game) = 0;
       
-      void Cleanup()
+      virtual void Cleanup()
       {
 	for(auto s : systems)
 	{
