@@ -1,7 +1,12 @@
 #ifndef R_WINDOW_H
 #define R_WINDOW_H
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 #include <SDL2/SDL.h>
 
 #include "r_entity/r_entity.h"

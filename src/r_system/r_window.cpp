@@ -154,9 +154,9 @@ void WindowSystem::Render(EntityID ownerID)
             SDL_SetRenderDrawColor( components[ownerID]->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
             SDL_RenderClear( components[ownerID]->renderer );
             SDL_RenderPresent( components[ownerID]->renderer );
-	    glClearColor(0xFF, 0xFF, 0xFF, 0xFF);
-	    glClear(GL_COLOR_BUFFER_BIT);
-	    SDL_GL_SwapWindow(components[ownerID]->window);
+            //glClearColor(0xFF, 0xFF, 0xFF, 0xFF);
+            //glClear(GL_COLOR_BUFFER_BIT);
+            SDL_GL_SwapWindow(components[ownerID]->window);
         }
     }
 }

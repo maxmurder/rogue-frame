@@ -14,9 +14,6 @@
 #include "r_entity/r_queue.h"
 #include "r_utils/r_rng.h"
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-
 
 using namespace std;
 
