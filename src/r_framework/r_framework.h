@@ -22,14 +22,15 @@ namespace r_framework
       {
             for(auto s : systems)
             {
-            s->Cleanup();
+              s->Cleanup();
             }
             systems.clear();
       };
     protected:
       RFramework(){};
-      std::vector<ISystem*> systems;
       ~RFramework(){ Cleanup(); };
+      std::vector<ISystem*> systems;
+      void AddSystem(ISystem* system) {systems.push_back(system);}
   };
 }
 #endif
