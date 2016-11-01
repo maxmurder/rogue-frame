@@ -2,6 +2,7 @@
 #define R_FRAMEWORK_BASE
 
 #include <SDL2/SDL.h>
+#include <vector>
 #include "r_framework.h"
 #include "r_engine/r_time.h"
 #include "r_system/r_window.h"
@@ -26,19 +27,19 @@ namespace r_framework
     std::pair<int,int> MousePosition();
     const Uint8* Keystates();
     std::string* Input();
-   
     r_time::RTime* Time();
     
     void Init(RGameEngine* game);
-    void Pause(RGameEngine* game){};
-    void Resume(RGameEngine* game){};
-    void HandleEvents(RGameEngine* game);
-    void Update(RGameEngine* game);
+    void Pause(){};
+    void Resume(){};
+    void HandleEvents();
+    void Update();
     void Draw();
     void Cleanup();
     r_framework_base();
       
   private:
+    RGameEngine* _game;
     WindowSystem _sys_window;
     SDL_Event _event;
     const Uint8* currentKeyStates;

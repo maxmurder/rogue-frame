@@ -12,10 +12,10 @@ namespace r_framework
   {
     public:
       virtual void Init(RGameEngine* game) = 0;
-      virtual void Pause(RGameEngine* game) = 0;
-      virtual void Resume(RGameEngine* game) = 0;
-      virtual void HandleEvents(RGameEngine* game) = 0;
-      virtual void Update(RGameEngine* game) = 0;
+      virtual void Pause() = 0;
+      virtual void Resume() = 0;
+      virtual void HandleEvents() = 0;
+      virtual void Update() = 0;
       virtual void Draw() = 0;
 
       virtual void Cleanup()

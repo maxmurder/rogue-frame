@@ -42,27 +42,28 @@ namespace r_framework {
 
   void r_framework_base::Init(RGameEngine* game)
   {
+    _game = game;
     WINDOW = CreateEntity();
     _sys_window.AddComponent(WINDOW);
     currentKeyStates = SDL_GetKeyboardState(NULL);
     SDL_StartTextInput();
   }
   
-  void r_framework_base::Update(RGameEngine* game)
+  void r_framework_base::Update()
   {
     _time.Update();
   }
   
-  void r_framework_base::HandleEvents(RGameEngine* game)
+  void r_framework_base::HandleEvents()
   {
     while ( SDL_PollEvent( &_event ) )
     {
       if( _event.type == SDL_QUIT )
       {
-	game->Quit();
+	      _game->Quit();
       }else if ( _event.type == SDL_MOUSEMOTION )
       {
-	SDL_GetMouseState(&_mousestate.x, &_mousestate.y);
+	      SDL_GetMouseState(&_mousestate.x, &_mousestate.y);
       }else if ( _event.type == SDL_MOUSEBUTTONDOWN || _event.type == SDL_MOUSEBUTTONUP )
       {
 	switch ( _event.button.button ) {
@@ -84,12 +85,12 @@ namespace r_framework {
 	}
       }else if (_event.type == SDL_MOUSEWHEEL)
       {
-	_mousestate.wheel_x += _event.wheel.x;
-	_mousestate.wheel_y += _event.wheel.y;
+        _mousestate.wheel_x += _event.wheel.x;
+        _mousestate.wheel_y += _event.wheel.y;
       }
       if ( currentKeyStates[SDL_SCANCODE_ESCAPE] )
       {
-	game->Quit();
+	      _game->Quit();
       }
       //get keyboard text input
       _input = r_SDL::TextInputHandler(_event, _input);

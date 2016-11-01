@@ -319,7 +319,7 @@ void TestState::Pause(RGameEngine* game){}
 void TestState::Resume(RGameEngine* game){}
 int TestState::HandleEvents(RGameEngine* game)
 {
-    _baseFramework.HandleEvents(game);
+    _baseFramework.HandleEvents();
     
     static bool sp_down;
     if ( _baseFramework.Keystates()[SDL_SCANCODE_SPACE] )
