@@ -12,6 +12,7 @@ namespace r_framework
 
     class r_framework_drawing : public RFramework {
         public:
+
         void Init(RGameEngine* game);
         void Pause(){};
         void Resume(){};

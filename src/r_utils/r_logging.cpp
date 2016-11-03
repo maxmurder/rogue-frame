@@ -2,9 +2,6 @@
 #include "r_engine/r_time.h"
 namespace r_logging
 {
-    #define Log(level) \
-    if (level > Log::ReportingLevel()) ; \
-    else Log().Get(level)
     std::ostringstream& Log::Get(LogLevel level)
     {
         ostream << "- " << r_time::system_time();
@@ -13,6 +10,7 @@ namespace r_logging
         messageLevel = level;
         return ostream;
     }
+
     Log::~Log()
     {
         //OutputPolicy::Output(ostream.str());
@@ -24,6 +22,11 @@ namespace r_logging
     LogLevel& Log::ReportLevel()
     {
         return messageLevel;
+    }
+
+    Log::Log()
+    {
+
     }
 /*
     inline FILE*& Output_File::Stream()
