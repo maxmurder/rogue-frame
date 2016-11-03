@@ -302,8 +302,8 @@ void TestState::Init(RGameEngine* game)
     _velocitySystem.components[TESTPLAYER]->y = r_rng::normal(0.0,100.0) * _baseFramework.Time()->Delta();
 
     //test logging
-    r_logging::Log::ReportLevel() = r_logging::DEBUG;
-    r_logging::Log().Get(r_logging::DEBUG) << "Test!";
+    r_logging::LogLevel loglevel = r_logging::DEBUG;
+    r_logging::Log(r_logging::DEBUG) << "Test!";
 
     //finishing up
     TTF_CloseFont(_font);

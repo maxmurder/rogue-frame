@@ -7,39 +7,28 @@ namespace  r_logging
 {
     enum LogLevel{ ERROR, WARNING, INFO, DEBUG };
 
-   // static void OutputPolicy(const std::string& msg);
-    static LogLevel messageLevel;
     class Log 
     {
-        private:
-        Log(const Log&);
-        Log& operator = (const Log&);
-        //#define Log(level) \
-        if (level > Log::ReportingLevel()) ; \
-        else Log().Get(level)
-
         public:
         static LogLevel& ReportLevel();            
-        Log();
+        Log(LogLevel level = ERROR);
+        template<typename T>
+        Log & operator<<(T const & value)
+        {
+            ostream << value;
+            return *this;
+        }
         ~Log();
-        std::ostringstream& Get(LogLevel level = INFO);
 
         protected:
-            std::ostringstream ostream;
-    };
-/*
-    class Output_File 
-    {
-        public:
-        static FILE*& Stream();
-        static void Output(const std::string& msg);
+        std::ostringstream ostream;
     };
 
-    typedef Log<Output_File> FileLog;
-    #define FILE_LOG(level) \
-    if (level < FileLog::ReportLevel() || !Output_File::Stream()) ; \
-    else FileLog().Get(messageLevel);
-*/
+    extern LogLevel loglevel;
+
+//    #define LOG(level) \
+    if (level > loglevel) ;\
+    else log(level)
 }
 
 #endif 
