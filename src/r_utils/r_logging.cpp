@@ -5,8 +5,7 @@ namespace r_logging
     #define Log(level) \
     if (level > Log::ReportingLevel()) ; \
     else Log().Get(level)
-    template <typename OutputPolicy>
-    std::ostringstream& Log<OutputPolicy>::Get(LogLevel level)
+    std::ostringstream& Log::Get(LogLevel level)
     {
         ostream << "- " << r_time::system_time();
         ostream << " " << level << ": ";
@@ -14,12 +13,19 @@ namespace r_logging
         messageLevel = level;
         return ostream;
     }
-    template <typename OutputPolicy>
-    Log<OutputPolicy>::~Log<OutputPolicy>()
+    Log::~Log()
     {
-        OutputPolicy::Output(ostream.str());
+        //OutputPolicy::Output(ostream.str());
+        ostream << std::endl;
+        fprintf(stderr, "%s", ostream.str().c_str());
+        fflush(stderr);
     }
 
+    LogLevel& Log::ReportLevel()
+    {
+        return messageLevel;
+    }
+/*
     inline FILE*& Output_File::Stream()
     {
         static FILE* stream = stderr;
@@ -34,4 +40,5 @@ namespace r_logging
         fprintf(stream, "%s", msg.c_str());
         fflush(stream);
     }
+    */
 }

@@ -13,6 +13,7 @@
 #include "r_entity/r_message.h"
 #include "r_entity/r_queue.h"
 #include "r_utils/r_rng.h"
+#include "r_utils/r_logging.h"
 
 using namespace std;
 
@@ -299,6 +300,10 @@ void TestState::Init(RGameEngine* game)
     //randomize player velocity
     _velocitySystem.components[TESTPLAYER]->x = r_rng::normal(250.0, 1.0) * _baseFramework.Time()->Delta();
     _velocitySystem.components[TESTPLAYER]->y = r_rng::normal(0.0,100.0) * _baseFramework.Time()->Delta();
+
+    //test logging
+    r_logging::Log::ReportLevel() = r_logging::DEBUG;
+    r_logging::Log().Get(r_logging::DEBUG) << "Test!";
 
     //finishing up
     TTF_CloseFont(_font);
