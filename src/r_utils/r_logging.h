@@ -1,10 +1,14 @@
 /*
 * Simple logging utility script:
 * Usage:
-* const r_logging::ELogLevel loglevel = r_logging::DEBUG; //Set loglevel threshold
-* R_LOG(r_logging::DEBUG) << "Message to output"; //Call the R_LOG() macro
+* const r_logging::ELogLevel loglevel = r_logging::DEBUG; //Set loglevel threshold.
+* R_LOG(r_logging::DEBUG) << "Message to output"; //Call the R_LOG() and construct the message.
+* NOTE: You must define a loglevel before calling the R_LOG macro. Superfluous calls to R_LOG will be omitted by the pre-compiler.
 *
-* Alternatively you may call Log() directly
+* Alternatively you may call Log() directly.
+* Usage:
+* r_logging::Log(r_logging::DEBUG) << "Message to output";
+* NOTE: Calling Log directly removes the requirement to define a loglevel. Direct calls to Log() will always be executed.
 */
 
 #ifndef  R_LOGGING_H
@@ -15,13 +19,13 @@
 
 namespace  r_logging
 {
-    enum ELogLevel{ ERROR, WARNING, INFO, DEBUG };
+    enum ELogLevel{ ERROR, WARNING, INFO, DEBUG }; // Enum of possible LogLevels
 
     class Log 
     {
         public:      
         Log(ELogLevel level = ERROR); 
-        // set << operator to allow atomic concatination ie std::cout
+        // << operator to allow atomic concatination ie std::cout
         template<typename T>
         Log & operator<<(T const & value)
         {
