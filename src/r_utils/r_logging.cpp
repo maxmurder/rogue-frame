@@ -4,14 +4,21 @@
 
 namespace r_logging
 {
-    Log::Log(LogLevel level)
+    static const char* ELogLevelStrings[] = { "ERROR", "WARNING", "INFO", "DEBUG" }; // human readable strings for ELogLevel values
+    //returns human readable name for the ELogLevel values.
+    const char* EtoString(ELogLevel enumVal)
     {
-        ostream << level;
-        ostream << " - " << r_time::system_time();
-        ostream << " " << level << ": ";
-        ostream << std::string( level > DEBUG ? 0 : level - DEBUG, '\t');
+        return ELogLevelStrings[enumVal];
     }
 
+    //Constructs the log prefix information
+    Log::Log(ELogLevel level)
+    {
+        ostream << EtoString(level);
+        ostream << " - " << r_time::system_time() << ": ";    
+    }
+
+    //Passes the output stream to std::cerr
     Log::~Log()
     {
         ostream << std::endl;
