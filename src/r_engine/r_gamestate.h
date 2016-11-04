@@ -3,7 +3,7 @@
 
 #include "r_engine.h"
 
-class RGameState //base class for game states
+class RGameState
 {
     public:
     virtual void Init(RGameEngine* game) = 0;
