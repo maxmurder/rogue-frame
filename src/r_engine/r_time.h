@@ -5,6 +5,9 @@ namespace r_time
 {
     unsigned system_time(); //returns the system time
 
+    /* 
+    * Simple time keeping class.
+    */
     class RTime
     {
         public:

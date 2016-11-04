@@ -27,7 +27,13 @@ namespace r_component
     void Destroy(const Component* comp); //destroy component function
 }
 
-//  Component registry macro 
+/* 
+* Component registry macro
+* When defining a new component type use this macro to register it.
+* Usage:
+*   struct SomeComponent : public Component {}; // define the component struct.
+*   COMPONENT_REGISTER(SomeComponent, "SomeComponent"); // register the component for use by systems.
+*/
 #define COMPONENT_REGISTER(TYPE, NAME)                                                                                  \
     namespace r_component {                                                                                             \
     namespace r_component_detail {                                                                                      \

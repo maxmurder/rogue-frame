@@ -1,3 +1,7 @@
+/*
+* Helper functions & classes for r_component
+*/
+
 #ifndef R_COMPONENT_DETAIL_H
 #define R_COMPONENT_DETAIL_H    
 
@@ -14,18 +18,19 @@ namespace r_component
     {
         typedef Component *(*CreateComponentFunction)();
         typedef std::map<std::string, CreateComponentFunction> ComponentRegistry;
-    
+        // Component registry
         inline ComponentRegistry& GetComponentRegistry()
         {
             static ComponentRegistry reg;
             return reg;
         }
-        
+        //Component istantiation helper
         template<class T> Component* CreateComponent() 
         {
             return new T; //actually create the component
         }
         
+        //RegistryEntry item struct
         template<class T> struct RegistryEntry
         {
             public:

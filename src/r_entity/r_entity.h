@@ -31,6 +31,7 @@ Entity* GetEntity(EntityID id); //returns pointer to the entity or NULL if Entit
 int NumEntities(); //retrns number of entities in the pool.
 int NumFree(); //returns number of free entities in the pool.
 
+//System interface class
 struct ISystem
 {
     public:
