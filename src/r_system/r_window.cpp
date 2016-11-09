@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "r_window.h"
+#include "r_utils/r_logging.h"
 
 void WindowSystem::AddComponent(EntityID ownerID, std::string title, int width, int height)
 {
@@ -21,7 +22,7 @@ void WindowSystem::InitWindow(EntityID ownerID, std::string title, int width, in
         components[ownerID]->renderer = SDL_CreateRenderer(components[ownerID]->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         if(components[ownerID]->renderer == NULL)
         {
-            std::cout << "Unable to create renderer :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Unable to create renderer :: " << SDL_GetError();
             SDL_DestroyWindow(components[ownerID]->window);
             components[ownerID]->window = NULL;
         }else
@@ -32,7 +33,7 @@ void WindowSystem::InitWindow(EntityID ownerID, std::string title, int width, in
       }
     }else
     {
-        std::cout << "Unable to create window :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to create window :: " << SDL_GetError();
     }
 }
 

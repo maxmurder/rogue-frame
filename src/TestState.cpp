@@ -13,6 +13,7 @@
 #include "r_entity/r_message.h"
 #include "r_entity/r_queue.h"
 #include "r_utils/r_rng.h"
+#include "r_utils/r_logging.h"
 
 using namespace std;
 

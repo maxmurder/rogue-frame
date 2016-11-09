@@ -7,10 +7,25 @@ elif GetOption('mac'):
     from scons import mac_build as c
 else:
     from scons import linux_build as c
- 
+
 c.cppflags.extend(['-O0', '-g','-std=c++1y'])
 c.cppflags.extend(['-Wall', '-Wextra'])
- 
+
+AddOption('--log_level',
+    dest='log_level',
+    type='string',
+    nargs=1,
+    action='store',
+    help='logging level')
+
+loglevel = GetOption('log_level')
+if(loglevel == 'warn'):
+    c.cppdefines.append(('R_LOG_LEVEL',1))
+elif (loglevel =='info'):
+    c.cppdefines.append(('R_LOG_LEVEL',2))
+elif (loglevel =='debug'):
+    c.cppdefines.append(('R_LOG_LEVEL',3))
+
 target   = '#/bin/test' + c.targetSuffix
 cppFiles = [Glob('*.cpp') +
             Glob('*/*.cpp')]
@@ -20,6 +35,7 @@ app = env.Program(target, cppFiles,
                   CPPPATH   = c.sourcepaths,
                   CPPFLAGS  = c.cppflags,
                   LINKFLAGS = c.linkflags,
-                  LIBS      = c.libs)
+                  LIBS      = c.libs,
+                  CPPDEFINES = c.cppdefines)
                   
 Default(app)

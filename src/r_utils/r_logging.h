@@ -39,12 +39,16 @@ namespace  r_logging
     };
 }
 
+
+    // preprocessor define for logging level threshold.
+    #ifndef R_LOG_LEVEL
+    #define R_LOG_LEVEL r_logging::ERROR
+    #endif // !LOG_LEVEL
+
     // Macro to allow precompiler to trim unneeded logging.
     // Calls to R_LOG with a level below the configured legLevel will be removed by the pre-compiler.
-    // User must define a loglevel before calling the R_LOG macro
-    extern r_logging::ELogLevel loglevel;
     #define R_LOG(level) \
-    if (level > loglevel) ; \
+    if (level > R_LOG_LEVEL) ; \
     else r_logging::Log(level)
 
 #endif 
