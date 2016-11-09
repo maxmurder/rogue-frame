@@ -1,6 +1,6 @@
-#include <iostream>
 #include "SDL2/SDL_image.h"
 #include "r_SDL.h"
+#include "r_logging.h"
 
 char* r_SDL::ReadFile(const char* filename, int* size)
 {
@@ -9,7 +9,7 @@ char* r_SDL::ReadFile(const char* filename, int* size)
 
     if( file == NULL )
     {
-        std::cout << "Could not load file: " << filename << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Could not load file: " << filename << " :: " << SDL_GetError();
         return NULL;
     }
 
@@ -57,14 +57,14 @@ bool r_SDL::WriteFile (const char* filename, const char* data)
     SDL_RWops *file = SDL_RWFromFile(filename, "wb");
     if( file == NULL )
     {
-        std::cout << "Could not create/open file: " << filename << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Could not create/open file: " << filename << " :: " << SDL_GetError();
         return false;
     }else
     {
         uint32_t len = SDL_strlen(data);
         if( SDL_RWwrite( file, data, 1, len) != len)
         {
-            std::cout << "Did not fully write data to: " << filename << " :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Did not fully write data to: " << filename << " :: " << SDL_GetError();
         }
         SDL_RWclose( file );
     }
@@ -78,7 +78,7 @@ SDL_Surface* r_SDL::LoadSurface( std::string path )
 
     if( loadedSurface == NULL)
     {
-        std::cout << "Unable to load image: " << path << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to load image: " << path << " :: " << SDL_GetError();
     }
     return loadedSurface;
 }
@@ -90,7 +90,7 @@ SDL_Surface* r_SDL::LoadSurface( std::string path, int red, int green, int blue 
 
     if( loadedSurface == NULL)
     {
-        std::cout << "Unable to load image: " << path << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to load image: " << path << " :: " << SDL_GetError();
     } else
     {
         SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, red, green, blue) );
@@ -107,13 +107,13 @@ SDL_Surface* r_SDL::LoadSurface( std::string path, SDL_PixelFormat* format )
 
     if( loadedSurface == NULL)
     {
-        std::cout << "Unable to load image: " << path << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to load image: " << path << " :: " << SDL_GetError();
     } else
     {
         optimisedSurface = SDL_ConvertSurface( loadedSurface, format, 0);
         if( optimisedSurface == NULL)
         {
-            std::cout << "Unable to convert surface: " << path << " :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Unable to convert surface: " << path << " :: " << SDL_GetError();
         }
         SDL_FreeSurface( loadedSurface );
     }
@@ -128,13 +128,13 @@ SDL_Texture* r_SDL::LoadTexture( std::string path, SDL_Renderer* renderer )
     loadedSurface = IMG_Load( path.c_str() );
     if (loadedSurface == NULL )
     {
-        std::cout << "Unable to load image: " << path << " :: " << IMG_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to load image: " << path << " :: " << IMG_GetError();
     }else
     {
         loadedTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
         if ( loadedTexture == NULL )
         {
-            std::cout << "Unable to load texture: " << path << " :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Unable to load texture: " << path << " :: " << SDL_GetError();
         }
 
         SDL_FreeSurface( loadedSurface );
@@ -151,19 +151,17 @@ SDL_Texture* r_SDL::LoadTexture( std::string path, SDL_Renderer* renderer, int r
     loadedSurface = IMG_Load( path.c_str() );
     if (loadedSurface == NULL )
     {
-        std::cout << "Unable to load image: " << path << " :: " << IMG_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to load image: " << path << " :: " << IMG_GetError();
     }else
     {
         SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, red, green, blue) );
         loadedTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
         if ( loadedTexture == NULL )
         {
-            std::cout << "Unable to load texture: " << path << " :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Unable to load texture: " << path << " :: " << SDL_GetError();
         }
-
         SDL_FreeSurface( loadedSurface );
     }
-
     return loadedTexture;
 }
 
@@ -178,13 +176,13 @@ SDL_Texture* r_SDL::RenderText( std::string string, TTF_Font* font, SDL_Renderer
     SDL_Surface* textSurface = TTF_RenderText_Solid( font, string.c_str(), color );
     if (textSurface == NULL )
     {
-        std::cout << "Unable to render text: " << string << " :: " << SDL_GetError() << std::endl;
+       R_LOG(r_logging::ERROR) << "Unable to render text: " << string << " :: " << SDL_GetError();
     }else
     {
         texture = SDL_CreateTextureFromSurface( renderer, textSurface );
         if (texture == NULL)
         {
-            std::cout << "Unable to create texture from rendered text surface: " << string << " :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Unable to create texture from rendered text surface: " << string << " :: " << SDL_GetError();
         }
         SDL_FreeSurface(textSurface);
     }
@@ -202,14 +200,14 @@ SDL_Texture* r_SDL::RenderUnicode( uint16_t symbols[], TTF_Font* font, SDL_Rende
     SDL_Surface* textSurface = TTF_RenderUNICODE_Blended( font, symbols, color );
     if (textSurface == NULL )
     {
-        std::cout << "Unable to render text: " << symbols << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to render text: " << symbols << " :: " << SDL_GetError();
     }else
     {
         //create texture
         texture = SDL_CreateTextureFromSurface( renderer, textSurface );
         if (texture == NULL)
         {
-            std::cout << "Unable to create texture from rendered text surface: " << symbols << " :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Unable to create texture from rendered text surface: " << symbols << " :: " << SDL_GetError();
         }
         SDL_FreeSurface(textSurface);
     }
@@ -221,7 +219,7 @@ TTF_Font* r_SDL::LoadFont( std::string path, int pointSize )
     TTF_Font* font = TTF_OpenFont( path.c_str(), pointSize);
     if (font == NULL )
     {
-        std::cout << "Unable to load font: " << path << " :: " << TTF_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "Unable to load font: " << path << " :: " << TTF_GetError();
     }
     return font;
 }

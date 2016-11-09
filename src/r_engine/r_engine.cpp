@@ -1,6 +1,6 @@
-#include <iostream>
 #include "r_engine.h"
 #include "r_gamestate.h"
+#include "r_utils/r_logging.h"
 
 int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fullscreen)
 {
@@ -8,18 +8,18 @@ int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fu
     //initialize SDL
     if (SDL_Init( SDL_INIT_EVERYTHING ) == -1)
     {
-        std::cout << "SDL initilization failure" << " :: " << SDL_GetError() << std::endl;
+        R_LOG(r_logging::ERROR) << "SDL initilization failure" << " :: " << SDL_GetError();
         return 1;
     }
     if ( !(IMG_Init( imgFlag) & imgFlag ) )
     {
-        std::cout << "SDL-IMG initilization failure" << " :: " << IMG_GetError() << std::endl;
+         R_LOG(r_logging::ERROR) << "SDL-IMG initilization failure" << " :: " << IMG_GetError();
         return 1;
     }
 
     if ( TTF_Init() == -1 )
     {
-        std::cout << "SDL-IMG initilization failure" << " :: " << TTF_GetError() << std::endl;
+         R_LOG(r_logging::ERROR) << "SDL-IMG initilization failure" << " :: " << TTF_GetError();
         return 1;
     }
 
@@ -29,7 +29,7 @@ int RGameEngine::Init(const char* title, int width, int height, int bpp, bool fu
 
     _fullscreen = fullscreen;
     _running = true;
-    std::cout << "RGameEngine Init\n";
+    R_LOG(r_logging::INFO) << "RGameEngine Init\n";
     return 0;
 }
 
@@ -57,7 +57,7 @@ int RGameEngine::Start()
         Cleanup();
         return 0;
     }
-    std::cout << "Somebody tried to start a running game.\n";
+    R_LOG(r_logging::WARNING) << "Somebody tried to start a running game.";
     return 1;
 }
 
@@ -73,8 +73,7 @@ void RGameEngine::Cleanup()
     TTF_Quit();
     SDL_Quit();
 
-
-    std::cout << "RGameEngine Cleanup" << std::endl;
+    R_LOG(r_logging::INFO) << "RGameEngine Cleanup";
 }
 
 int RGameEngine::HandleEvents()

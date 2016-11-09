@@ -1,7 +1,7 @@
 #include "r_texture.h"
 #include "r_entity/r_entity.h"
 #include "r_utils/r_SDL.h"
-#include <iostream>
+#include "r_utils/r_logging.h"
 
 TextureComponent::TextureComponent() : Component()
 {
@@ -27,11 +27,11 @@ void TextureSystem::LoadFromFile( EntityID ownerID, std::string path, SDL_Render
             SDL_QueryTexture( components[ownerID]->texture, NULL, NULL, &components[ownerID]->width, &components[ownerID]->height );
         }else
         {
-            std::cout << "Texture could not load :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::ERROR) << "Texture could not load :: " << SDL_GetError();
         }
     }else
     {
-        std::cout << "Texture could not load :: invalid EntityID" << std::endl;
+        R_LOG(r_logging::ERROR)  << "Texture could not load :: invalid EntityID";
     }
 }
 
@@ -43,7 +43,7 @@ void TextureSystem::RenderUnicode( EntityID ownerID, SDL_Renderer* renderer, TTF
         components[ownerID]->texture = r_SDL::RenderUnicode(text, font, renderer, components[ownerID]->texture, color);
         if (components[ownerID]->texture == NULL)
         {
-            std::cout << "Symbol could not be rendered :: " << SDL_GetError() << std::endl;
+            R_LOG(r_logging::WARNING) << "Symbol could not be rendered :: " << SDL_GetError();
         } else
         {
             SDL_QueryTexture( components[ownerID]->texture, NULL, NULL, &components[ownerID]->width, &components[ownerID]->height );

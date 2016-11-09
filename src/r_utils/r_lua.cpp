@@ -1,5 +1,5 @@
 #include "r_lua.h"
-#include "iostream"
+#include "r_logging.h"
 
 void LuaScript::ClearStack()
 {
@@ -52,7 +52,7 @@ bool LuaScript::GetToStack(const std::string &variableName)
 
 void LuaScript::PrintError(const std::string &variableName, const std::string &error)
 {
-    std::cout << "Error: Script did not get:'" << variableName << "' :: " << error << std::endl;
+    R_LOG(r_logging::ERROR) << "Script did not get:'" << variableName << "' :: " << error;
 }
 
 LuaScript::LuaScript(const std::string &filename)
@@ -60,7 +60,7 @@ LuaScript::LuaScript(const std::string &filename)
     L = luaL_newstate();
     if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0))
     {
-        std::cout << "Error: Script did not load (" << filename << ")" << std::endl;
+         R_LOG(r_logging::ERROR) << "Script did not load (" << filename << ")";
        L = 0;
     }
 }

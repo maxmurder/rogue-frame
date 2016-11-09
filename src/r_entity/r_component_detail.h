@@ -8,7 +8,7 @@
 #include <map>
 #include <string>
 #include <utility>
-#include <iostream>
+#include "r_utils/r_logging.h"
 
 class Component;
 
@@ -51,7 +51,7 @@ namespace r_component
                     if (ret.second == false) 
                     {   
                         //failure to find component with appropriate name
-                        std::cout << "Failed to find registered component with name: " << name << std::endl << "You must register a component with COMPONENT_REGISTER(ComponentName, \"ComponentName\") before using." << std::endl;
+                        R_LOG(r_logging::ERROR) << "Failed to find registered component with name: " << name << "\nYou must register a component with COMPONENT_REGISTER(ComponentName, \"ComponentName\") before using.";
                     }
                 }
                 

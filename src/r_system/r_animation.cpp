@@ -14,7 +14,7 @@ void AnimationSystem::SetAnimation(EntityID id, std::string animation)
     {
         if (components[id]->animations.find(animation) == components[id]->animations.end() )
         {
-            std::cout << "Animation: " << animation << " not found in list." << std::endl;
+            R_LOG(r_logging::WARNING) << "Animation: " << animation << " not found in list.";
         }else
         {
             components[id]->currentAnimation = animation;
