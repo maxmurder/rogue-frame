@@ -14,6 +14,8 @@ namespace r_logging
     //Constructs the log prefix information
     Log::Log(ELogLevel level)
     {
+        auto pol = new DefaultPolicy();
+        AddOutput(pol);
         ostream << EtoString(level);
         ostream << " - " << r_time::system_time() << ": ";    
     }
@@ -22,6 +24,19 @@ namespace r_logging
     Log::~Log()
     {
         ostream << std::endl;
-        std::cerr << ostream.str();
+        for(auto out : outputPolicies)
+        {
+            out->write(ostream.str());
+        }
+    }
+
+    void Log::AddOutput(IOutputPolicy* policy)
+    {
+        outputPolicies.emplace_back(policy);
+    }
+
+    void DefaultPolicy::write(const std::string& msg)
+    {
+        std::cerr << msg;
     }
 }

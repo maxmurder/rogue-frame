@@ -20,6 +20,12 @@
 namespace  r_logging
 {
     enum ELogLevel{ ERROR, WARNING, INFO, DEBUG }; // Enum of possible LogLevels
+    
+    class IOutputPolicy 
+    {
+        public:
+            virtual void write(const std::string& msg) = 0;
+    };
 
     class Log 
     {
@@ -34,8 +40,16 @@ namespace  r_logging
         }
         ~Log();
 
+        void AddOutput(IOutputPolicy* policy);
+
         protected:
         std::ostringstream ostream;
+        std::vector<IOutputPolicy*> outputPolicies;
+    };
+
+    class DefaultPolicy : public IOutputPolicy
+    {
+        void write(const std::string& msg);
     };
 }
 
