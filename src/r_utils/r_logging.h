@@ -16,6 +16,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <array>
 
 namespace  r_logging
 {
@@ -30,7 +31,7 @@ namespace  r_logging
     class Log 
     {
         public:      
-        Log(ELogLevel level = ERROR); 
+        Log(ELogLevel level = ERROR, std::vector<IOutputPolicy*> policyList = std::vector<IOutputPolicy*>()); 
         // << operator to allow atomic concatination ie std::cout
         template<typename T>
         Log & operator<<(T const & value)
@@ -64,5 +65,5 @@ namespace  r_logging
     #define R_LOG(level) \
     if (level > R_LOG_LEVEL) ; \
     else r_logging::Log(level)
-
+    
 #endif 

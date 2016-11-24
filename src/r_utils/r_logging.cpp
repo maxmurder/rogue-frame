@@ -12,10 +12,15 @@ namespace r_logging
     }
 
     //Constructs the log prefix information
-    Log::Log(ELogLevel level)
+    Log::Log(ELogLevel level, std::vector<IOutputPolicy*> policyList)
     {
-        auto pol = new DefaultPolicy();
-        AddOutput(pol);
+        if(policyList.size() == 0)
+        {
+            auto pol = new DefaultPolicy();
+            AddOutput(pol);
+        }else{
+            outputPolicies.swap(policyList);
+        }
         ostream << EtoString(level);
         ostream << " - " << r_time::system_time() << ": ";    
     }
